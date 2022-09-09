@@ -1,5 +1,5 @@
 
-# Request for Proposal Senior Project: FooDood
+# Request for Proposal - Senior Project: FooDood
 
 ## Project Summary
 
