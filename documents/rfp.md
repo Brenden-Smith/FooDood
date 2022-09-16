@@ -24,7 +24,7 @@ Make it super easy for a user to find a place to eat. Our goal is to attend who 
 - Finding a new restaurant to try
 - Sharing a dish with friends
 - Discovering local restaurants to try
-- Promoting local businesses to a random audience
+- Promoting local businesses to a random audience 
 
 ## System Requirements
 
