@@ -12,9 +12,9 @@ FooDood is a mobile application that combines the concept of Tinder-swiping with
 
 ## User Description
 
-Goal: To find a place to eat that is close to the user and has food that they like to eat.
-Motivation: The user is hungry and wants to eat something that they like to eat.
-Frustration: The user is hungry and does not know what they want to eat.
+**Goal**: To find a place to eat that is close to the user and has food that they like to eat.  
+**Motivation**: The user is hungry and wants to eat something that they like to eat.  
+**Frustration**: The user is hungry and does not know what they want to eat.  
 
 ## Use Cases
 
