@@ -1,6 +1,10 @@
 
 # Request for Proposal - Senior Project: FooDood
 
+## Introductions
+
+Brenden Smith - Experienced in web and application development, but not in the food industry. I will be working mostly on the back-end of the project. I have experience with Java, Python, C++, and JavaScript/TypeScript. I am passionate about learning new things and I am excited to work on this project.
+
 ## Project Summary
 
 Swipe right on your next Dish.
