@@ -5,6 +5,8 @@
 
 Brenden Smith - Experienced in web and application development, but not in the food industry. I will be working mostly on the back-end of the project. I have experience with Java, Python, C++, and JavaScript/TypeScript. I am passionate about learning new things and I am excited to work on this project.
 
+Konrad Hernandez - I have experience with web and game development and im excited to get into mobile application development. I have experience with Java, Python, C++, adn C#. I'm excited to get started on this project and hope to learn a lot!
+
 ## Project Summary
 
 Swipe right on your next Dish.
