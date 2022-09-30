@@ -24,14 +24,6 @@ Make it super easy for a user to find a place to eat. Our goal is to attend who 
 - User should be able to like a restaurant
 - User should be able to see a list of liked dishes and restaurants
 
-## Use Cases
-
-- Finding a new dish to try
-- Finding a new restaurant to try
-- Sharing a dish with friends
-- Discovering local restaurants to try
-- Promoting local businesses to a random audience 
-
 ## System Requirements
 
 Web-App, Mobile App
