@@ -7,6 +7,8 @@ Brenden Smith - Experienced in web and application development, but not in the f
 
 Konrad Hernandez - I have experience with web and game development and I'm excited to get into mobile application development. I have experience with Java, Python, C++, adn C#. I'm excited to get started on this project and hope to learn a lot!
 
+Rodolfo Sandoval - I have experence in web, app, and game development. I know a variety of languages from C++ to Python. I currently work as IT and do some cloud operations, but most of my passion in computer science deal with design. I focus a lot on the front end of applications and enjoy making art. I enjoy all parts of all computer science and look forward to the learning experience this project will bring.
+
 ## Project Summary
 
 Swipe right on your next Dish.
