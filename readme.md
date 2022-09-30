@@ -1,7 +1,7 @@
 # **Senior Project: FooDood**
 
 ## **CECS 491a/b**
-**California State University of Long Beach**
+**California State University of Long Beach**\
 **Team Name: Bing Bros**
 
 Team: [Brenden Smith](https://www.linkedin.com/in/brenden-s-smith/), [Stephen Lyons](https://www.linkedin.com/in/stephen-lyons/), [Rodolfo Sandoval](https://www.linkedin.com/in/rudyspg), [Konrad Hernandez](https://www.linkedin.com/in/konrad-hernandez)\
