@@ -23,10 +23,7 @@
 
 ## Use Cases
 
-- As a user, I want to be able to find a place to eat that is close to me and has food that I like to eat.
-- As a user, I want to have an easy way to find a place to eat.
-- As a user, I want to discover local restaurants to try.
-- As a user, I want to be able to share new dishes with friends.
+Use Cases: [https://docs.google.com/document/d/1UdK3g8ThGhJ6By0xvMrJRvuxTJ3cJSXRPQhAxzBtOhU/edit](https://docs.google.com/document/d/1UdK3g8ThGhJ6By0xvMrJRvuxTJ3cJSXRPQhAxzBtOhU/edit)
 
 ## Privacy
 
