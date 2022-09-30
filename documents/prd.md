@@ -8,7 +8,11 @@
 
 <!-- FooDood is a mobile application that combines the concept of Tinder with selecting something to eat. Users will be able to swipe left or right on food options and the app will match them with other users who have similar food preferences. Users will be able to chat with each other and make plans to meet up and eat together. -->
 
-FooDood is a mobile application that combines the concept of Tinder-swiping with selecting something to eat. Science says that it is easier to make a decision when presented with simple options such as "yes" or "no" rather than a large list of options. FooDood will present users with a list of food options and they will be able to swipe left or right on the options. The app will make a list of the plates that the user has swiped right on in a session, and present it to them at the end of the session. The app will then allow the user to select a plate, and present them with the restaurant information, and available delivery services to order that plate.
+- FooDood is a mobile application that combines the concept of Tinder-swiping with selecting something to eat.
+- Science says that it is easier to make a decision when presented with simple options such as "yes" or "no" rather than a large list of options.
+- FooDood will present users with a list of food options and they will be able to swipe left or right on the options.
+- The app will make a list of the plates that the user has swiped right on in a session, and present it to them at the end of the session.
+- The app will then allow the user to select a plate, and present them with the restaurant information, and available delivery services to order that plate.
 
 ## User Description
 
@@ -23,7 +27,7 @@ FooDood is a mobile application that combines the concept of Tinder-swiping with
 - As a user, I want to discover local restaurants to try.
 - As a user, I want to be able to share new dishes with friends.
 
-## Data Usage
+## Privacy
 
 - The user's location will be used to find restaurants near them.
 - The user's food preferences will be used to find restaurants that have food that they like to eat
@@ -36,4 +40,8 @@ Data will be stored in reliable cloud-based services, such as through Google or 
 ## Launch & Maintenance
 
 The app will be launched on the Google Play Store and the Apple App Store. The app will be maintained by the development team. The app will be updated regularly to fix bugs and add new features.
+
+## Documentation
+
+Wireframe: [https://www.figma.com/file/riGS3WArD8vaWNttwlXUls/Wireframe](https://www.figma.com/file/riGS3WArD8vaWNttwlXUls/Wireframe)
 
