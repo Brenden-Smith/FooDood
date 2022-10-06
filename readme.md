@@ -1,6 +1,6 @@
-# CECS 491A/B Senior Project: FooDood
+# FooDood
 
-California State University of Long Beach
+Senior Project (CECS 491A/B) at California State University, Long Beach
 
 ## Team: BingBros
 
