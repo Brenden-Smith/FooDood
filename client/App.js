@@ -1,20 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// This is the entry point if you run `yarn expo:start`
+// If you run `yarn ios` or `yarn android`, it'll use ./index.js instead.
+import App from "./app/app.tsx"
+import React from "react"
+import { registerRootComponent } from "expo"
+import * as SplashScreen from "expo-splash-screen"
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+SplashScreen.preventAutoHideAsync()
+
+function IgniteApp() {
+  return <App hideSplashScreen={SplashScreen.hideAsync} />
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+registerRootComponent(IgniteApp)
+export default IgniteApp
