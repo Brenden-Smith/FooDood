@@ -6,7 +6,7 @@
     src="website/public/images/FooDoodDark.svg" 
     alt="Our logo">
 </img>
-
+<h3 align="center">Senior Project: 2022-2023</h3>
 <h3 align="center">Created by Brenden Smith, Konrad Hernandez, Rodolfo Sandoval, and Stephen Lyons</h3>
 <p align="center"><a href="https://foodood.dev" target="_blank">View Website</a></p>
 
