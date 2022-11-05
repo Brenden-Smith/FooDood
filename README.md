@@ -3,7 +3,7 @@
            margin-left: auto;
            margin-right: auto;
            width: 100%;"
-    src="website/public/images/FooDood.svg" 
+    src="website/public/images/FooDoodDark.svg" 
     alt="Our logo">
 </img>
   
