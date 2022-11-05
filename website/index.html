@@ -15,29 +15,6 @@
     />
   </head>
   <body>
-    <header class="p-3 text-bg-dark">
-      <div class="container">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between"
-        >
-          <h1>FooDood</h1>
-          <ul class="nav nav-pills">
-            <li class="nav-item">
-              <a href="#" class="nav-link active" aria-current="page"> Home </a>
-            </li>
-            <li class="nav-item">
-              <a
-                href="https://github.com/Brenden-Smith/FooDood"
-                target="_blank"
-                class="nav-link"
-              >
-                GitHub
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </header>
 
     <div class="carousel">
       <div class="carousel-inner">
@@ -175,10 +152,12 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 text-center gap-3 p-5">
+        <div class="col-lg-6 text-center gap-3" style="padding-left: 30px; padding-right: 30px;">
           <div class="container">
             <h2>About</h2>
-            <h5><em>Have you ever been hungry and didn't know what to eat?</em></h5>
+            <h5>
+              <em>Have you ever been hungry and didn't know what to eat?</em>
+            </h5>
             <p>
               FooDood is a mobile application that combines the concept of
               Tinder-swiping with selecting something to eat. Science says that
@@ -226,6 +205,43 @@
         </div>
       </div>
     </div>
+
+    <footer
+      class="p-3 text-bg-dark d-flex flex-wrap justify-content-between align-items-center p-4"
+    >
+      <div class="col-md-6 d-flex">
+        <div class="row align-items-center justify-content-start">
+          <div class="container-fluid">
+            <h1>FooDood</h1>
+          </div>
+          <div class="container-fluid">
+            <p>
+              CECS 491 - Senior Project (2022-2023) @ California State
+              University, Long Beach
+            </p>
+          </div>
+        </div>
+      </div>
+      <ul class="nav col-md-6 justify-content-end list-unstyled d-flex">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://github.com/Brenden-Smith/FooDood"
+            target="_blank"
+          >
+            <i class="bi bi-github icon-white"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://www.youtube.com/c/BingBros"
+            target="_blank"
+          >
+            <i class="bi bi-youtube icon-white"></i>
+        </li>
+      </ul>
+    </footer>
 
     <!-- Bootstrap -->
     <script
