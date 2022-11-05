@@ -1,4 +1,13 @@
-# FooDood
+<img 
+    style="display: block; 
+           margin-left: auto;
+           margin-right: auto;
+           width: 100%;"
+    src="website/public/images/FooDood.svg" 
+    alt="Our logo">
+</img>
+  
+<h1 align="center">FooDood</h1>
 
 Senior Project (CECS 491A/B) at California State University, Long Beach
 
