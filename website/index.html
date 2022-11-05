@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>FooDood</title>
@@ -15,30 +16,6 @@
     />
   </head>
   <body>
-    <header class="p-3 text-bg-dark">
-      <div class="container">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between"
-        >
-          <h1>FooDood</h1>
-          <ul class="nav nav-pills">
-            <li class="nav-item">
-              <a href="#" class="nav-link active" aria-current="page"> Home </a>
-            </li>
-            <li class="nav-item">
-              <a
-                href="https://github.com/Brenden-Smith/FooDood"
-                target="_blank"
-                class="nav-link"
-              >
-                GitHub
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </header>
-
     <div class="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active banner"></div>
@@ -51,10 +28,10 @@
     </div>
 
     <div class="container">
-      <div class="row m-5">
-        <div class="col-lg-6 text-center">
+      <div class="row mt-5 mb-5 justify-content-between">
+        <div class="col-lg-6 text-center gap-3 order-sm-first order-last">
           <h2>Team</h2>
-          <div class="row p-3">
+          <div class="row p-3 gap-3">
             <div class="col">
               <img
                 src="./public/images/brenden.jpeg"
@@ -65,8 +42,8 @@
               />
               <h3>Brenden Smith</h3>
               <p>Back End</p>
-              <div class="row justify-content-center">
-                <div class="col-sm-2 p-0">
+              <div class="nav justify-content-center align-items-center gap-3">
+                <div class="nav-item">
                   <a
                     href="https://www.linkedin.com/in/brenden-s-smith/"
                     target="_blank"
@@ -74,7 +51,7 @@
                     ><i class="bi bi-linkedin icon-linkedin"></i>
                   </a>
                 </div>
-                <div class="col-sm-2 p-0">
+                <div class="nav-item">
                   <a
                     href="https://www.github.com/Brenden-Smith"
                     target="_blank"
@@ -94,8 +71,8 @@
               />
               <h3>Konrad Hernandez</h3>
               <p>Front End</p>
-              <div class="row justify-content-center">
-                <div class="col-sm-2 p-0">
+              <div class="nav justify-content-center align-items-center gap-3">
+                <div class="nav-item">
                   <a
                     href="https://www.linkedin.com/in/konrad-hernandez/"
                     target="_blank"
@@ -103,7 +80,7 @@
                     ><i class="bi bi-linkedin icon-linkedin"></i>
                   </a>
                 </div>
-                <div class="col-sm-2 p-0">
+                <div class="nav-item">
                   <a
                     href="https://github.com/konradmh3"
                     target="_blank"
@@ -114,7 +91,7 @@
               </div>
             </div>
           </div>
-          <div class="row p-3">
+          <div class="row p-3 gap-3">
             <div class="col">
               <img
                 src="./public/images/rudy.jpeg"
@@ -125,8 +102,8 @@
               />
               <h3>Rodolfo Sandoval</h3>
               <p>Design</p>
-              <div class="row justify-content-center">
-                <div class="col-sm-2 p-0">
+              <div class="nav justify-content-center align-items-center gap-3">
+                <div class="nav-item">
                   <a
                     href="https://www.linkedin.com/in/rudyspg/"
                     target="_blank"
@@ -134,7 +111,7 @@
                     ><i class="bi bi-linkedin icon-linkedin"></i>
                   </a>
                 </div>
-                <div class="col-sm-2 p-0">
+                <div class="nav-item">
                   <a
                     href="https://github.com/RudySPG"
                     target="_blank"
@@ -154,8 +131,8 @@
               />
               <h3>Stephen Lyons</h3>
               <p>DevOps</p>
-              <div class="row justify-content-center">
-                <div class="col-sm-2 p-0">
+              <div class="nav justify-content-center align-items-center gap-3">
+                <div class="nav-item">
                   <a
                     href="https://www.linkedin.com/in/stephen-lyons/"
                     target="_blank"
@@ -163,7 +140,7 @@
                     ><i class="bi bi-linkedin icon-linkedin"></i>
                   </a>
                 </div>
-                <div class="col-sm-2 p-0">
+                <div class="nav-item">
                   <a
                     href="https://github.com/stephenlyons18"
                     target="_blank"
@@ -175,37 +152,99 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 text-center">
-          <h2>Documentation</h2>
-          <ul>
-            <li>
-              <a
-                href="https://docs.google.com/document/d/1qYJEUIF6UIDfJtLO8e_IWbw1zoRV9pCKldmvTQyZ_AE/edit?usp=sharing"
-                >Design Document</a
-              >
-            </li>
-            <li>
-              <a
-                href="https://docs.google.com/document/d/1iuygXH2ctdoNIbL7mxNQsqCXLY6GpL_bNVeKUZmhJlQ/edit?usp=sharing"
-                >Request For Proposal</a
-              >
-            </li>
-            <li>
-              <a
-                href="https://docs.google.com/presentation/d/1oQiz8q5eKTryzq4bqgrvuvIC2BK1OMsx7xgBAQfn1UQ/edit?usp=sharing"
-                >Presentation Slides</a
-              >
-            </li>
-            <li>
-              <a
-                href="https://docs.google.com/document/d/1Cw9VeyBDBDZLC0T4V6qWaWFBESTCrVcq4Az3GOJ98WA/edit?usp=sharing"
-                >Product Requirements Document</a
-              >
-            </li>
-          </ul>
+        <div
+          class="col-lg-6 text-center ps-lg-5 order-first order-sm-last"
+        >
+          <div class="container">
+            <h2>About</h2>
+            <h5>
+              <em>Have you ever been hungry and didn't know what to eat?</em>
+            </h5>
+            <p>
+              FooDood is a mobile application that combines the concept of
+              Tinder-swiping with selecting something to eat. Science says that
+              it is easier to make a decision when presented with simple options
+              such as "yes" or "no" rather than a large list of options. FooDood
+              will present users with a list of food options in their area and
+              they will be able to swipe left or right on the options to decide
+              what to eat. With this product, we will be able to help people
+              make decisions on what to eat more easily and efficiently. We are
+              different from food delivery apps' recommendations because we
+              present options to users with only two choices - “yes” or “no” -
+              rather than a large list. We also present options by plate rather
+              than by restaurant.
+            </p>
+          </div>
+          <div class="container">
+            <h2>Documentation</h2>
+            <ul>
+              <li>
+                <a
+                  href="https://docs.google.com/document/d/1qYJEUIF6UIDfJtLO8e_IWbw1zoRV9pCKldmvTQyZ_AE/edit?usp=sharing"
+                  >Design Document</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.google.com/document/d/1iuygXH2ctdoNIbL7mxNQsqCXLY6GpL_bNVeKUZmhJlQ/edit?usp=sharing"
+                  >Request For Proposal</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.google.com/presentation/d/1oQiz8q5eKTryzq4bqgrvuvIC2BK1OMsx7xgBAQfn1UQ/edit?usp=sharing"
+                  >Presentation Slides</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.google.com/document/d/1Cw9VeyBDBDZLC0T4V6qWaWFBESTCrVcq4Az3GOJ98WA/edit?usp=sharing"
+                  >Product Requirements Document</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
+
+    <footer
+      class="p-3 text-bg-dark d-flex flex-wrap justify-content-between align-items-center p-4"
+    >
+      <div class="col-md-6 d-flex">
+        <div class="row align-items-center justify-content-start">
+          <div class="container-fluid">
+            <h1>FooDood</h1>
+          </div>
+          <div class="container-fluid">
+            <p>
+              CECS 491 - Senior Project (2022-2023) @ California State
+              University, Long Beach
+            </p>
+          </div>
+        </div>
+      </div>
+      <ul class="nav col-md-6 justify-content-end list-unstyled d-flex">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://github.com/Brenden-Smith/FooDood"
+            target="_blank"
+          >
+            <i class="bi bi-github icon-white"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://www.youtube.com/c/BingBros"
+            target="_blank"
+          >
+            <i class="bi bi-youtube icon-white"></i>
+          </a>
+        </li>
+      </ul>
+    </footer>
 
     <!-- Bootstrap -->
     <script
