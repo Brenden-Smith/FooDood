@@ -10,7 +10,16 @@ import { colors, spacing } from "../../theme"
 import * as Demos from "./demos"
 import { DrawerIconButton } from "./DrawerIconButton"
 
+
 const logo = require("../../../assets/images/logo.png")
+
+import CardsSwipe from "react-native-cards-swipe"
+const cardsData = [
+  { src: require("../../../assets/images/1.jpg") },
+  { src: require("../../../assets/images/2.jpg") },
+  { src: require("../../../assets/images/3.jpg") },
+  { src: require("../../../assets/images/4.jpg") },
+]
 
 export interface Demo {
   name: string
@@ -126,7 +135,14 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> =
           contentContainerStyle={$screenContainer}
         >
           <DrawerIconButton onPress={toggleDrawer} {...{ open, progress }} />
-
+          <View>
+            <CardsSwipe
+              cards={cardsData}
+              renderCard={(card) => <Image source={card.src} style={{ width: 300, height: 300 }} />}
+              onSwipedLeft={() => console.log("swipe left")}
+              onSwipedRight={() => console.log("swipe right")}
+            />
+          </View>
           <SectionList
             ref={listRef}
             contentContainerStyle={$sectionListContentContainer}

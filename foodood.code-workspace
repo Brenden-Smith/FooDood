@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "./"
+		}
+	],
+
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.tabSize": 4,
+		"workbench.colorTheme": "GitHub Dark Default"
+	}
+}
