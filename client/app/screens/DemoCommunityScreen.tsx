@@ -91,7 +91,10 @@ export const DemoCommunityScreen: FC<DemoTabScreenProps<"DemoCommunity">> =
             loop={false}
             renderCard={(card) => (
               <View style={styles.card}>
+                <Text style={styles.title}>{card.title}</Text>
                 <Image style={styles.cardImg} source={{uri: card.src}} />
+                <Text style={styles.description}>{card.description}</Text>
+                <Text style={styles.price}>{card.price}</Text>
               </View>
             )}
             renderNoMoreCard={() => (
@@ -248,5 +251,21 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: 'lightgreen',
     fontWeight: 'bold',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
+  },
+  price: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
   },
 });
