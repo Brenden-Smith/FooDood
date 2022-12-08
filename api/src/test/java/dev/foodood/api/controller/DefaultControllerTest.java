@@ -1,4 +1,4 @@
-package dev.foodood.api.controllers;
+package dev.foodood.api.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

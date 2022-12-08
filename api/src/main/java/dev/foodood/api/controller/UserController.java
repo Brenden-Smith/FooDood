@@ -1,9 +1,9 @@
-package dev.foodood.api.controllers;
+package dev.foodood.api.controller;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
-import dev.foodood.api.entities.User;
+import dev.foodood.api.entity.User;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

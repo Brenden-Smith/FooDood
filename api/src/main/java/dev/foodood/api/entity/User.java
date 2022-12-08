@@ -1,4 +1,4 @@
-package dev.foodood.api.entities;
+package dev.foodood.api.entity;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
