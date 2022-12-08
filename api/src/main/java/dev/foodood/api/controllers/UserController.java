@@ -31,7 +31,7 @@ public class UserController {
     /**
      * Creates a new user
      *
-     * @param unformattedUser User information that has not been formatted thorugh Firebase yet
+     * @param unformattedUser User information that has not been formatted through Firebase yet
      * @return The ID of the new user
      */
     @PostMapping(
