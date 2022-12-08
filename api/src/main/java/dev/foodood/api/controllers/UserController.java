@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * @author Brenden Smith
  *
- * Controller for the User entity.
+ * Controller for the User entity
  */
 @RestController
 @RequestMapping(path="/users")
