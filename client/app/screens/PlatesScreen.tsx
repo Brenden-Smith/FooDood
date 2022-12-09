@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle, StyleSheet, Dimensions, StatusBar, SafeAreaView } from "react-native"
+import { Image, ImageStyle, TextStyle, View, ViewStyle, StyleSheet, Dimensions, StatusBar, SafeAreaView, TouchableOpacity } from "react-native"
 import { ListItem, Screen, Text } from "../components"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import Swiper from "react-native-deck-swiper"
@@ -97,6 +97,7 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
                         disableBottomSwipe
                         animateOverlayLabelsOpacity
                         animateCardOpacity
+                        ref={swiperRef}
                         overlayLabels={{
                             left: {
                                 title: 'DisLike',
@@ -138,7 +139,20 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
                             }
                         }}
                     />
+                
+                
                 </View>
+                {/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
+                {/* container for the buttons */}
+                <View style={styles.bottomContainerButtons}>
+                    <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
+                        <Text style={styles.likeText}>Like</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.dislikeButton} onPress={() => swiperRef.current.swipeLeft()}>
+                        <Text style={styles.dislikeText}>Dislike</Text>
+                    </TouchableOpacity>
+                </View>
+
                 {/* <View style={styles.bottomContainer}>
                     <Transitioning.View
                         transition={transition}
@@ -164,10 +178,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     bottomContainerMeta: { alignContent: 'flex-end', alignItems: 'center' },
-    bottomContainerButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly'
-    },
+    
     cardImage: {
         width: '100%',
         height : '100%',
@@ -239,5 +250,51 @@ const styles = StyleSheet.create({
         position:'absolute',
         width:'100%',
         height:'100%'
+    },
+    likeButton: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        width: 100,
+        height: 100,
+        backgroundColor: colors.blue,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 20
+    },
+    likeText: {
+        color: colors.white,
+        fontSize: 24,
+        fontWeight: '700'
+    },
+    dislikeButton: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: 100,
+        height: 100,
+        backgroundColor: colors.red,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 20
+    },
+    dislikeText: {
+        color: colors.white,
+        fontSize: 24,
+        fontWeight: '700'
+    },
+    bottomContainerButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: -10,
+        left: 0,
+        right: 0,
+        height: 100,
+        backgroundColor: 'transparent'
+
     },
 });
