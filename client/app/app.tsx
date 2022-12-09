@@ -12,7 +12,7 @@
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
@@ -22,6 +22,7 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
+import { getApp } from "firebase/app"
 
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
@@ -76,7 +77,8 @@ function App(props: AppProps) {
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
-  const [areFontsLoaded] = useFonts(customFontsToLoad)
+  const [areFontsLoaded] = useFonts(customFontsToLoad);
+  const [firebaseReady, setFirebaseReady] = useState(false);
 
   const { rehydrated } = useInitialRootStore(() => {
     // This runs after the root store has been initialized and rehydrated.
@@ -96,13 +98,20 @@ function App(props: AppProps) {
   // You can replace with your own loading component if you wish.
   if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) return null
 
+
   const linking = {
     prefixes: [prefix],
     config,
   }
 
+  // Ensure that Firebase has initialized
+  useEffect(() => {
+    if (getApp())
+      setFirebaseReady(true);
+  }, []);
+
   // otherwise, we're ready to render the app
-  return (
+  return firebaseReady && (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <ErrorBoundary catchErrors={Config.catchErrors}>
         <AppNavigator
