@@ -5,7 +5,6 @@ import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-import axios from "axios"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -65,14 +64,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     [isAuthPasswordHidden],
   )
 
-  const [apiRes, setApiRes] = useState("")
-
-  async function testApi() {
-    await axios.get("https://api.foodood.dev").then((res) => setApiRes(res.data))
-  }
-
   useEffect(() => {
-    testApi()
     return () => {
       setAuthPassword("")
       setAuthEmail("")
@@ -86,9 +78,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       safeAreaEdges={["top", "bottom"]}
     >
       <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text testID="hello-world-test" preset="subheading" style={$signIn}>
-        {apiRes}
-      </Text>
       <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 

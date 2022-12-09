@@ -7,12 +7,18 @@ import { Icon } from "../components"
 import { translate } from "../i18n"
 import { DemoCommunityScreen, DemoShowroomScreen, DemoDebugScreen } from "../screens"
 import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
+import { LikesScreen } from "../screens/LikesScreen"
+import { PlatesScreen } from "../screens/PlatesScreen"
+import { TagsScreen } from "../screens/TagsScreen"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 
 export type DemoTabParamList = {
+  Tags: undefined
+  Plates: undefined
+  Likes: undefined
   DemoCommunity: undefined
-  DemoShowroom: undefined
+  DemoShowroom: { queryIndex?: string; itemIndex?: string }
   DemoDebug: undefined
   DemoPodcastList: undefined
 }
@@ -45,40 +51,40 @@ export function DemoNavigator() {
       }}
     >
       <Tab.Screen
-        name="DemoShowroom"
-        component={DemoShowroomScreen}
+        name="Tags"
+        component={TagsScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarLabel: "Tags",
+          tabBarIcon: ({ focused }) => <Icon icon="pin" color={focused && colors.tint} />,
+        }}
+      />
+
+      <Tab.Screen
+        name="Plates"
+        component={PlatesScreen}
+        options={{
+          tabBarLabel: "Plates",
           tabBarIcon: ({ focused }) => <Icon icon="components" color={focused && colors.tint} />,
         }}
       />
 
       <Tab.Screen
-        name="DemoCommunity"
-        component={DemoCommunityScreen}
+        name="Likes"
+        component={LikesScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.communityTab"),
-          tabBarIcon: ({ focused }) => <Icon icon="community" color={focused && colors.tint} />,
+          tabBarLabel: "Likes",
+          tabBarIcon: ({ focused }) => <Icon icon="heart" color={focused && colors.tint} />,
         }}
       />
 
-      <Tab.Screen
-        name="DemoPodcastList"
-        component={DemoPodcastListScreen}
-        options={{
-          tabBarLabel: translate("demoNavigator.podcastListTab"),
-          tabBarIcon: ({ focused }) => <Icon icon="podcast" color={focused && colors.tint} />,
-        }}
-      />
-
-      <Tab.Screen
+      {/* <Tab.Screen
         name="DemoDebug"
         component={DemoDebugScreen}
         options={{
           tabBarLabel: translate("demoNavigator.debugTab"),
           tabBarIcon: ({ focused }) => <Icon icon="debug" color={focused && colors.tint} />,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }

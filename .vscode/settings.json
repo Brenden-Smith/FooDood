@@ -1,3 +1,4 @@
 {
-	"prettier.configPath": ".prettierrc"
+	"prettier.configPath": ".prettierrc",
+	"java.compile.nullAnalysis.mode": "automatic"
 }
