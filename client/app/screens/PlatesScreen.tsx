@@ -11,8 +11,8 @@ const { width } = Dimensions.get('window');
 
 const stackSize = 4;
 const colors = {
-    red: '#EC2379',
-    blue: '#0070FF',
+    red: '#d90404',
+    blue: '#0063e6',
     gray: '#777777',
     white: '#ffffff',
     black: '#000000',
@@ -49,9 +49,13 @@ const transitionRef = React.createRef();
 const Card = ({ card }) => {
     return (
         <View style={styles.card}>
+            
             <Image source={{ uri: card.image }} style={styles.cardImage} />
             <Text style={styles.heading}>{card.name}</Text>
             <Text style={styles.price}>{card.price}</Text>
+            {/* <View style={styles.descContainer}>
+                <Text style={styles.price}>{card.desc}</Text>
+            </View> */}
             {/* <LinearGradient 
                 locations={[0, 1.0]}  
                 colors= {['rgba(0,0,0,0.00)', 'rgba(0,0,0,0.80)']} 
@@ -146,11 +150,17 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
                 {/* container for the buttons */}
                 <View style={styles.bottomContainerButtons}>
                     <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
-                        <Text style={styles.likeText}>Like</Text>
+                        <Image source={require('../../assets/icons/like.png')} style={styles.btnImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.infoButton} onPress={() => {}}>
+                        {/* Add Like image here */}
+                        <Image source={require('../../assets/icons/view.png')} style={styles.btnImage} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.dislikeButton} onPress={() => swiperRef.current.swipeLeft()}>
-                        <Text style={styles.dislikeText}>Dislike</Text>
+                        {/* Add Like image here */}
+                        <Image source={require('../../assets/icons/x.png')} style={styles.btnImage} />
                     </TouchableOpacity>
+                    
                 </View>
 
                 {/* <View style={styles.bottomContainer}>
@@ -252,9 +262,6 @@ const styles = StyleSheet.create({
         height:'100%'
     },
     likeButton: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
         width: 100,
         height: 100,
         backgroundColor: colors.blue,
@@ -269,9 +276,6 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     dislikeButton: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
         width: 100,
         height: 100,
         backgroundColor: colors.red,
@@ -286,15 +290,38 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     bottomContainerButtons: {
-        flexDirection: 'row',
+        flexDirection: 'row-reverse',
         justifyContent: 'space-evenly',
         alignItems: 'center',
         position: 'absolute',
-        bottom: -10,
+        bottom: 5,
         left: 0,
         right: 0,
         height: 100,
         backgroundColor: 'transparent'
-
     },
+    btnImage: {
+        width: 40,
+        height: 40,
+        tintColor: colors.white
+    },
+    infoButton: {
+        width: 75,
+        height: 75,
+        backgroundColor: '#ff6a14',
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 20
+    },
+    descContainer: {
+        position: 'absolute',
+        backgroundColor: colors.white,
+        color: colors.white,
+        top: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: 8,
+        overflow: 'hidden',
+    }
 });
