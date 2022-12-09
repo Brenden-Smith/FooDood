@@ -78,7 +78,7 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
-  const [firebaseReady, setFirebaseReady] = useState(false);
+  // const [firebaseReady, setFirebaseReady] = useState(false);
 
   const { rehydrated } = useInitialRootStore(() => {
     // This runs after the root store has been initialized and rehydrated.
@@ -104,14 +104,8 @@ function App(props: AppProps) {
     config,
   }
 
-  // Ensure that Firebase has initialized
-  useEffect(() => {
-    if (getApp())
-      setFirebaseReady(true);
-  }, []);
-
   // otherwise, we're ready to render the app
-  return firebaseReady && (
+  return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <ErrorBoundary catchErrors={Config.catchErrors}>
         <AppNavigator

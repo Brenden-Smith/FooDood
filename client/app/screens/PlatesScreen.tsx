@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { createContext, FC, useContext } from "react"
 import { Image, ImageStyle, TextStyle, View, ViewStyle, StyleSheet, Dimensions, StatusBar, SafeAreaView, TouchableOpacity } from "react-native"
 import { ListItem, Screen, Text } from "../components"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
@@ -6,8 +6,13 @@ import Swiper from "react-native-deck-swiper"
 import data from "../../assets/data/theoutpost"
 import { Transitioning, Transition } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
+import { addDoc, collection, getFirestore } from "firebase/firestore";
+import "../services/firebase";
+import { useState } from "react"
 
 const { width } = Dimensions.get('window');
+
+const DescriptionContext = createContext(false);
 
 const stackSize = 4;
 const colors = {
@@ -47,15 +52,22 @@ const swiperRef = React.createRef();
 const transitionRef = React.createRef();
 
 const Card = ({ card }) => {
+
+    const showDescription = useContext(DescriptionContext);
+    
     return (
         <View style={styles.card}>
             
             <Image source={{ uri: card.image }} style={styles.cardImage} />
             <Text style={styles.heading}>{card.name}</Text>
             <Text style={styles.price}>{card.price}</Text>
-            {/* <View style={styles.descContainer}>
-                <Text style={styles.price}>{card.desc}</Text>
-            </View> */}
+            
+            {showDescription && (<View style={styles.descContainer}>
+                <Text style={styles.descText}>{card.name}</Text>
+                <Text style={styles.descText}>{card.price}</Text>
+                <Text style={styles.descText}>Description</Text>
+                <Text style={styles.descText}>{card.desc}</Text>
+            </View> )}
             {/* <LinearGradient 
                 locations={[0, 1.0]}  
                 colors= {['rgba(0,0,0,0.00)', 'rgba(0,0,0,0.80)']} 
@@ -76,17 +88,32 @@ const CardDetails = ({ index }) => (
 
 export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
     function LikesScreen(_props) {
-        const [index, setIndex] = React.useState(0);
+        const [index, setIndex] = useState(0);
         const onSwiped = () => {
             setIndex((index + 1) % data.length);
         };
+
+        function likePlate(card: any) {
+            addDoc(collection(getFirestore(), "likes"), {
+                plateId: card.id,
+                customerId: "1234",
+            }).then(() => {
+                console.info("Added", {
+                    plateId: card.id,
+                    customerId: "1234",
+                })
+            })
+        }
+        const [showDescription, setShowDescription] = useState(false);
 
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar hidden={true} />
                 <View style={styles.swiperContainer}>
+                    <DescriptionContext.Provider value={showDescription}>
                     <Swiper
                         cards={data}
+                        onSwipedRight={(index => likePlate(data[index]))}
                         cardIndex={index}
                         renderCard={card => <Card card={card} />}
                         infinite
@@ -143,6 +170,7 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
                             }
                         }}
                     />
+                    </DescriptionContext.Provider>
                 
                 
                 </View>
@@ -152,9 +180,9 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> =
                     <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
                         <Image source={require('../../assets/icons/like.png')} style={styles.btnImage} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.infoButton} onPress={() => {}}>
+                    <TouchableOpacity style={styles.infoButton} onPress={() => setShowDescription(!showDescription)}>
                         {/* Add Like image here */}
-                        <Image source={require('../../assets/icons/view.png')} style={styles.btnImage} />
+                        <Image source={require('../../assets/icons/view.png')} style={styles.btnImage}  />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.dislikeButton} onPress={() => swiperRef.current.swipeLeft()}>
                         {/* Add Like image here */}
@@ -323,5 +351,12 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 8,
         overflow: 'hidden',
+    },
+    descText: {
+        color: colors.black,
+        fontSize: 16,
+        fontWeight: '500',
+        padding: 30,
+        bottom: 0,
     }
 });
