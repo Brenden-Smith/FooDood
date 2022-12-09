@@ -9,7 +9,7 @@ install! 'cocoapods', :deterministic_uuids => false
 
 production = ENV["PRODUCTION"] == "1"
 
-target 'client' do
+target 'RnLearn' do
   use_expo_modules!
   post_integrate do |installer|
     begin
@@ -34,7 +34,7 @@ target 'client' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'clientTests' do
+  target 'RnLearnTests' do
     inherit! :complete
     # Pods for testing
   end
