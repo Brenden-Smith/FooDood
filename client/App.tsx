@@ -37,7 +37,6 @@ export default function App() {
               {
                 name: "User Name",
                 email: user.email,
-                uid: user.uid,
                 birthday: new Date(),
                 createdAt: new Date(),
                 latitude: 0,
