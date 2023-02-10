@@ -2,6 +2,7 @@ import { createRef, FC, LegacyRef, } from "react"
 import {
   Image,
   View,
+  Text,
   StyleSheet,
   Dimensions,
   StatusBar,
@@ -12,7 +13,7 @@ import Swiper from "react-native-deck-swiper"
 import data from "../../assets/data/theoutpost"
 import { Transition } from "react-native-reanimated"
 import { addDoc, collection, getFirestore } from "firebase/firestore"
-import "../services/firebase"
+// import "../services/firebase"
 import { useState } from "react"
 
 const { width } = Dimensions.get("window")
@@ -52,7 +53,7 @@ const swiperRef: LegacyRef<Swiper<{
 }>> = createRef()
 const transitionRef = createRef()
 
-const CardDetails = ({ index }) => (
+const CardDetails = ({ index }:any) => (
   <View key={data[index].id} style={{ alignItems: "center" }}>
     <Text style={[styles.text, styles.heading]} numberOfLines={2}>
       {data[index].name}
@@ -61,7 +62,7 @@ const CardDetails = ({ index }) => (
   </View>
 )
 
-export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> = function LikesScreen(_props) {
+export const PlatesScreen = function PlatesScreen(_props:any) {
   const [index, setIndex] = useState(0)
   const onSwiped = () => {
     setIndex((index + 1) % data.length)
@@ -79,7 +80,7 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> = function LikesScre
     })
   }
   const [showDescription, setShowDescription] = useState(false)
-  const Card = ({ card }) => {
+  const Card = ({ card }:any) => {
     return (
       <View style={styles.card}>
         <Image source={{ uri: card.image }} style={styles.cardImage} />
@@ -169,7 +170,7 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> = function LikesScre
       </View>
       {/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
       {/* container for the buttons */}
-      <View style={styles.bottomContainerButtons}>
+      {/* <View style={styles.bottomContainerButtons}>
         <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
           <Image source={require("../../assets/icons/like.png")} style={styles.btnImage} />
         </TouchableOpacity>
@@ -177,17 +178,17 @@ export const PlatesScreen: FC<DemoTabScreenProps<"Plates">> = function LikesScre
           style={styles.infoButton}
           onPress={() => setShowDescription(!showDescription)}
         >
-          {/* Add Like image here */}
+          
           <Image source={require("../../assets/icons/view.png")} style={styles.btnImage} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.dislikeButton}
           onPress={() => swiperRef.current.swipeLeft()}
         >
-          {/* Add Like image here */}
+          
           <Image source={require("../../assets/icons/x.png")} style={styles.btnImage} />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* <View style={styles.bottomContainer}>
                     <Transitioning.View
@@ -358,3 +359,5 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 })
+
+export default PlatesScreen
