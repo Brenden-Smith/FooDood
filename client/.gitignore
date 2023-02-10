@@ -12,3 +12,7 @@ web-build/
 
 # macOS
 .DS_Store
+
+# Use yarn as package manager
+package-lock.json
+pnpm-lock.yaml
