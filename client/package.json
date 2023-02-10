@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
+    "@types/babel__core": "^7.20.0",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
     "tailwindcss": "^3.2.6",
