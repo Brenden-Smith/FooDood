@@ -35,7 +35,7 @@ export default function App() {
             .post(
               "http://api.foodood.dev/users",
               {
-                name: "User Name",
+                name: user.displayName,
                 email: user.email,
                 birthday: new Date(),
                 createdAt: new Date(),
@@ -48,9 +48,6 @@ export default function App() {
                 },
               }
             )
-            .then((res) => {
-              console.log(res);
-            })
             .catch((err) => {
               console.log(err);
             });
