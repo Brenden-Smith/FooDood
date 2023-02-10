@@ -15,6 +15,7 @@ import { Transition } from "react-native-reanimated"
 import { addDoc, collection, getFirestore } from "firebase/firestore"
 // import "../services/firebase"
 import { useState } from "react"
+import { getAuth } from "firebase/auth"
 
 const { width } = Dimensions.get("window")
 
@@ -71,13 +72,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
   function likePlate(card: any) {
     addDoc(collection(getFirestore(), "likes"), {
       plateId: card.id,
-      customerId: "1234",
-    }).then(() => {
-      console.info("Added", {
-        plateId: card.id,
-        customerId: "1234",
-      })
-    })
+      customerId: getAuth().currentUser?.uid,
+    });
   }
   const [showDescription, setShowDescription] = useState(false)
   const Card = ({ card }:any) => {
