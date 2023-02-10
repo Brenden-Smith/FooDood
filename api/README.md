@@ -9,3 +9,11 @@ This is the source code for the FooDood server. It is a RESTful API that allows 
 ### Secrets
 
 - `src/main/resources/static/serviceAccount.json` - This is the service account file for the Firebase project. It is used to authenticate the server with the Firebase Admin SDK.
+
+### Deployment
+
+Deploy the application to Google Cloud Engine with the command
+
+```sh
+gcloud app deploy pom.xml
+```
