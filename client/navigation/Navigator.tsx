@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Tags, Plates, Likes } from './screens';
+import { Tags, Plates, Likes } from '../screens';
 
 const Tab = createBottomTabNavigator();
 
