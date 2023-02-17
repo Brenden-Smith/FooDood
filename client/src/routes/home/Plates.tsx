@@ -1,4 +1,4 @@
-import { createRef, FC, LegacyRef, } from "react"
+import { createRef, FC, LegacyRef } from "react";
 import {
   Image,
   View,
@@ -8,18 +8,18 @@ import {
   StatusBar,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native"
-import Swiper from "react-native-deck-swiper"
-import data from "../../assets/data/theoutpost"
-import { Transition } from "react-native-reanimated"
-import { addDoc, collection, getFirestore } from "firebase/firestore"
+} from "react-native";
+import Swiper from "react-native-deck-swiper";
+import data from "../../assets/data/theoutpost";
+import { Transition } from "react-native-reanimated";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
 // import "../services/firebase"
-import { useState } from "react"
-import { getAuth } from "firebase/auth"
+import { useState } from "react";
+import { getAuth } from "firebase/auth";
 
-const { width } = Dimensions.get("window")
+const { width } = Dimensions.get("window");
 
-const stackSize = 4
+const stackSize = 4;
 const colors = {
   red: "#d90404",
   blue: "#0063e6",
@@ -27,14 +27,22 @@ const colors = {
   white: "#ffffff",
   black: "#000000",
   green: "#aff7a8",
-}
-const ANIMATION_DURATION = 200
+};
+const ANIMATION_DURATION = 200;
 
 const transition = (
   <Transition.Sequence>
-    <Transition.Out type="slide-bottom" durationMs={ANIMATION_DURATION} interpolation="easeIn" />
+    <Transition.Out
+      type="slide-bottom"
+      durationMs={ANIMATION_DURATION}
+      interpolation="easeIn"
+    />
     <Transition.Together>
-      <Transition.In type="fade" durationMs={ANIMATION_DURATION} delayMs={ANIMATION_DURATION / 2} />
+      <Transition.In
+        type="fade"
+        durationMs={ANIMATION_DURATION}
+        delayMs={ANIMATION_DURATION / 2}
+      />
       <Transition.In
         type="slide-bottom"
         durationMs={ANIMATION_DURATION}
@@ -43,31 +51,33 @@ const transition = (
       />
     </Transition.Together>
   </Transition.Sequence>
-)
+);
 
-const swiperRef: LegacyRef<Swiper<{
-  id: string;
-  name: string;
-  price: string;
-  desc: string;
-  image: string;
-}>> = createRef()
-const transitionRef = createRef()
+const swiperRef: LegacyRef<
+  Swiper<{
+    id: string;
+    name: string;
+    price: string;
+    desc: string;
+    image: string;
+  }>
+> = createRef();
+const transitionRef = createRef();
 
-const CardDetails = ({ index }:any) => (
+const CardDetails = ({ index }: any) => (
   <View key={data[index].id} style={{ alignItems: "center" }}>
     <Text style={[styles.text, styles.heading]} numberOfLines={2}>
       {data[index].name}
     </Text>
     <Text style={[styles.text, styles.price]}>{data[index].price}</Text>
   </View>
-)
+);
 
-export const PlatesScreen = function PlatesScreen(_props:any) {
-  const [index, setIndex] = useState(0)
+export const PlatesScreen = function PlatesScreen(_props: any) {
+  const [index, setIndex] = useState(0);
   const onSwiped = () => {
-    setIndex((index + 1) % data.length)
-  }
+    setIndex((index + 1) % data.length);
+  };
 
   function likePlate(card: any) {
     addDoc(collection(getFirestore(), "likes"), {
@@ -75,8 +85,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
       customerId: getAuth().currentUser?.uid,
     });
   }
-  const [showDescription, setShowDescription] = useState(false)
-  const Card = ({ card }:any) => {
+  const [showDescription, setShowDescription] = useState(false);
+  const Card = ({ card }: any) => {
     return (
       <View style={styles.card}>
         <Image source={{ uri: card.image }} style={styles.cardImage} />
@@ -97,8 +107,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
                         style={styles.linearGradient}>
                     </LinearGradient> */}
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -195,8 +205,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
                     </Transitioning.View>
                 </View> */}
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -354,6 +364,6 @@ const styles = StyleSheet.create({
     padding: 30,
     bottom: 0,
   },
-})
+});
 
-export default PlatesScreen
+export default PlatesScreen;

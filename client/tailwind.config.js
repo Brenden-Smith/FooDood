@@ -2,8 +2,7 @@
 module.exports = {
   content: [
     "./App.{js,jsx,ts,tsx}",
-    "./screens/home/*.{js,ts,jsx,tsx}",
-    "./screens/auth/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {},
