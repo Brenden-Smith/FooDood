@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "foodood-app",
+    "scheme": "foodood-app",
     "slug": "foodood-app",
     "version": "1.0.0",
     "orientation": "portrait",
