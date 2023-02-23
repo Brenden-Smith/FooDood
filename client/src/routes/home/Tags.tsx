@@ -94,10 +94,10 @@ export default function Tags() {
         <TouchableOpacity>
             <Image
                 style={{
-                    width: 60,
-                    height: 60,
+                    width: 50,
+                    height: 50,
                     borderRadius: 30,
-                    marginLeft: 10,
+                    marginLeft: 20,
                     marginTop: 10,
                 }}
                 source={{ uri: "https://picsum.photos/200/300" }} // temp photo
@@ -112,7 +112,7 @@ export default function Tags() {
                     width: 40,
                     height: 40,
                     borderRadius: 30,
-                    marginRight: 10,
+                    marginRight: 20,
                     marginTop: 10,
                 }}
                 source={require("../../assets/icons/settings-gear.png")}
@@ -124,7 +124,7 @@ export default function Tags() {
     return (
         // to add a safeareaview without messing up the flexbox, wrap the view in a flex-1 view
         <SafeAreaView className="flex-1 bg-white">
-            <View className="flex-1 items-center justify-center bg-white">
+            <View className="items-center justify-center">
                 <Modal
                     animationType="slide"
                     transparent={true}

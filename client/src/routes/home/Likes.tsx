@@ -129,11 +129,11 @@ export default function Likes() {
 		<TouchableOpacity>
 			<Image
 				style={{
-					width: 60,
-					height: 60,
+					width: 50,
+					height: 50,
 					borderRadius: 30,
-					marginLeft: 10,
-					marginTop: 10,
+					marginLeft: 20,
+					marginTop: 7,
 				}}
 				source={{ uri: "https://picsum.photos/200/300" }} // temp photo
 			/>
@@ -147,8 +147,8 @@ export default function Likes() {
 					width: 40,
 					height: 40,
 					borderRadius: 30,
-					marginRight: 10,
-					marginTop: 10,
+					marginRight: 20,
+					marginTop: 7.5,
 				}}
 				source={require("../../assets/icons/settings-gear.png")}
 			/>
@@ -159,7 +159,7 @@ export default function Likes() {
 	return (
 		// to add safe area view to the top of the screen we need to wrap the view in a safe area view
 		<SafeAreaView className="flex-1 bg-white">
-			<View className="items-center justify-center bg-white">
+			<View className="items-center justify-center">
 				<Modal
 					animationType="slide"
 					transparent={true}
