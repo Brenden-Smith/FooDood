@@ -2246,6 +2246,11 @@
   dependencies:
     nanoid "^3.1.23"
 
+"@react-query-firebase/firestore@^1.0.0-dev.7":
+  version "1.0.0-dev.7"
+  resolved "https://registry.yarnpkg.com/@react-query-firebase/firestore/-/firestore-1.0.0-dev.7.tgz#6f5747164e03f66f34c5924e6fc51a7f03031c3d"
+  integrity sha512-DF6t4hPDZlEBKgf0XFurJpS+SmbVoMhgjQrxdPhlr3zhddcUv54hmPuSIN8htzmNCDMXFUdZWNy4fI/tJVRkgg==
+
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz"
@@ -6577,6 +6582,11 @@ react-native-deck-swiper@^2.0.12:
   integrity sha512-JsasOVQcyYvWAPNfhNOG+SKeoYTyfIip67Qq477EkpA2yJQs0mC25C5PeIbGohVi55OsGgOlxf7/W+gz3lmeYg==
   dependencies:
     prop-types "15.5.10"
+
+react-native-fast-image@^8.6.3:
+  version "8.6.3"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz#6edc3f9190092a909d636d93eecbcc54a8822255"
+  integrity sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg==
 
 react-native-gesture-handler@~2.8.0:
   version "2.8.0"

@@ -1,26 +1,8 @@
 import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Image, Text } from "react-native";
 
-
-
-interface SettingsProps {
-	setSettingsOpen: (value: boolean) => void;
-}
-
-export default function Settings(props: SettingsProps) {
-	const { setSettingsOpen } = props;
+export default function Settings() {
 	return (
-		<View className="flex-1 items-center justify-center bg-white">
-			<SafeAreaView>
-				{/* create a function which calls the setSettingsOpen function that closes the settings dialogue  */}
-				<TouchableOpacity
-					onPress={() => {
-						setSettingsOpen(false);
-					}}
-				>
-					<Image source={require("../../assets/icons/back.png")} />
-				</TouchableOpacity>
-			</SafeAreaView>
-			<Text className="mb-5 text-3xl font-bold">Settings</Text>
+		<SafeAreaView className="flex-1 items-center justify-center bg-white">
 			<View className="flex-1 items-center rounded w-4/5 py-5 bg-slate-500 my-5">
 				<Text className="text-2xl p-2">Account</Text>
 				<View className="flex flex-col">
@@ -84,6 +66,6 @@ export default function Settings(props: SettingsProps) {
 					<Switch disabled={false} />
 				</View>
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 }
