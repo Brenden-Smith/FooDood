@@ -1,20 +1,54 @@
-import { memo, useCallback } from "react";
-import { FlatList, Text, TouchableOpacity } from "react-native";
+import { useCallback, useMemo } from "react";
+import { FlatList, TouchableOpacity } from "react-native";
 
 type SelectableItem = {
 	title: string;
 	value: string;
 };
 
+/**
+ * A group of selectable items
+ * @param {SelectableItem[]} items - The items to select from
+ * @param {string[]} values - The values of the selected items
+ * @param {(values: string[]) => void} onChange - The function to call when the selection changes
+ * @param {React.FC<{item: SelectableItem}>} ItemComponent - The component to render for each item
+ * @returns {JSX.Element}
+ */
 export function SelectableGroup({
 	items,
 	values,
 	onChange,
+	ItemComponent,
 }: {
 	items: SelectableItem[];
 	values: string[];
 	onChange: (values: string[]) => void;
+	ItemComponent: React.FC<{
+		item: SelectableItem;
+		selected: boolean;
+	}>;
 }) {
+	const Item = useMemo(
+		() =>
+			({
+				item,
+				selected,
+				onSelect,
+			}: {
+				item: SelectableItem;
+				selected: boolean;
+				onSelect: (item: SelectableItem) => void;
+				}) => {
+				const onPress = useCallback(() => onSelect(item), [item]);
+				return (
+					<TouchableOpacity onPress={onPress}>
+						<ItemComponent item={item} selected={selected} />
+					</TouchableOpacity>
+				);
+			},
+		[ItemComponent],
+	);
+
 	const renderItem = useCallback(
 		({ item }: { item: SelectableItem }) => {
 			const selected = values.includes(item.value);
@@ -43,24 +77,3 @@ export function SelectableGroup({
 		/>
 	);
 }
-
-const Item = memo(
-	({
-		item,
-		selected,
-		onSelect,
-	}: {
-		item: SelectableItem;
-		selected: boolean;
-		onSelect: (item: SelectableItem) => void;
-	}) => {
-		return (
-			<TouchableOpacity
-				onPress={() => onSelect(item)}
-				style={[{ backgroundColor: selected ? "#6e3b6e" : "#f9c2ff" }]}
-			>
-				<Text>{item.title}</Text>
-			</TouchableOpacity>
-		);
-	},
-);
