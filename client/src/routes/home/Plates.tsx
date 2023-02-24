@@ -1,4 +1,4 @@
-import { createRef, FC, LegacyRef } from "react";
+import { createRef, FC, LegacyRef, useEffect } from "react";
 import {
   Image,
   View,
@@ -12,10 +12,19 @@ import {
 import Swiper from "react-native-deck-swiper";
 import data from "../../assets/data/theoutpost";
 import { Transition } from "react-native-reanimated";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import {
+	getDocs,
+	query,
+	collection,
+	getFirestore,
+	where,
+	DocumentData,
+  addDoc
+} from "firebase/firestore";
 // import "../services/firebase"
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
+
 
 const { width } = Dimensions.get("window");
 
@@ -72,6 +81,37 @@ const CardDetails = ({ index }: any) => (
     <Text style={[styles.text, styles.price]}>{data[index].price}</Text>
   </View>
 );
+
+function PreviousLikesCard(){
+  // grab the likes from firebase
+  // display the likes in a card
+  const [likes, setLikes] = useState<DocumentData[]>([]);
+  useEffect(() => {
+		const fetchLikes = async () => {
+			const likesCollection = collection(getFirestore(), "likes");
+			const userLikesQuery = query(
+				likesCollection,
+				where("customerId", "==", getAuth().currentUser?.uid),
+			);
+			const likesSnapshot = await getDocs(userLikesQuery);
+			const likesData = likesSnapshot.docs.map((doc) => doc.data());
+			setLikes(likesData);
+		};
+		fetchLikes();
+	}, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.heading}>Previous Likes</Text>
+      {likes.map((like) => (
+        <Text key={like.plateId}>{like.plateId}</Text>
+      ))}
+      
+    </View>
+  );
+
+}
+
 
 export const PlatesScreen = function PlatesScreen(_props: any) {
   const [index, setIndex] = useState(0);
