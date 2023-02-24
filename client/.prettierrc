@@ -1,0 +1,14 @@
+{
+	"printWidth": 80,
+	"editor.formatOnSave": true,
+	"proseWrap": "always",
+	"tabWidth": 4,
+	"requireConfig": false,
+	"useTabs": true,
+	"trailingComma": "all",
+	"bracketSpacing": true,
+	"jsxBracketSameLine": false,
+	"semi": true,
+	"html.format.wrapAttributes": "force",
+	"html.format.wrapLineLength": 40
+}

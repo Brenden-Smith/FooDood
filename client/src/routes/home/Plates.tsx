@@ -1,4 +1,4 @@
-import { createRef, FC, LegacyRef, } from "react"
+import { createRef, FC, LegacyRef, useEffect, useCallback } from "react";
 import {
   Image,
   View,
@@ -6,20 +6,33 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
-  SafeAreaView,
   TouchableOpacity,
-} from "react-native"
-import Swiper from "react-native-deck-swiper"
-import data from "../../assets/data/theoutpost"
-import { Transition } from "react-native-reanimated"
-import { addDoc, collection, getFirestore } from "firebase/firestore"
+  SafeAreaView,
+  FlatList
+} from "react-native";
+import Swiper from "react-native-deck-swiper";
+import data from "../../assets/data/theoutpost";
+import { Transition } from "react-native-reanimated";
+import {
+	getDocs,
+	query,
+	collection,
+	getFirestore,
+	where,
+	DocumentData,
+  addDoc
+} from "firebase/firestore";
 // import "../services/firebase"
-import { useState } from "react"
-import { getAuth } from "firebase/auth"
+import { useState } from "react";
+import { getAuth } from "firebase/auth";
+import { useFirestoreQuery } from "@react-query-firebase/firestore";
+import { QueryKey } from "@/constants/QueryKey";
+import { useLikes } from "@/hooks";
 
-const { width } = Dimensions.get("window")
 
-const stackSize = 4
+const { width } = Dimensions.get("window");
+
+const stackSize = 4;
 const colors = {
   red: "#d90404",
   blue: "#0063e6",
@@ -27,14 +40,22 @@ const colors = {
   white: "#ffffff",
   black: "#000000",
   green: "#aff7a8",
-}
-const ANIMATION_DURATION = 200
+};
+const ANIMATION_DURATION = 200;
 
 const transition = (
   <Transition.Sequence>
-    <Transition.Out type="slide-bottom" durationMs={ANIMATION_DURATION} interpolation="easeIn" />
+    <Transition.Out
+      type="slide-bottom"
+      durationMs={ANIMATION_DURATION}
+      interpolation="easeIn"
+    />
     <Transition.Together>
-      <Transition.In type="fade" durationMs={ANIMATION_DURATION} delayMs={ANIMATION_DURATION / 2} />
+      <Transition.In
+        type="fade"
+        durationMs={ANIMATION_DURATION}
+        delayMs={ANIMATION_DURATION / 2}
+      />
       <Transition.In
         type="slide-bottom"
         durationMs={ANIMATION_DURATION}
@@ -43,31 +64,84 @@ const transition = (
       />
     </Transition.Together>
   </Transition.Sequence>
-)
+);
 
-const swiperRef: LegacyRef<Swiper<{
-  id: string;
-  name: string;
-  price: string;
-  desc: string;
-  image: string;
-}>> = createRef()
-const transitionRef = createRef()
+const swiperRef: LegacyRef<
+  Swiper<{
+    id: string;
+    name: string;
+    price: string;
+    desc: string;
+    image: string;
+  }>
+> = createRef();
+const transitionRef = createRef();
 
-const CardDetails = ({ index }:any) => (
+const CardDetails = ({ index }: any) => (
   <View key={data[index].id} style={{ alignItems: "center" }}>
     <Text style={[styles.text, styles.heading]} numberOfLines={2}>
       {data[index].name}
     </Text>
     <Text style={[styles.text, styles.price]}>{data[index].price}</Text>
   </View>
-)
+);
 
-export const PlatesScreen = function PlatesScreen(_props:any) {
-  const [index, setIndex] = useState(0)
+function PreviousLikesCard() {
+  const likes = useLikes();
+
+  return (
+    <View style={[styles.card, {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-evenly",
+      padding: 20,
+    }]}>
+      <View className="flex flex-col space-y-5 items-center mt-5">
+      <Text className="text-2xl font-bold">Previous Likes</Text>
+      {/* previous likes descripton */}
+        <Text className="text-md">These are some of the plates you liked in the past! Choose from the following plates to order online!</Text>
+        </View>
+      <View className="flex flex-row flex-wrap justify-center items-center">
+        <FlatList
+          // limit the number of items shown in the flatlist to 5
+          data={likes.data?.docs.splice(0, 4)}
+          renderItem={({ item }) => (
+            <View className="flex flex-row justify-center items-center rounded bg-slate-300 m-3" style={{
+              height: 150,
+              width: 150,
+            }}>
+              {/* <Image
+                source={{ uri: like.data()?.image }}
+                style={{ width: 100, height: 100 }}
+              /> */}
+              <Text className="text-lg text-gray-900">{item.data().plateId}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ alignItems: "center" }}
+          
+          numColumns={2}
+        />
+        
+
+        <Text className="text-md">Or swipe to the right or left to see more plates!</Text>
+      </View>
+      
+      
+    </View>
+  );
+
+}
+
+
+export const PlatesScreen = function PlatesScreen(_props: any) {
+  const [index, setIndex] = useState(0);
+  const [numInteractions, setNumInteractions] = useState(0);
+  const [showPreviousLikes, setShowPreviousLikes] = useState(false);
   const onSwiped = () => {
-    setIndex((index + 1) % data.length)
-  }
+    setIndex((index + 1) % data.length);
+    
+  };
 
   function likePlate(card: any) {
     addDoc(collection(getFirestore(), "likes"), {
@@ -75,8 +149,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
       customerId: getAuth().currentUser?.uid,
     });
   }
-  const [showDescription, setShowDescription] = useState(false)
-  const Card = ({ card }:any) => {
+  const [showDescription, setShowDescription] = useState(false);
+  const Card = ({ card }: any) => {
     return (
       <View style={styles.card}>
         <Image source={{ uri: card.image }} style={styles.cardImage} />
@@ -97,18 +171,41 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
                         style={styles.linearGradient}>
                     </LinearGradient> */}
       </View>
-    )
-  }
+    );
+  };
+
+  const renderCard = useCallback((card: {
+      id: string;
+      name: string;
+      price: string;
+      desc: string;
+      image: string;
+    },
+    index: number
+  ) => showPreviousLikes ? <PreviousLikesCard /> : <Card card={card} />, [showPreviousLikes]);
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar hidden={true} />
-      <View style={styles.swiperContainer}>
+    <SafeAreaView style={styles.container}      
+    >
+      <View style={{ flex: 0.2 }} />
+      <View style={{ flex: 1, width: '100%' }}>
         <Swiper
           cards={data}
-          onSwipedRight={(index) => likePlate(data[index])}
+          onSwipedRight={(index) => 
+            {likePlate(data[index])
+              setNumInteractions(numInteractions + 1)
+              if (numInteractions % 6 == 5) {
+                // show the previous likes card which is the last card in the data array
+                setShowPreviousLikes(true);
+              }
+              else {
+                setShowPreviousLikes(false);
+              }
+            }
+          }
           cardIndex={index}
-          renderCard={(card) => <Card card={card} />}
+          renderCard={renderCard}
           infinite
           backgroundColor={"transparent"}
           onSwiped={onSwiped}
@@ -121,7 +218,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
           disableBottomSwipe
           animateOverlayLabelsOpacity
           animateCardOpacity
-          ref={swiperRef}
+          showSecondCard={showPreviousLikes ? false : true}
+        ref={swiperRef}
           overlayLabels={{
             left: {
               title: "DisLike",
@@ -163,7 +261,8 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
             },
           }}
         />
-      </View>
+        </View>
+        <View style={{flex: 1}} />
       {/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
       {/* container for the buttons */}
       {/* <View style={styles.bottomContainerButtons}>
@@ -195,13 +294,18 @@ export const PlatesScreen = function PlatesScreen(_props:any) {
                     </Transitioning.View>
                 </View> */}
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: "flex",
+    height: "100%",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#e3dfde",
+    flex: 1,
   },
   swiperContainer: {
     flex: 0.55,
@@ -211,7 +315,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   bottomContainerMeta: { alignContent: "flex-end", alignItems: "center" },
-
   cardImage: {
     width: "100%",
     height: "100%",
@@ -354,6 +457,6 @@ const styles = StyleSheet.create({
     padding: 30,
     bottom: 0,
   },
-})
+});
 
-export default PlatesScreen
+export default PlatesScreen;
