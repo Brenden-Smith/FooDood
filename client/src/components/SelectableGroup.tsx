@@ -24,7 +24,7 @@ export function SelectableGroup({
 	values,
 	onChange,
 	ItemComponent,
-	itemProps,
+	itemStyle,
 	...props
 }: {
 	items: SelectableItem[];
@@ -34,8 +34,9 @@ export function SelectableGroup({
 		item: SelectableItem;
 		selected: boolean;
 	}>;
-	itemProps?: TouchableOpacityProps;
-} & FlatListProps<SelectableItem>) {
+	itemStyle?: TouchableOpacityProps["style"];
+	} & Partial<FlatListProps<SelectableItem>>
+) {
 	const Item = useMemo(
 		() =>
 			({
@@ -49,7 +50,7 @@ export function SelectableGroup({
 			}) => {
 				const onPress = useCallback(() => onSelect(item), [item]);
 				return (
-					<TouchableOpacity {...props} onPress={onPress}>
+					<TouchableOpacity onPress={onPress} style={itemStyle}>
 						<ItemComponent item={item} selected={selected} />
 					</TouchableOpacity>
 				);
@@ -79,10 +80,10 @@ export function SelectableGroup({
 
 	return (
 		<FlatList
-			{...props}
 			data={items}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.value}
+			{...props}
 		/>
 	);
 }

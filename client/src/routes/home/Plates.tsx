@@ -1,4 +1,4 @@
-import { createRef, FC, LegacyRef, useEffect } from "react";
+import { createRef, FC, LegacyRef, useEffect, useCallback } from "react";
 import {
   Image,
   View,
@@ -6,8 +6,9 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
-  SafeAreaView,
   TouchableOpacity,
+  SafeAreaView,
+  FlatList
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import data from "../../assets/data/theoutpost";
@@ -24,6 +25,9 @@ import {
 // import "../services/firebase"
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
+import { useFirestoreQuery } from "@react-query-firebase/firestore";
+import { QueryKey } from "@/constants/QueryKey";
+import { useLikes } from "@/hooks";
 
 
 const { width } = Dimensions.get("window");
@@ -82,30 +86,47 @@ const CardDetails = ({ index }: any) => (
   </View>
 );
 
-function PreviousLikesCard(){
-  // grab the likes from firebase
-  // display the likes in a card
-  const [likes, setLikes] = useState<DocumentData[]>([]);
-  useEffect(() => {
-		const fetchLikes = async () => {
-			const likesCollection = collection(getFirestore(), "likes");
-			const userLikesQuery = query(
-				likesCollection,
-				where("customerId", "==", getAuth().currentUser?.uid),
-			);
-			const likesSnapshot = await getDocs(userLikesQuery);
-			const likesData = likesSnapshot.docs.map((doc) => doc.data());
-			setLikes(likesData);
-		};
-		fetchLikes();
-	}, []);
+function PreviousLikesCard() {
+  const likes = useLikes();
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.heading}>Previous Likes</Text>
-      {likes.map((like) => (
-        <Text key={like.plateId}>{like.plateId}</Text>
-      ))}
+    <View style={[styles.card, {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-evenly",
+      padding: 20,
+    }]}>
+      <View className="flex flex-col space-y-5 items-center mt-5">
+      <Text className="text-2xl font-bold">Previous Likes</Text>
+      {/* previous likes descripton */}
+        <Text className="text-md">These are some of the plates you liked in the past! Choose from the following plates to order online!</Text>
+        </View>
+      <View className="flex flex-row flex-wrap justify-center items-center">
+        <FlatList
+          // limit the number of items shown in the flatlist to 5
+          data={likes.data?.docs.splice(0, 4)}
+          renderItem={({ item }) => (
+            <View className="flex flex-row justify-center items-center rounded bg-slate-300 m-3" style={{
+              height: 150,
+              width: 150,
+            }}>
+              {/* <Image
+                source={{ uri: like.data()?.image }}
+                style={{ width: 100, height: 100 }}
+              /> */}
+              <Text className="text-lg text-gray-900">{item.data().plateId}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ alignItems: "center" }}
+          
+          numColumns={2}
+        />
+        
+
+        <Text className="text-md">Or swipe to the right or left to see more plates!</Text>
+      </View>
+      
       
     </View>
   );
@@ -115,8 +136,11 @@ function PreviousLikesCard(){
 
 export const PlatesScreen = function PlatesScreen(_props: any) {
   const [index, setIndex] = useState(0);
+  const [numInteractions, setNumInteractions] = useState(0);
+  const [showPreviousLikes, setShowPreviousLikes] = useState(false);
   const onSwiped = () => {
     setIndex((index + 1) % data.length);
+    
   };
 
   function likePlate(card: any) {
@@ -150,15 +174,38 @@ export const PlatesScreen = function PlatesScreen(_props: any) {
     );
   };
 
+  const renderCard = useCallback((card: {
+      id: string;
+      name: string;
+      price: string;
+      desc: string;
+      image: string;
+    },
+    index: number
+  ) => showPreviousLikes ? <PreviousLikesCard /> : <Card card={card} />, [showPreviousLikes]);
+
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar hidden={true} />
-      <View style={styles.swiperContainer}>
+    <SafeAreaView style={styles.container}      
+    >
+      <View style={{ flex: 0.2 }} />
+      <View style={{ flex: 1, width: '100%' }}>
         <Swiper
           cards={data}
-          onSwipedRight={(index) => likePlate(data[index])}
+          onSwipedRight={(index) => 
+            {likePlate(data[index])
+              setNumInteractions(numInteractions + 1)
+              if (numInteractions % 6 == 5) {
+                // show the previous likes card which is the last card in the data array
+                setShowPreviousLikes(true);
+              }
+              else {
+                setShowPreviousLikes(false);
+              }
+            }
+          }
           cardIndex={index}
-          renderCard={(card) => <Card card={card} />}
+          renderCard={renderCard}
           infinite
           backgroundColor={"transparent"}
           onSwiped={onSwiped}
@@ -171,7 +218,8 @@ export const PlatesScreen = function PlatesScreen(_props: any) {
           disableBottomSwipe
           animateOverlayLabelsOpacity
           animateCardOpacity
-          ref={swiperRef}
+          showSecondCard={showPreviousLikes ? false : true}
+        ref={swiperRef}
           overlayLabels={{
             left: {
               title: "DisLike",
@@ -213,7 +261,8 @@ export const PlatesScreen = function PlatesScreen(_props: any) {
             },
           }}
         />
-      </View>
+        </View>
+        <View style={{flex: 1}} />
       {/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
       {/* container for the buttons */}
       {/* <View style={styles.bottomContainerButtons}>
@@ -250,8 +299,13 @@ export const PlatesScreen = function PlatesScreen(_props: any) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: "flex",
+    height: "100%",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#e3dfde",
+    flex: 1,
   },
   swiperContainer: {
     flex: 0.55,
@@ -261,7 +315,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   bottomContainerMeta: { alignContent: "flex-end", alignItems: "center" },
-
   cardImage: {
     width: "100%",
     height: "100%",

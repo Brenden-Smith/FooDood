@@ -1,15 +1,18 @@
 import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Image, Text } from "react-native";
+import { getAuth, signOut } from "firebase/auth";
+import { useUserData } from "@/hooks/useUserData";
 
 export default function Settings() {
+	const user = useUserData();
 	return (
-		<SafeAreaView className="flex-1 items-center justify-center bg-white">
+			<SafeAreaView className="flex-1 items-center justify-center bg-white">
 			<View className="flex-1 items-center rounded w-4/5 py-5 bg-slate-500 my-5">
 				<Text className="text-2xl p-2">Account</Text>
 				<View className="flex flex-col">
 					<View className="w-64 flex flex-row my-2">
 						{/* create a textfield which loads in the current email */}
 						<TextInput
-							placeholder="Email"
+							placeholder={user.data?.data()?.email}
 							className="rounded bg-white w-32"
 						/>
 
@@ -66,6 +69,9 @@ export default function Settings() {
 					<Switch disabled={false} />
 				</View>
 			</View>
-		</SafeAreaView>
+			<TouchableOpacity onPress={() => signOut(getAuth())}>
+				<Text>Logout</Text>
+			</TouchableOpacity>
+		</SafeAreaView >
 	);
 }

@@ -2246,6 +2246,11 @@
   dependencies:
     nanoid "^3.1.23"
 
+"@react-query-firebase/auth@^1.0.0-dev.2":
+  version "1.0.0-dev.2"
+  resolved "https://registry.yarnpkg.com/@react-query-firebase/auth/-/auth-1.0.0-dev.2.tgz#459572fe331e178e9e61bd3a0f3db215c31c2b8c"
+  integrity sha512-qfr2fV3N/fvtcX0xPTTLRB0gyxh5iPPXnEVnV8Q4fGaKsfp2ASJayMoOW6uxhCL3dIYuWD6u/ud3fgtuZGTdQA==
+
 "@react-query-firebase/firestore@^1.0.0-dev.7":
   version "1.0.0-dev.7"
   resolved "https://registry.yarnpkg.com/@react-query-firebase/firestore/-/firestore-1.0.0-dev.7.tgz#6f5747164e03f66f34c5924e6fc51a7f03031c3d"

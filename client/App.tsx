@@ -4,6 +4,7 @@ import "@/service/firebase";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Router from "@/router";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const queryClient = new QueryClient();
 
@@ -15,11 +16,13 @@ export default function App(): JSX.Element {
 	return (
 		<>
 			<StatusBar style="auto" />
-			<QueryClientProvider client={queryClient}>
-				<NavigationContainer>
-					<Router />
-				</NavigationContainer>
-			</QueryClientProvider>
+			<SafeAreaProvider>
+				<QueryClientProvider client={queryClient}>
+					<NavigationContainer>
+						<Router />
+					</NavigationContainer>
+				</QueryClientProvider>
+			</SafeAreaProvider>
 		</>
 	);
 }
