@@ -1,5 +1,10 @@
 import { useCallback, useMemo } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
+import {
+	FlatList,
+	FlatListProps,
+	TouchableOpacity,
+	TouchableOpacityProps,
+} from "react-native";
 
 type SelectableItem = {
 	title: string;
@@ -19,6 +24,8 @@ export function SelectableGroup({
 	values,
 	onChange,
 	ItemComponent,
+	itemProps,
+	...props
 }: {
 	items: SelectableItem[];
 	values: string[];
@@ -27,7 +34,8 @@ export function SelectableGroup({
 		item: SelectableItem;
 		selected: boolean;
 	}>;
-}) {
+	itemProps?: TouchableOpacityProps;
+} & FlatListProps<SelectableItem>) {
 	const Item = useMemo(
 		() =>
 			({
@@ -38,10 +46,10 @@ export function SelectableGroup({
 				item: SelectableItem;
 				selected: boolean;
 				onSelect: (item: SelectableItem) => void;
-				}) => {
+			}) => {
 				const onPress = useCallback(() => onSelect(item), [item]);
 				return (
-					<TouchableOpacity onPress={onPress}>
+					<TouchableOpacity {...props} onPress={onPress}>
 						<ItemComponent item={item} selected={selected} />
 					</TouchableOpacity>
 				);
@@ -71,6 +79,7 @@ export function SelectableGroup({
 
 	return (
 		<FlatList
+			{...props}
 			data={items}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.value}
