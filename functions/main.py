@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import functions_framework
 from flask import abort
 
-# Function to scrape menu items from a restaurant's Yelp page
 @functions_framework.http
 def scrapeMenu(request):
   """Scrapes menu items from a restaurant's Yelp page.
@@ -14,10 +13,14 @@ def scrapeMenu(request):
       The menu items as a JSON array.
   """
 
-  # Setup request headers
+  # Get URL parameter
   url = request.args.get('url')
   if url is None:
-      return abort(400, 'Missing URL parameter')
+    url = request.get_json().get('url')
+  if url is None:
+    return abort(400, 'Missing URL parameter')
+  
+  # Setup request headers
   headers = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
   }
