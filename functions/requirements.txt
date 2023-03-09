@@ -4,11 +4,16 @@ charset-normalizer==3.1.0
 google-api-core==2.11.0
 google-auth==2.16.2
 google-cloud-core==2.3.2
+google-cloud-functions==1.11.0
 google-cloud-storage==2.7.0
 google-crc32c==1.5.0
 google-resumable-media==2.4.1
 googleapis-common-protos==1.58.0
+grpc-google-iam-v1==0.12.6
+grpcio==1.51.3
+grpcio-status==1.51.3
 idna==3.4
+proto-plus==1.22.2
 protobuf==4.22.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
