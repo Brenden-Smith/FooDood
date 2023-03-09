@@ -25,7 +25,7 @@ export default function Settings() {
 						/>
 
 						<TouchableOpacity 
-							className="rounded bg-cyan-600 m-4"
+							className="rounded bg-cyan-600 m-4 p-2"
 							// update the email with the new email in the textfield in firebase
 							// onPress={() => updateEmail(getAuth(), email)}
 						>
@@ -40,7 +40,7 @@ export default function Settings() {
 							value={username}
 							onChangeText={(text) => setUsername(text)}
 						/>
-						<TouchableOpacity className="rounded bg-cyan-600 m-4"
+						<TouchableOpacity className="rounded bg-cyan-600 m-4 p-2"
 							// update the username with the new username in the textfield in firebase
 							// onPress={() => setDoc(user.data?.ref, {username}, {merge: true})}
 						>
@@ -55,7 +55,7 @@ export default function Settings() {
 							value={password}
 							onChangeText={(text) => setPassword(text)}
 						/>
-						<TouchableOpacity className="rounded bg-cyan-600 m-4"
+						<TouchableOpacity className="rounded bg-cyan-600 m-4 p-2"
 							// update the password with the new password in the textfield in firebase
 							// onPress={() => updatePassword(getAuth(), password)}
 								// onPress={() => setDoc(user.data?.ref, {password}, {merge: true})}
