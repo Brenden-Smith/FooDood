@@ -4,6 +4,8 @@ import {
 	View,
 	SafeAreaView,
 	FlatList,
+	StyleSheet,
+	Image,
 } from "react-native";
 import { memo, useCallback, useEffect, useState } from "react";
 import {
@@ -22,6 +24,8 @@ import {
 import { getAuth } from "firebase/auth";
 import { useFirestoreQuery } from "@react-query-firebase/firestore";
 import { QueryKey } from "@/constants";
+import {likesStyles} from "./styles";
+import { styles } from "@/routes/Plates/styles"
 
 export default function Likes() {
 	const [likedPlates, setLikedPlates] = useState<
@@ -121,27 +125,24 @@ const ListItem = memo(
 	}) => {
 		return (
 			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					marginBottom: 10,
-				}}
+				style={likesStyles.likeContainer}
 			>
+				<Image
+					source={item.data().image_url}
+					style={likesStyles.likedImage}
+				/>
 				<Text style={{ fontSize: 18 }}>
-					{item.data().customerId}: {item.data().plateId}
+					{item.data().name}: {item.data().businessId}
 				</Text>
 				<TouchableOpacity
 					onPress={() => removeLikedPlate(item.data().plateId)}
-					style={{
-						backgroundColor: "red",
-						padding: 5,
-						borderRadius: 5,
-					}}
+					style={likesStyles.removeLikeButton}
 				>
-					<Text style={{ color: "white", fontSize: 12 }}>remove</Text>
+					<Text style={{ color: "white", fontSize: 12 }}>Remove</Text>
 				</TouchableOpacity>
 			</View>
 		);
 	},
 );
+
+
