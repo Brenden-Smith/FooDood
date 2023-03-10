@@ -104,6 +104,7 @@ export function Plates(): JSX.Element {
 										setShowPreviousLikes(false);
 									}
 								}}
+								
 								cardIndex={index}
 								renderCard={renderCard}
 								infinite

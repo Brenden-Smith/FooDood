@@ -4,7 +4,7 @@ import { doc, DocumentData, getDoc, getFirestore, DocumentSnapshot } from "fireb
 import { memo, useEffect, useState } from "react";
 import { FlatList, Text, View, Image } from "react-native";
 import { styles } from "./styles";
-
+import { colors } from "@/constants";
 
 
 
@@ -33,6 +33,7 @@ export default memo(() => {
 					flexDirection: "column",
 					justifyContent: "space-evenly",
 					padding: 20,
+					backgroundColor: colors.creamLight,
 				},
 			]}
 		>
@@ -50,10 +51,12 @@ export default memo(() => {
 					data={plates}
 					renderItem={({ item }) => (
 						<View
-							className="flex flex-col justify-center items-center rounded bg-slate-300 m-3"
+							className="flex flex-col justify-center items-center rounded m-3" 
+
 							style={{
 								height: 150,
 								width: 150,
+								backgroundColor: colors.white
 							}}
 						>
 							<Image
@@ -72,7 +75,6 @@ export default memo(() => {
 							<Text className="text-md text-gray-900">
 								{item.data()?.name}
 							</Text>
-							
 						</View>
 					)}
 					keyExtractor={(item) => item.id}

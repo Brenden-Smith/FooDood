@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
 		alignContent: "center",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "#e3dfde",
+		backgroundColor: colors.cream,
 		flex: 1,
 	},
 	swiperContainer: {

@@ -23,12 +23,13 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useFirestoreQuery } from "@react-query-firebase/firestore";
-import { QueryKey } from "@/constants";
+import { colors, QueryKey } from "@/constants";
 import {likesStyles} from "./styles";
 import { styles } from "@/routes/Plates/styles"
 import { HoldItem } from "react-native-hold-menu"
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+
 
 
 
@@ -74,12 +75,12 @@ export default function Likes() {
 
 	return (
 		<SafeAreaView
-			style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
+			style={{ flex: 1, backgroundColor: colors.cream, alignItems: "center" }}
 		>
 			<View
 				style={{
 					width: "85%",
-					backgroundColor: "lightgrey",
+					backgroundColor: colors.creamLight,
 					borderRadius: 10,
 					padding: 10,
 					marginTop: 30,
@@ -87,7 +88,7 @@ export default function Likes() {
 			>
 				{likedPlates.length > 0 ? (
 					<>
-						<Text
+						{/* <Text
 							style={{
 								fontSize: 20,
 								fontWeight: "bold",
@@ -96,7 +97,7 @@ export default function Likes() {
 							}}
 						>
 							CustomerID: Plate
-						</Text>
+						</Text> */}
 						<FlatList
 							data={likedPlates}
 							keyExtractor={(item) => item.id}
@@ -156,7 +157,7 @@ const ListItem = memo(
 						onPress={() => removeLikedPlate(item.data().plateId)}
 						style={likesStyles.removeLikeButton}
 					>
-						<Text style={{ color: "white", fontSize: 12 }}>Remove</Text>
+						<AntDesign name="close" size={21} color="white" />
 					</TouchableOpacity>
 				</View>
 			</HoldItem>

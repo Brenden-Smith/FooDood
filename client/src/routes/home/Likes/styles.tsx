@@ -11,14 +11,15 @@ export const likesStyles = StyleSheet.create({
 		margin: 10,
 		padding: 10,
         borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "black",
+        // borderWidth: 2,
+        // borderColor: "black",
         // wrap text
         flexWrap: "wrap",
+        backgroundColor: colors.white
 	},
 	removeLikeButton: {
-		backgroundColor: "red",
-		padding: 5,
+		backgroundColor: colors.creamRed,
+		padding: 3,
 		borderRadius: 5,
 	},
     likedImage: {
