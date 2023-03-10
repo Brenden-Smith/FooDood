@@ -8,7 +8,12 @@ import {
 	ActivityIndicator,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import { collection, getFirestore, addDoc } from "firebase/firestore";
+import {
+	collection,
+	getFirestore,
+	addDoc,
+	serverTimestamp,
+} from "firebase/firestore";
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import {
@@ -36,16 +41,21 @@ export function Plates(): JSX.Element {
 		"getRecommendations",
 	);
 	const onSwiped = useCallback(() => {
-		if (!( numInteractions % 6 == 5))
-		setIndex((index + 1) % (data?.length ?? 0));
+		if (!(numInteractions % 6 == 5))
+			setIndex((index + 1) % (data?.length ?? 0));
 	}, [data, index]);
 
-	function likePlate(card: any) {
-		addDoc(collection(getFirestore(), "likes"), {
-			plateId: card.id,
-			customerId: getAuth().currentUser?.uid,
-		});
-	}
+	const likePlate = useCallback(
+		(plate: Plate) =>
+			addDoc(collection(getFirestore(), "likes"), {
+				plateId: plate.id,
+				customerId: getAuth().currentUser?.uid,
+				timestamp: serverTimestamp(),
+				name: plate.name,
+				image_url: plate.image_url,
+			}),
+		[],
+	);
 
 	const fetchPlates = useCallback(async () => {
 		setLoading(true);
