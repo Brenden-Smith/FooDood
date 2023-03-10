@@ -38,28 +38,28 @@ def scrapeMenu(request):
       if name_element is not None:
           name = name_element.text.strip().replace('/', '-')
       else:
-          name = ""
+          continue
 
       # Get description
       description_element = item.select_one('p.menu-item-details-description')
       if description_element is not None:
           description = description_element.text.strip()
       else:
-          description = ""
+          continue
 
       # Get image
       image_element = item.select_one('img.photo-box-img')
       if image_element is not None and image_element['src'] != 'https://s3-media0.fl.yelpcdn.com/assets/2/www/img/dca54f97fb84/default_avatars/menu_medium_square.png':
           image_url = image_element['src'].replace("60s.jpg", "o.jpg")
       else:
-          image_url = ""
+          continue
 
       # Get price
       price_element = item.select_one('li.menu-item-price-amount')
       if price_element is not None:
           price = price_element.text.strip()
       else:
-          price = ""
+          continue
 
       # Add item to list
       items.append({
