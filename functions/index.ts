@@ -174,6 +174,20 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           ) ?? []
         );
 
+        // Filter out plates with undefined or empty values
+        plates.filter((plate) => {
+          return (
+            plate.name !== undefined &&
+            plate.name !== "" &&
+            plate.description !== undefined &&
+            plate.description !== "" &&
+            plate.price !== undefined &&
+            plate.price !== "" &&
+            plate.image_url !== undefined &&
+            plate.image_url !== ""
+          );
+        });
+
         // Add business to Firestore
         await firestore().collection("businesses").doc(business.id).set({
           name: business.name,
