@@ -35,8 +35,7 @@ export function SelectableGroup({
 		selected: boolean;
 	}>;
 	itemStyle?: TouchableOpacityProps["style"];
-	} & Partial<FlatListProps<SelectableItem>>
-) {
+} & Partial<FlatListProps<SelectableItem>>) {
 	const Item = useMemo(
 		() =>
 			({
@@ -80,10 +79,11 @@ export function SelectableGroup({
 
 	return (
 		<FlatList
+			{...props}
 			data={items}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.value}
-			{...props}
+			scrollEnabled={false}
 		/>
 	);
 }

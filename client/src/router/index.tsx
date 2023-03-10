@@ -3,8 +3,7 @@ import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import axios from "axios";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Loading, Settings } from "@/routes";
-import Login from "@/routes/auth/Login";
+import { Loading, Login, Settings } from "@/routes";
 import { RootStackParamList } from "@/types";
 import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
@@ -36,8 +35,6 @@ export default function Router(): JSX.Element {
 									email: user.email,
 									birthday: new Date(),
 									createdAt: new Date(),
-									latitude: 0,
-									longitude: 0,
 								},
 								{
 									headers: {
@@ -60,7 +57,9 @@ export default function Router(): JSX.Element {
 	return (
 		<Stack.Navigator
 			initialRouteName="Loading"
-			screenOptions={{ headerShown: false }}
+			screenOptions={{
+				headerShown: false,
+			}}
 		>
 			<Stack.Screen
 				name="Loading"

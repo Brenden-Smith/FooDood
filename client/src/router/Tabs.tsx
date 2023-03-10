@@ -2,6 +2,7 @@ import { useNavigation } from "@/hooks";
 import { Likes, Plates, Tags } from "@/routes";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, TouchableOpacity } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -12,39 +13,23 @@ export default function Tabs() {
 			screenOptions={{
 				tabBarHideOnKeyboard: true,
 				tabBarShowLabel: false,
-				headerLeft: () => (
-					<TouchableOpacity>
-						<Image
-							style={{
-								width: 50,
-								height: 50,
-								borderRadius: 30,
-								marginLeft: 20,
-								marginTop: 7,
-							}}
-							source={{ uri: "https://picsum.photos/200/300" }}
-						/>
-					</TouchableOpacity>
-				),
 				headerRight: () => (
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Settings")}
 					>
-						<Image
+						<FontAwesome
+							name="gear"
+							size={26}
+							color="black"
 							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 30,
 								marginRight: 20,
-								marginTop: 7.5,
 							}}
-							source={require("@/assets/icons/settings-gear.png")}
 						/>
 					</TouchableOpacity>
 				),
 				headerTitleStyle: {
-					fontSize: 30,
 					fontWeight: "bold",
+					fontSize: 24,
 				},
 				headerTitleAlign: "center",
 			}}
@@ -71,7 +56,7 @@ export default function Tabs() {
 							source={require("@/assets/icons/plate-utensils.png")}
 						/>
 					),
-					headerShown: false,
+					headerShown: true,
 				}}
 			/>
 			<Tab.Screen
