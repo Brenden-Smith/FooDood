@@ -1,22 +1,20 @@
-import { View, Text, TouchableOpacity, Image, SafeAreaView, TextInput, Switch, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, SafeAreaView, TextInput, Switch, Modal, Alert, StyleSheet, Dimensions } from 'react-native';
 import React, { useState, } from "react";
-import Settings from './Settings';
 import { SelectableGroup } from '@/components';
 import { ScrollView } from 'react-native-gesture-handler';
+import { colors } from '@/constants/colors';
 
+const srcWidth = Dimensions.get('window').width;
 
 export default function Tags() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]); // selected tags
-    const [isChecked, setChecked] = useState(false);
-
-
 
     return (
         // to add a safeareaview without messing up the flexbox, wrap the view in a flex-1 view
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView style={styles.pageContainer}>
             <ScrollView style={{ height: '100%' }}>
-                <View className="items-center justify-center">
-                    <View className="items-center rounded w-4/5 py-5 bg-slate-200 my-5">
+                <View style={styles.categiesContainer}>
+                    <View style={styles.category}>
                         <Text className="text-2xl p-2">Cuisine</Text>
                             <SelectableGroup
                                 items={[
@@ -45,14 +43,14 @@ export default function Tags() {
 									ItemComponent={({ item, selected }) => (
 										<View
 											style={{
-												backgroundColor: selected ? "#add8e6" : "white",
+												backgroundColor: selected ? colors.creamOrange : "white",
 												alignItems: "center",
 												padding: 8,
 												borderRadius: 5,
 												width: '100%'
 											}}
 										>
-											<Text>{item.title}</Text>
+											<Text style={{color: selected ? "white" : "black",}}>{item.title}</Text>
 										</View>
 									)}
 									ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
@@ -63,7 +61,7 @@ export default function Tags() {
 									}}
                             />
                     </View>
-                    <View className="items-center rounded w-4/5 py-5 bg-slate-200 my-5">
+                    <View style={styles.category}>
                         <Text className="text-2xl p-2">Styles</Text>
 							<SelectableGroup
 								items={[
@@ -92,14 +90,14 @@ export default function Tags() {
 								ItemComponent={({ item, selected }) => (
 									<View
 										style={{
-											backgroundColor: selected ? "#add8e6" : "white",
+											backgroundColor: selected ? colors.creamOrange : "white",
 											alignItems: "center",
 											padding: 8,
 											borderRadius: 5,
 											width: '100%'
 										}}
 									>
-										<Text>{item.title}</Text>
+										<Text style={{color: selected ? "white" : "black",}}>{item.title}</Text>
 									</View>
 								)}
 								ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
@@ -111,7 +109,7 @@ export default function Tags() {
                         />
 
                     </View>
-                    <View className="items-center rounded w-4/5 py-5 bg-slate-200 my-5">
+                    <View style={styles.category}>
                         <Text className="text-2xl p-2">Extra</Text>
                             <SelectableGroup
                                 items={[
@@ -146,14 +144,14 @@ export default function Tags() {
 									ItemComponent={({ item, selected }) => (
 										<View
 											style={{
-												backgroundColor: selected ? "#add8e6" : "white",
+												backgroundColor: selected ? colors.creamOrange : "white",
 												alignItems: "center",
 												padding: 8,
 												borderRadius: 5,
 												width: '100%'
 											}}
 										>
-											<Text>{item.title}</Text>
+											<Text style={{color: selected ? "white" : "black",}}>{item.title}</Text>
 										</View>
 									)}
 									ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
@@ -169,3 +167,22 @@ export default function Tags() {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+	pageContainer: {
+		flex: 1,
+		backgroundColor: colors.cream,
+	},
+	categiesContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	category: {
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 10,
+		backgroundColor: colors.creamLight,
+		width: srcWidth * 0.8,
+		marginVertical: 24,
+	},
+});
