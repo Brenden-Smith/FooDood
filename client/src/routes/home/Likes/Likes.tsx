@@ -127,12 +127,12 @@ const ListItem = memo(
 			<View
 				style={likesStyles.likeContainer}
 			>
-				<Image
+				{/* <Image
 					source={item.data().image_url}
 					style={likesStyles.likedImage}
-				/>
+				/> */}
 				<Text style={{ fontSize: 18 }}>
-					{item.data().name}: {item.data().businessId}
+					{item.data().plateId}
 				</Text>
 				<TouchableOpacity
 					onPress={() => removeLikedPlate(item.data().plateId)}

@@ -71,7 +71,7 @@ export default function Tabs() {
 							source={require("@/assets/icons/plate-utensils.png")}
 						/>
 					),
-					headerShown: false,
+					headerShown: true,
 				}}
 			/>
 			<Tab.Screen
