@@ -18,17 +18,17 @@ type Business = {
   rating: string;
   coordinates: { latitude: string; longitude: string };
   transactions: Array<string>;
-  price: string;
+  price?: string;
   location: {
-    address1: string;
-    address2: string;
-    address3: string;
-    city: string;
-    zip_code: string;
-    country: string;
-    state: string;
+    address1?: string;
+    address2?: string;
+    address3?: string;
+    city?: string;
+    zip_code?: string;
+    country?: string;
+    state?: string;
     display_address: Array<string>;
-    cross_streets: string;
+    cross_streets?: string;
   };
   phone: string;
   display_phone: string;
@@ -199,7 +199,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           rating: business.rating,
           coordinates: business.coordinates,
           transactions: business.transactions,
-          price: business.price,
+          price: business.price ?? "",
           location: business.location,
           phone: business.phone,
           display_phone: business.display_phone,
