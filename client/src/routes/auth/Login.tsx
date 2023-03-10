@@ -1,10 +1,7 @@
-import { Button, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import { useEffect, useState } from "react";
-import {
-  GoogleAuthProvider,
-  getAuth,
-  signInWithCredential,
+import { GoogleAuthProvider, getAuth, signInWithCredential,
 } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
@@ -13,7 +10,6 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
-
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: "637872410840-d6ut3b9clpcenh663ssdi8ggk7pf03ac.apps.googleusercontent.com",
   });
@@ -60,27 +56,100 @@ export default function Login() {
   
   // Render front end component
   return (
-    <SafeAreaView className="flex-1 bg-white justify-center items-center">
-        <Text className="mb-4">Login</Text>
-          <View className="items-center h-auto rounded w-4/5 py-5 bg-slate-200">
-            <TextInput
-              className="rounded bg-white w-64 align-middle mb-4 pl-2"
-              onChangeText={setEmail}
+    <SafeAreaView style={styles.pageContainer}>
+        <Text style={styles.textTitle}>Login</Text>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setEmail}
           value={email}
           placeholder="Username or Email"
-            />
-            <TextInput
-              className="rounded bg-white w-64 align-middle mb-4 pl-2"
-              onChangeText={setPassword}
-              value={password}
-          />
-          <Text className="mb-4 underline">Help Logining In?</Text>
-          <View className="h-1 w-64 bg-white mb-4"></View>
-          <Text className="mb-4 ">Login with</Text>
-          <TouchableOpacity className="rounded bg-white w-64 align-middle mb-4 p-2" disabled={!request} onPress={() => promptAsync()} ><Text>Google</Text></TouchableOpacity>
-          <TouchableOpacity className="rounded bg-white w-64 align-middle mb-4 p-2" disabled><Text>Twitter</Text></TouchableOpacity>
-          <TouchableOpacity className="rounded bg-white w-64 align-middle mb-4 p-2" disabled><Text>Apple</Text></TouchableOpacity>
-        </View>
+        />
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+        />
+        <TouchableOpacity style={styles.loginBtn}>
+          <Text style={styles.textLoginBtn}>Login</Text>
+        </TouchableOpacity>
+        <Text style={[styles.textNormal, styles.textLink]}>Need Help Logging In?</Text>
+        <Text style={styles.textNormal}>
+          <Text style={styles.textNormal}>Don't have an Account </Text>
+          <Text style={[styles.textNormal, styles.textLink]}>Sign Up</Text>
+        </Text>
+        <View style={styles.divider}></View>
+        <Text style={styles.textNormal}>Login with</Text>
+        <TouchableOpacity style={styles.loginAlt} disabled={!request} onPress={() => promptAsync()} >
+          <Text style={styles.textLoginAlt}>Google</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.loginAlt} disabled>
+          <Text style={styles.textLoginAlt}>Apple</Text>
+        </TouchableOpacity>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fbe3cd',
+  },
+  textTitle: {
+    fontSize: 64,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    color: '#7c437b',
+  },
+  textInput: {
+    backgroundColor: '#fceee3',
+    borderRadius: 10,
+    width: 300,
+    paddingLeft: 12,
+    paddingVertical: 10,
+    marginBottom: 24,
+    fontSize: 20,
+  }, 
+  textNormal: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  textLink: {
+    textDecorationLine: 'underline',
+    color: '#7c437b',
+  },
+  divider: {
+    width: 300,
+    height: 10,
+    backgroundColor: '#fceee3',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  loginAlt: {
+    backgroundColor: '#fceee3',
+    borderRadius: 10,
+    width: 300,
+    paddingLeft: 12,
+    paddingVertical: 10,
+    marginBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textLoginAlt: {
+    fontSize: 20
+  },
+  loginBtn: {
+    backgroundColor: '#fa973b',
+    borderRadius: 100,
+    paddingVertical: 10,
+    paddingHorizontal: 64,
+    marginBottom: 12,
+  },
+  textLoginBtn: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  }
+});
