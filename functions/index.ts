@@ -77,7 +77,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         radius: radius,
         longitude: longitude,
         latitude: latitude,
-        limit: 10,
+        limit: 20,
       },
     })
     .then((response) => response.data.businesses)
@@ -105,7 +105,6 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         const plates: Plate[] = await firestore()
           .collection("plates")
           .where("businessId", "==", business.id)
-          .where("n", "==", Math.floor(Math.random() * 3))
           .get()
           .then((querySnapshot) =>
             querySnapshot.docs.map((doc) => {
@@ -150,7 +149,6 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           });
 
         // Add plates to Firestore
-        let count = 0;
         const plates: Plate[] = await Promise.all(
           plateData?.map((plate) =>
             firestore()
@@ -161,7 +159,6 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 description: plate.description,
                 price: plate.price,
                 image_url: plate.image_url,
-                n: count++ % 3,
               })
               .then((docRef) => {
                 return {
@@ -175,8 +172,6 @@ export const getRecommendations = functions.https.onCall(async (data) => {
               })
           ) ?? []
         );
-
-        const randomPlates = plates.filter(() => Math.random() < 0.33);
 
         // Add business to Firestore
         await firestore()
@@ -203,7 +198,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
             ttl: 86400000,
           });
 
-        return randomPlates;
+        return plates;
       }
     })
   );

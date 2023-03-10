@@ -45,7 +45,7 @@ def scrapeMenu(request):
       if description_element is not None:
           description = description_element.text.strip()
       else:
-          continue
+          description = ''
 
       # Get image
       image_element = item.select_one('img.photo-box-img')
@@ -59,7 +59,7 @@ def scrapeMenu(request):
       if price_element is not None:
           price = price_element.text.strip()
       else:
-          continue
+          price = ''
 
       # Add item to list
       items.append({
