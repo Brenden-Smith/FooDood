@@ -7,25 +7,27 @@ export const likesStyles = StyleSheet.create({
         display: "flex",
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between",
+        justifyContent: "space-between",
+        // Prevent items from wrapping
 		margin: 10,
 		padding: 10,
         borderRadius: 10,
         // borderWidth: 2,
         // borderColor: "black",
         // wrap text
-        flexWrap: "wrap",
-        backgroundColor: colors.white
+        flexWrap: "nowrap",
+        backgroundColor: colors.white,
 	},
 	removeLikeButton: {
 		backgroundColor: colors.creamRed,
 		padding: 3,
-		borderRadius: 5,
+        borderRadius: 5,
 	},
     likedImage: {
         width: 70,
         height: 70,
         borderRadius: 10,
+        marginRight: 15,
         resizeMode: "cover",
     },
 

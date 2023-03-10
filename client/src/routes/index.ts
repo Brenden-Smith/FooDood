@@ -1,7 +1,6 @@
+export { Likes } from "./Likes";
 export { Loading } from "./Loading";
-
-// Home Screens
+export { Login } from "./Login";
 export { Plates } from "./Plates";
+export { Settings } from "./Settings";
 export { Tags } from "./Tags";
-export { default as Likes } from "./home/Likes/Likes";
-export { default as Settings } from "./home/Settings";

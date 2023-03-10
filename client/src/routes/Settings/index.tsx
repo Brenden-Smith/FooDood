@@ -1,18 +1,16 @@
-import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Image, Text, StyleSheet, Dimensions } from "react-native";
-import { getAuth, signOut, updateEmail } from "firebase/auth";
+import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Text, StyleSheet, Dimensions } from "react-native";
+import { getAuth, signOut } from "firebase/auth";
 import { useUserData } from "@/hooks/useUserData";
 import { useState } from "react";
-import { setDoc } from "firebase/firestore"
 import { colors } from "@/constants/colors"
 import { ScrollView } from 'react-native-gesture-handler';
 
 
 const scrWidth = Dimensions.get("window").width;
 
-export default function Settings() {
+export function Settings() {
 	const user = useUserData();
 	const [email, setEmail] = useState<string>("");
-	const [username, setUsername] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
 	return (

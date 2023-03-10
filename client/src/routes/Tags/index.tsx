@@ -34,6 +34,7 @@ export function Tags() {
 				]}
 				renderItem={renderItem}
 				keyExtractor={(item, index) => index.toString()}
+				showsVerticalScrollIndicator={false}
 			/>
 		</SafeAreaView>
 	);

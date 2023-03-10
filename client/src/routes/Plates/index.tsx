@@ -45,17 +45,33 @@ export function Plates(): JSX.Element {
 			setIndex((index + 1) % (data?.length ?? 0));
 	}, [data, index]);
 
-	const likePlate = useCallback(
-		(plate: Plate) =>
-			addDoc(collection(getFirestore(), "likes"), {
-				plateId: plate.id,
-				customerId: getAuth().currentUser?.uid,
-				timestamp: serverTimestamp(),
-				name: plate.name,
-				image_url: plate.image_url,
-			}),
-		[],
+	const onSwipedRight = useCallback(
+		(i: number) => {
+			const plate = data?.[i];
+			if (plate)
+				addDoc(collection(getFirestore(), "likes"), {
+					plateId: plate.id,
+					customerId: getAuth().currentUser?.uid,
+					timestamp: serverTimestamp(),
+					name: plate.name,
+					image_url: plate.image_url,
+				}),
+					setNumInteractions(numInteractions + 1);
+			if (numInteractions % 6 == 5) {
+				// show the previous likes card which is the last card in the data array
+				setShowPreviousLikes(true);
+			} else {
+				setShowPreviousLikes(false);
+			}
+		},
+		[data, numInteractions],
 	);
+
+	const onSwipedLeft = useCallback(() => {
+		if (showPreviousLikes) {
+			setShowPreviousLikes(false);
+		}
+	}, [showPreviousLikes]);
 
 	const fetchPlates = useCallback(async () => {
 		setLoading(true);
@@ -94,17 +110,8 @@ export function Plates(): JSX.Element {
 						{data ? (
 							<Swiper
 								cards={data}
-								onSwipedRight={(index) => {
-									likePlate(data[index]);
-									setNumInteractions(numInteractions + 1);
-									if (numInteractions % 6 == 5) {
-										// show the previous likes card which is the last card in the data array
-										setShowPreviousLikes(true);
-									} else {
-										setShowPreviousLikes(false);
-									}
-								}}
-								
+								onSwipedRight={onSwipedRight}
+								onSwipedLeft={onSwipedLeft}
 								cardIndex={index}
 								renderCard={renderCard}
 								infinite
@@ -125,11 +132,11 @@ export function Plates(): JSX.Element {
 								ref={swiperRef}
 								overlayLabels={{
 									left: {
-										title: "DisLike",
+										title: showPreviousLikes ? "" : "Dislike",
 										style: {
 											label: {
-												backgroundColor: colors.red,
-												borderColor: colors.red,
+												backgroundColor: showPreviousLikes ? "transparent" : colors.red,
+												borderColor: showPreviousLikes ? "transparent" : colors.red,
 												color: colors.white,
 												borderWidth: 1,
 												fontSize: 24,
@@ -144,11 +151,11 @@ export function Plates(): JSX.Element {
 										},
 									},
 									right: {
-										title: "Like",
+										title: showPreviousLikes ? "" : "Like",
 										style: {
 											label: {
-												backgroundColor: colors.blue,
-												borderColor: colors.blue,
+												backgroundColor: showPreviousLikes ? "transparent" : colors.blue,
+												borderColor: showPreviousLikes ? "transparent" : colors.blue,
 												color: colors.white,
 												borderWidth: 1,
 												fontSize: 24,

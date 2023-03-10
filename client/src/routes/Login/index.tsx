@@ -10,7 +10,7 @@ import { colors } from "@/constants/colors";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function Login() {
+export function Login() {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: "637872410840-d6ut3b9clpcenh663ssdi8ggk7pf03ac.apps.googleusercontent.com",
   });
