@@ -165,27 +165,37 @@ export function Plates(): JSX.Element {
 								}}
 							/>
 						) : (
-							<TouchableOpacity
-								onPress={fetchPlates}
+							<View
 								style={{
-									backgroundColor: colors.blue,
-									width: 200,
-									height: 50,
-									borderRadius: 10,
+									flex: 1,
 									justifyContent: "center",
 									alignItems: "center",
-									alignSelf: "center",
+									height: "100%",
 								}}
 							>
-								<Text
+								<TouchableOpacity
+									onPress={fetchPlates}
 									style={{
-										color: colors.white,
-										fontSize: 20,
+										backgroundColor: colors.blue,
+										width: 200,
+										height: 50,
+										borderRadius: 10,
+										justifyContent: "center",
+										alignItems: "center",
+										alignSelf: "center",
 									}}
 								>
-									Get Recommendations
-								</Text>
-							</TouchableOpacity>
+									<Text
+										style={{
+											color: colors.white,
+											fontSize: 20,
+											flexWrap: "nowrap",
+										}}
+									>
+										Get Plates
+									</Text>
+								</TouchableOpacity>
+							</View>
 						)}
 					</View>
 					<View style={{ flex: 1 }} />

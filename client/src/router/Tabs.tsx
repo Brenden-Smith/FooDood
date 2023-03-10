@@ -12,28 +12,28 @@ export default function Tabs() {
 			screenOptions={{
 				tabBarHideOnKeyboard: true,
 				tabBarShowLabel: false,
-				headerLeft: () => (
-					<TouchableOpacity>
-						<Image
-							style={{
-								width: 50,
-								height: 50,
-								borderRadius: 30,
-								marginLeft: 20,
-								marginTop: 7,
-							}}
-							source={{ uri: "https://picsum.photos/200/300" }}
-						/>
-					</TouchableOpacity>
-				),
+				// headerLeft: () => (
+				// 	<TouchableOpacity>
+				// 		<Image
+				// 			style={{
+				// 				width: 50,
+				// 				height: 50,
+				// 				borderRadius: 30,
+				// 				marginLeft: 20,
+				// 				marginTop: 7,
+				// 			}}
+				// 			source={{ uri: "https://picsum.photos/200/300" }}
+				// 		/>
+				// 	</TouchableOpacity>
+				// ),
 				headerRight: () => (
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Settings")}
 					>
 						<Image
 							style={{
-								width: 40,
-								height: 40,
+								width: 30,
+								height: 30,
 								borderRadius: 30,
 								marginRight: 20,
 								marginTop: 7.5,

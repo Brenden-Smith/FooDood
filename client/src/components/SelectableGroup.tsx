@@ -83,6 +83,7 @@ export function SelectableGroup({
 			data={items}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.value}
+			scrollEnabled={false}
 		/>
 	);
 }
