@@ -36,6 +36,7 @@ export function Plates(): JSX.Element {
 		"getRecommendations",
 	);
 	const onSwiped = useCallback(() => {
+		if (!( numInteractions % 6 == 5))
 		setIndex((index + 1) % (data?.length ?? 0));
 	}, [data, index]);
 
