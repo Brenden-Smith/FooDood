@@ -105,6 +105,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         const plates: Plate[] = await firestore()
           .collection("plates")
           .where("businessId", "==", business.id)
+          .where("n", "==", Math.floor(Math.random() * 3))
           .get()
           .then((querySnapshot) =>
             querySnapshot.docs.map((doc) => {
@@ -117,12 +118,8 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 image_url: doc.data().image_url,
               };
             })
-        );
-        
-        // Randomize plates
-        const randomPlates = plates.filter(() => Math.random() < 0.33);
-
-        return randomPlates;
+          );
+        return plates;
       } else {
         // If business is in Firestore but is expired, delete plates from Firestore
         functions.logger.info("Getting plates from Yelp");
@@ -153,6 +150,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           });
 
         // Add plates to Firestore
+        let count = 0;
         const plates: Plate[] = await Promise.all(
           plateData?.map((plate) =>
             firestore()
@@ -163,6 +161,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 description: plate.description,
                 price: plate.price,
                 image_url: plate.image_url,
+                n: count++ % 3,
               })
               .then((docRef) => {
                 return {
@@ -180,26 +179,29 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         const randomPlates = plates.filter(() => Math.random() < 0.33);
 
         // Add business to Firestore
-        await firestore().collection("businesses").doc(business.id).set({
-          name: business.name,
-          image_url: business.image_url,
-          is_closed: business.is_closed,
-          url: business.url,
-          review_count: business.review_count,
-          categories: business.categories,
-          rating: business.rating,
-          coordinates: business.coordinates,
-          transactions: business.transactions,
-          price: business.price ?? "",
-          location: business.location,
-          phone: business.phone,
-          display_phone: business.display_phone,
-          distance: business.distance ?? "",
-          hours: business.hours ?? [],
-          attributes: business.attributes ?? [],
-          timestamp: firestore.FieldValue.serverTimestamp(),
-          ttl: 86400000,
-        });
+        await firestore()
+          .collection("businesses")
+          .doc(business.id)
+          .set({
+            name: business.name,
+            image_url: business.image_url,
+            is_closed: business.is_closed,
+            url: business.url,
+            review_count: business.review_count,
+            categories: business.categories,
+            rating: business.rating,
+            coordinates: business.coordinates,
+            transactions: business.transactions,
+            price: business.price ?? "",
+            location: business.location,
+            phone: business.phone,
+            display_phone: business.display_phone,
+            distance: business.distance ?? "",
+            hours: business.hours ?? [],
+            attributes: business.attributes ?? [],
+            timestamp: firestore.FieldValue.serverTimestamp(),
+            ttl: 86400000,
+          });
 
         return randomPlates;
       }
