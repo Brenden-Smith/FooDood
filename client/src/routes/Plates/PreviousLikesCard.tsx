@@ -1,10 +1,29 @@
 import { useLikes } from "@/hooks";
-import { memo } from "react";
-import { FlatList, Text, View } from "react-native";
+import { Plate } from "@/types"
+import { doc, DocumentData, getDoc, getFirestore, DocumentSnapshot } from "firebase/firestore"
+import { memo, useEffect, useState } from "react";
+import { FlatList, Text, View, Image } from "react-native";
 import { styles } from "./styles";
 
+
+
+
 export default memo(() => {
+
+	const [plates, setPlates] = useState<DocumentSnapshot<DocumentData>[]>([]);
+	
+
 	const likes = useLikes();
+	useEffect(() => {
+	async function getPlates() {
+		
+		const plateIds = likes.data?.docs?.splice(0,4).map((doc) => doc.data().plateId) ?? [];
+		const plateDocs = await Promise.all(plateIds.map((id: string) => getDoc(doc(getFirestore(), "plates", id))));
+		setPlates(plateDocs);
+	}
+	getPlates();
+}, [likes.data?.docs]);
+
 	return (
 		<View
 			style={[
@@ -28,22 +47,32 @@ export default memo(() => {
 			<View className="flex flex-row flex-wrap justify-center items-center">
 				<FlatList
 					// limit the number of items shown in the flatlist to 5
-					data={likes.data?.docs.splice(0, 4)}
+					data={plates}
 					renderItem={({ item }) => (
 						<View
-							className="flex flex-row justify-center items-center rounded bg-slate-300 m-3"
+							className="flex flex-col justify-center items-center rounded bg-slate-300 m-3"
 							style={{
 								height: 150,
 								width: 150,
 							}}
 						>
-							{/* <Image
-                source={{ uri: like.data()?.image }}
-                style={{ width: 100, height: 100 }}
-              /> */}
-							<Text className="text-lg text-gray-900">
-								{item.data().plateId}
+							<Image
+								source={{
+									uri: item.data()?.image_url,
+								}}
+								style={{
+									height: 50,
+									width: 50,
+									borderRadius: 10
+								}}
+							/>
+							<Text className="text-sm text-gray-900">
+								{item.data()?.price}
 							</Text>
+							<Text className="text-md text-gray-900">
+								{item.data()?.name}
+							</Text>
+							
 						</View>
 					)}
 					keyExtractor={(item) => item.id}

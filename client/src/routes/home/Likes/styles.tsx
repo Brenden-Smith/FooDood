@@ -13,6 +13,8 @@ export const likesStyles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 2,
         borderColor: "black",
+        // wrap text
+        flexWrap: "wrap",
 	},
 	removeLikeButton: {
 		backgroundColor: "red",
@@ -25,5 +27,5 @@ export const likesStyles = StyleSheet.create({
         borderRadius: 10,
         resizeMode: "cover",
     },
-    
+
 });
