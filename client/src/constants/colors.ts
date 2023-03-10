@@ -5,4 +5,11 @@ export const colors = {
 	white: "#ffffff",
 	black: "#000000",
 	green: "#aff7a8",
+	cream: "#f8e3cc",
+	creamLight: "#fceee3",
+	creamOrange: "#fc9a3b",
+	creamPurple: "#834179",
+	creamRed: "#ee5953",
+	creamGreen: "#23cbc2",
+	creamPink: "#e9a5a5",
 };
