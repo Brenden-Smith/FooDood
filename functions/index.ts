@@ -77,7 +77,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         radius: radius,
         longitude: longitude,
         latitude: latitude,
-        limit: 10,
+        limit: 20,
       },
     })
     .then((response) => response.data.businesses)
@@ -117,12 +117,8 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 image_url: doc.data().image_url,
               };
             })
-        );
-        
-        // Randomize plates
-        const randomPlates = plates.filter(() => Math.random() < 0.33);
-
-        return randomPlates;
+          );
+        return plates;
       } else {
         // If business is in Firestore but is expired, delete plates from Firestore
         functions.logger.info("Getting plates from Yelp");
@@ -177,31 +173,32 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           ) ?? []
         );
 
-        const randomPlates = plates.filter(() => Math.random() < 0.33);
-
         // Add business to Firestore
-        await firestore().collection("businesses").doc(business.id).set({
-          name: business.name,
-          image_url: business.image_url,
-          is_closed: business.is_closed,
-          url: business.url,
-          review_count: business.review_count,
-          categories: business.categories,
-          rating: business.rating,
-          coordinates: business.coordinates,
-          transactions: business.transactions,
-          price: business.price ?? "",
-          location: business.location,
-          phone: business.phone,
-          display_phone: business.display_phone,
-          distance: business.distance ?? "",
-          hours: business.hours ?? [],
-          attributes: business.attributes ?? [],
-          timestamp: firestore.FieldValue.serverTimestamp(),
-          ttl: 86400000,
-        });
+        await firestore()
+          .collection("businesses")
+          .doc(business.id)
+          .set({
+            name: business.name,
+            image_url: business.image_url,
+            is_closed: business.is_closed,
+            url: business.url,
+            review_count: business.review_count,
+            categories: business.categories,
+            rating: business.rating,
+            coordinates: business.coordinates,
+            transactions: business.transactions,
+            price: business.price ?? "",
+            location: business.location,
+            phone: business.phone,
+            display_phone: business.display_phone,
+            distance: business.distance ?? "",
+            hours: business.hours ?? [],
+            attributes: business.attributes ?? [],
+            timestamp: firestore.FieldValue.serverTimestamp(),
+            ttl: 86400000,
+          });
 
-        return randomPlates;
+        return plates;
       }
     })
   );

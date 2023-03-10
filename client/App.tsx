@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import { NavigationContainer } from "@react-navigation/native";
 import "react-native-gesture-handler";
 import "@/service/firebase";
@@ -5,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Router from "@/router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { HoldMenuProvider } from "react-native-hold-menu";
 
 const queryClient = new QueryClient();
 
@@ -18,9 +20,11 @@ export default function App(): JSX.Element {
 			<StatusBar style="auto" />
 			<SafeAreaProvider>
 				<QueryClientProvider client={queryClient}>
-					<NavigationContainer>
-						<Router />
-					</NavigationContainer>
+					<HoldMenuProvider>
+						<NavigationContainer>
+							<Router />
+						</NavigationContainer>
+					</HoldMenuProvider>
 				</QueryClientProvider>
 			</SafeAreaProvider>
 		</>

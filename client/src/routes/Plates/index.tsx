@@ -90,7 +90,6 @@ export function Plates(): JSX.Element {
 				<ActivityIndicator size="large" color="#0000ff" />
 			) : (
 				<>
-					<View style={{ flex: 0.2 }} />
 					<View style={{ flex: 1, width: "100%" }}>
 						{data ? (
 							<Swiper

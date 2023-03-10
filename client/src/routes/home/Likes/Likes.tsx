@@ -26,6 +26,11 @@ import { useFirestoreQuery } from "@react-query-firebase/firestore";
 import { QueryKey } from "@/constants";
 import {likesStyles} from "./styles";
 import { styles } from "@/routes/Plates/styles"
+import { HoldItem } from "react-native-hold-menu"
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+
+
 
 export default function Likes() {
 	const [likedPlates, setLikedPlates] = useState<
@@ -115,6 +120,8 @@ export default function Likes() {
 	);
 }
 
+
+
 const ListItem = memo(
 	({
 		item,
@@ -123,24 +130,36 @@ const ListItem = memo(
 		item: QueryDocumentSnapshot<DocumentData>;
 		removeLikedPlate: Function;
 	}) => {
+
+
+		const MenuItems = [
+		{ text: 'Actions', isTitle: true },
+		{ text: 'Super Like', icon: () => <AntDesign name="heart" size={24} color="black" />, onPress: () => {} },
+	{ text: 'Info', icon: () => <Ionicons name="information-circle-outline" size={24} color="black" />, onPress: () => {} },
+	{ text: 'Delete', icon: () => <AntDesign name="delete" size={24} color="black" />, onPress: () => {removeLikedPlate(item.data().plateId)} },
+]
 		return (
-			<View
-				style={likesStyles.likeContainer}
+			<HoldItem
+				items={MenuItems}
 			>
-				{/* <Image
-					source={item.data().image_url}
-					style={likesStyles.likedImage}
-				/> */}
-				<Text style={{ fontSize: 18 }}>
-					{item.data().plateId}
-				</Text>
-				<TouchableOpacity
-					onPress={() => removeLikedPlate(item.data().plateId)}
-					style={likesStyles.removeLikeButton}
+				<View
+					style={likesStyles.likeContainer}
 				>
-					<Text style={{ color: "white", fontSize: 12 }}>Remove</Text>
-				</TouchableOpacity>
-			</View>
+					<Image
+						source={{ uri: item.data().image_url }}
+						style={likesStyles.likedImage}
+					/>
+					<Text style={{ fontSize: 18 }}>
+						{item.data().name}
+					</Text>
+					<TouchableOpacity
+						onPress={() => removeLikedPlate(item.data().plateId)}
+						style={likesStyles.removeLikeButton}
+					>
+						<Text style={{ color: "white", fontSize: 12 }}>Remove</Text>
+					</TouchableOpacity>
+				</View>
+			</HoldItem>
 		);
 	},
 );
