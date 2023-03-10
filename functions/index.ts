@@ -117,9 +117,12 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 image_url: doc.data().image_url,
               };
             })
-          );
+        );
+        
+        // Randomize plates
+        const randomPlates = plates.filter(() => Math.random() < 0.33);
 
-        return plates;
+        return randomPlates;
       } else {
         // If business is in Firestore but is expired, delete plates from Firestore
         functions.logger.info("Getting plates from Yelp");
@@ -148,6 +151,20 @@ export const getRecommendations = functions.https.onCall(async (data) => {
             functions.logger.error(error);
             return [];
           });
+        
+        // Filter out invalid values
+        plateData.filter((plate) => {
+          return (
+            plate.name !== "" &&
+            plate.name !== undefined &&
+            plate.description !== "" &&
+            plate.description !== undefined &&
+            plate.price !== "" &&
+            plate.price !== undefined &&
+            plate.image_url !== "" &&
+            plate.image_url !== undefined
+          )
+        })
 
         // Add plates to Firestore
         const plates: Plate[] = await Promise.all(
@@ -174,19 +191,7 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           ) ?? []
         );
 
-        // Filter out plates with undefined or empty values
-        plates.filter((plate) => {
-          return (
-            plate.name !== undefined &&
-            plate.name !== "" &&
-            plate.description !== undefined &&
-            plate.description !== "" &&
-            plate.price !== undefined &&
-            plate.price !== "" &&
-            plate.image_url !== undefined &&
-            plate.image_url !== ""
-          );
-        });
+        const randomPlates = plates.filter(() => Math.random() < 0.33);
 
         // Add business to Firestore
         await firestore().collection("businesses").doc(business.id).set({
@@ -210,10 +215,15 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           ttl: 86400000,
         });
 
-        return plates;
+        return randomPlates;
       }
     })
   );
+
+  // Shuffle items based on timestamp 3 times
+  for (let i = 0; i < 3; i++) {
+    items.sort(() => Math.random() - 0.5);
+  }
 
   return items;
 });
