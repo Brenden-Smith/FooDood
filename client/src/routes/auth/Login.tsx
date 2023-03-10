@@ -6,6 +6,7 @@ import { GoogleAuthProvider, getAuth, signInWithCredential,
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { colors } from "@/constants/colors";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -62,7 +63,7 @@ export default function Login() {
           style={styles.textInput}
           onChangeText={setEmail}
           value={email}
-          placeholder="Username or Email"
+          placeholder="E-Mail"
         />
         <TextInput
           style={styles.textInput}
@@ -79,7 +80,6 @@ export default function Login() {
           <Text style={[styles.textNormal, styles.textLink]}>Sign Up</Text>
         </Text>
         <View style={styles.divider}></View>
-        <Text style={styles.textNormal}>Login with</Text>
         <TouchableOpacity style={styles.loginAlt} disabled={!request} onPress={() => promptAsync()} >
           <Text style={styles.textLoginAlt}>Google</Text>
         </TouchableOpacity>
@@ -95,16 +95,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fbe3cd',
+    backgroundColor: colors.cream,
   },
   textTitle: {
     fontSize: 64,
     fontWeight: 'bold',
     marginBottom: 24,
-    color: '#7c437b',
+    color: colors.creamPurple,
   },
   textInput: {
-    backgroundColor: '#fceee3',
+    backgroundColor: colors.creamLight,
     borderRadius: 10,
     width: 300,
     paddingLeft: 12,
@@ -118,17 +118,17 @@ const styles = StyleSheet.create({
   },
   textLink: {
     textDecorationLine: 'underline',
-    color: '#7c437b',
+    color: colors.creamPurple,
   },
   divider: {
     width: 300,
-    height: 10,
-    backgroundColor: '#fceee3',
+    height: 6,
+    backgroundColor: colors.creamPurple,
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   loginAlt: {
-    backgroundColor: '#fceee3',
+    backgroundColor: colors.creamLight,
     borderRadius: 10,
     width: 300,
     paddingLeft: 12,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   loginBtn: {
-    backgroundColor: '#fa973b',
+    backgroundColor: colors.creamOrange,
     borderRadius: 100,
     paddingVertical: 10,
     paddingHorizontal: 64,
