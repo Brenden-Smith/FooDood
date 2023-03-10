@@ -151,20 +151,6 @@ export const getRecommendations = functions.https.onCall(async (data) => {
             functions.logger.error(error);
             return [];
           });
-        
-        // Filter out invalid values
-        plateData.filter((plate) => {
-          return (
-            plate.name !== "" &&
-            plate.name !== undefined &&
-            plate.description !== "" &&
-            plate.description !== undefined &&
-            plate.price !== "" &&
-            plate.price !== undefined &&
-            plate.image_url !== "" &&
-            plate.image_url !== undefined
-          )
-        })
 
         // Add plates to Firestore
         const plates: Plate[] = await Promise.all(
