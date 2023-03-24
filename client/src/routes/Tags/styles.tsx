@@ -24,4 +24,18 @@ export const styles = StyleSheet.create({
 		backgroundColor: colors.creamLight,
 		flexWrap: "nowrap",
 	},
+		saveButton: {
+		backgroundColor: colors.creamOrange,
+		borderRadius: 100,
+		paddingVertical: 10,
+		paddingHorizontal: 64,
+		marginBottom: 12,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	buttonText: {
+		color: colors.white,
+		fontSize: 16,
+	},
+	
 });
