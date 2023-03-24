@@ -59,14 +59,14 @@ export function SelectableGroup({
 
 	const renderItem = useCallback(
 		({ item }: { item: SelectableItem }) => {
-			const selected = values.includes(item.value);
+			const selected = values?.includes(item.value);
 			return (
 				<Item
 					item={item}
 					selected={selected}
 					onSelect={() => {
 						if (selected) {
-							onChange(values.filter((v) => v !== item.value));
+							onChange(values?.filter((v) => v !== item.value));
 						} else {
 							onChange([...values, item.value]);
 						}

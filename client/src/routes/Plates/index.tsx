@@ -25,12 +25,14 @@ import { Card } from "./Card";
 import { useFirestoreInfiniteQuery } from "@react-query-firebase/firestore";
 import { useFunctionsQuery } from "@react-query-firebase/functions";
 import { useQuery } from "react-query";
+import { useUserData } from "@/hooks";
 
 const swiperRef: LegacyRef<Swiper<QueryDocumentSnapshot<DocumentData>>> =
 	createRef();
 
 export function Plates(): JSX.Element {
 	const [platesQuery, setPlatesQuery] = useState<any>(null);
+	const user = useUserData();
 	const location = useQuery(QueryKey.LOCATION, async () => {
 		const { status } = await Location.requestForegroundPermissionsAsync();
 		if (status === "granted") {
@@ -39,18 +41,17 @@ export function Plates(): JSX.Element {
 		}
 	});
 	const businessIds = useFunctionsQuery<any, any[]>(
-		QueryKey.BUSINESSES,
+		[QueryKey.BUSINESSES, ...user.data?.data()?.tags],
 		getFunctions(),
 		"getRecommendations",
 		{
 			latitude: location.data?.coords.latitude,
 			longitude: location.data?.coords.longitude,
-			categories: ["burgers"],
 			radius: 40000,
 		},
 		{},
 		{
-			enabled: !!location.data,
+			enabled: !!location.data && !!user.data,
 			onSuccess: (data) => {
 				setPlatesQuery(
 					query(
