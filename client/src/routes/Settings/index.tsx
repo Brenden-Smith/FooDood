@@ -133,11 +133,11 @@ export function Settings() {
 										<Text style={styles.subtitle}>Search Distance</Text>
 										<Slider
 											style={{width: 200, height: 40}}
-											minimumValue={5}
+											minimumValue={1}
 											maximumValue={24}
 											minimumTrackTintColor="#FFFFFF"
 											maximumTrackTintColor="#000000"
-											step={5}
+											step={1}
 											tapToSeek={true}
 											value={values.searchDistance}
 											// when the slider is moved, update the searchDistance value to the new value
@@ -153,10 +153,6 @@ export function Settings() {
 									<TouchableOpacity style={styles.logoutBtn} onPress={() => handleSubmit()}>
 										<Text>Save</Text>
 									</TouchableOpacity>
-
-									
-
-
 								</View>
 							</View>
 							<TouchableOpacity style={styles.logoutBtn} onPress={() => signOut(getAuth())}>
