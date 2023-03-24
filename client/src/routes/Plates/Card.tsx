@@ -20,9 +20,9 @@ export const Card = memo(({ plate }: { plate: Plate }) => {
 				</View>
 			)}
 			{/* <LinearGradient 
-                      locations={[0, 1.0]}  
-                      colors= {['rgba(0,0,0,0.00)', 'rgba(0,0,0,0.80)']} 
-                      style={styles.linearGradient}>
+                    locations={[0, 1.0]}  
+                    colors= {['rgba(0,0,0,0.00)', 'rgba(0,0,0,0.80)']} 
+                    style={styles.linearGradient}>
                   </LinearGradient> */}
 		</View>
 	);

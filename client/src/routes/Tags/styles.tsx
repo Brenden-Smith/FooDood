@@ -13,11 +13,29 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	category: {
-		justifyContent: "center",
+		display: "flex",
+		// flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "space-between",
+		margin: 10,
+		marginTop: 30,
+		padding: 10,
 		borderRadius: 10,
 		backgroundColor: colors.creamLight,
-		width: srcWidth * 0.8,
-		marginVertical: 24,
+		flexWrap: "nowrap",
 	},
+		saveButton: {
+		backgroundColor: colors.creamOrange,
+		borderRadius: 100,
+		paddingVertical: 10,
+		paddingHorizontal: 64,
+		marginBottom: 12,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	buttonText: {
+		color: colors.white,
+		fontSize: 16,
+	},
+	
 });
