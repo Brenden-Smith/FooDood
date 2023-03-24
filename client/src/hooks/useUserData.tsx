@@ -1,17 +1,17 @@
-import { useAuthUser } from '@react-query-firebase/auth';
-import { useFirestoreDocument } from '@react-query-firebase/firestore';
-import { QueryKey } from '@/constants';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc } from 'firebase/firestore';
+import { useFirestoreDocument } from "@react-query-firebase/firestore";
+import { QueryKey } from "@/constants";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc } from "firebase/firestore";
 
 export function useUserData() {
-  const user = useAuthUser(QueryKey.USER, getAuth());
-  return useFirestoreDocument(
-    [QueryKey.USER_DATA, user.data?.uid],
-    doc(getFirestore(), `users/${user.data?.uid}`),
-    {},
+	return useFirestoreDocument(
+		[QueryKey.USER_DATA, getAuth().currentUser?.uid],
+		doc(getFirestore(), `users/${getAuth().currentUser?.uid}`),
     {
-      enabled: !!user.data?.uid,
-    }
-  );
+      subscribe: true,
+    },
+		{
+			enabled: !!getAuth().currentUser?.uid,
+		},
+	);
 }

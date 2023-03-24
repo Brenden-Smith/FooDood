@@ -4,6 +4,7 @@ import {
 	FlatList,
 	ActivityIndicator,
 	View,
+	Dimensions,
 } from "react-native";
 import { useCallback } from "react";
 import {
@@ -57,8 +58,9 @@ export function Likes() {
 					backgroundColor: colors.creamLight,
 					borderRadius: 10,
 					padding: 10,
-					marginVertical: 30,
-					marginHorizontal: 20,
+					width: Dimensions.get("window").width - 40,
+					height: Dimensions.get("window").height - 200,
+					margin: 20,
 				}}
 			>
 				<FlatList

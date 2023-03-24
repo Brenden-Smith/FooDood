@@ -25,7 +25,6 @@ export const styles = StyleSheet.create({
 		flexWrap: "nowrap",
 	},
 		saveButton: {
-		backgroundColor: colors.creamOrange,
 		borderRadius: 100,
 		paddingVertical: 10,
 		paddingHorizontal: 64,
@@ -34,7 +33,6 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	buttonText: {
-		color: colors.white,
 		fontSize: 16,
 	},
 	

@@ -3,9 +3,10 @@ import { colors } from "@/constants";
 import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
+import { useTags } from "./TagsContext";
 
 export default memo(() => {
-	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const { tags, setTags } = useTags();
 	return (
 		<View style={styles.category}>
 			<Text className="text-2xl p-2">Extra</Text>
@@ -19,8 +20,8 @@ export default memo(() => {
 				]}
 				numColumns={2}
 				scrollEnabled={false}
-				values={selectedTags}
-				onChange={(values) => setSelectedTags(values)}
+				values={tags}
+				onChange={(values) => setTags(values)}
 				ItemComponent={({ item, selected }) => (
 					<View
 						style={{
