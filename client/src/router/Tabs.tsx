@@ -42,7 +42,7 @@ export default function Tabs() {
 				},
 				headerRight: () => (
 					<TouchableOpacity onPress={() => navigation.navigate("Settings")} >
-						<FontAwesome name="gear" size={26} color="white" style={{ marginRight: 40 }} />
+						<FontAwesome name="gear" size={26} color="white" style={{ marginRight: 20 }} />
 					</TouchableOpacity>
 				),
 				headerTitleStyle: {
