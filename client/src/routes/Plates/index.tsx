@@ -1,5 +1,5 @@
 import { createRef, LegacyRef, useCallback, useEffect, useMemo } from "react";
-import { View, SafeAreaView, ActivityIndicator } from "react-native";
+import { View, SafeAreaView, ActivityIndicator, Text } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import {
 	collection,
@@ -42,7 +42,7 @@ export function Plates(): JSX.Element {
 		}
 	});
 	const businessIds = useFunctionsQuery<any, any[]>(
-		[QueryKey.BUSINESSES, ...user.data?.data()?.tags],
+		[QueryKey.BUSINESSES, ...user.data?.data()?.tags ?? []],
 		getFunctions(),
 		"getRecommendations",
 		{
@@ -52,7 +52,7 @@ export function Plates(): JSX.Element {
 		},
 		{},
 		{
-			enabled: !!location.data && !!user.data,
+			enabled: !!location.data && !!user.data && !!user.data?.data()?.tags,
 			onSuccess: (data) => {
 				setBusinesses(data);
 				setPlatesQuery(
@@ -157,7 +157,11 @@ export function Plates(): JSX.Element {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			{!plates.data ? (
+			{!user.data?.data()?.tags ? (
+				<Text>
+					Please select some tags to get started!
+				</Text>
+			) : !plates.data ? (
 				<ActivityIndicator size="large" color="#0000ff" />
 			) : (
 				<Swiper

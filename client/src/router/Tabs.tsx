@@ -38,7 +38,7 @@ export default function Tabs() {
 					}
 
 					// You can return any component that you like here!
-					return <Ionicons name={iconName} size={32} color="white" />;
+					return <Ionicons name={iconName} size={24} color="white" />;
 				},
 				headerRight: () => (
 					<TouchableOpacity onPress={() => navigation.navigate("Settings")} >
