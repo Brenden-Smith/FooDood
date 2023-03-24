@@ -1,4 +1,4 @@
-import { createRef, LegacyRef, useCallback } from "react";
+import { createRef, LegacyRef, useCallback, useEffect, useMemo } from "react";
 import { View, SafeAreaView, ActivityIndicator } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import {
@@ -26,7 +26,8 @@ import { useFirestoreInfiniteQuery } from "@react-query-firebase/firestore";
 import { useFunctionsQuery } from "@react-query-firebase/functions";
 import { useQuery } from "react-query";
 
-const swiperRef: LegacyRef<Swiper<any>> = createRef();
+const swiperRef: LegacyRef<Swiper<QueryDocumentSnapshot<DocumentData>>> =
+	createRef();
 
 export function Plates(): JSX.Element {
 	const [platesQuery, setPlatesQuery] = useState<any>(null);
@@ -80,7 +81,6 @@ export function Plates(): JSX.Element {
 			enabled: !!businessIds,
 		},
 	);
-	const data = plates.data?.pages?.flatMap((page) => page.docs) ?? [];
 	const [index, setIndex] = useState(0);
 	const [numInteractions, setNumInteractions] = useState(0);
 	const [showPreviousLikes, setShowPreviousLikes] = useState(false);
@@ -88,6 +88,10 @@ export function Plates(): JSX.Element {
 		if (!(numInteractions % 6 == 5))
 			setIndex((index + 1) % (data?.length ?? 0));
 	}, [plates.data, index]);
+	const data = useMemo(
+		() => plates.data?.pages.flatMap((page) => page.docs) ?? [],
+		[plates.data],
+	);
 
 	const onSwipedRight = useCallback(
 		(i: number) => {
@@ -126,93 +130,96 @@ export function Plates(): JSX.Element {
 			),
 		[showPreviousLikes],
 	);
-	const onSwipedAll = useCallback(() => {
-		setIndex(0);
-		plates.fetchNextPage();
-	}, [plates.data]);
+
+	useEffect(() => {
+		if (index == data.length - 2) {
+			plates.fetchNextPage();
+		}
+	}, [index, plates.data]);
 
 	return (
 		<SafeAreaView style={styles.container}>
 			{!plates.data ? (
 				<ActivityIndicator size="large" color="#0000ff" />
 			) : (
-				<>
-					<View style={{ flex: 1, width: "100%" }}>
-						<Swiper
-							cards={data}
-							onSwipedRight={onSwipedRight}
-							onSwipedLeft={onSwipedLeft}
-							onSwipedAll={onSwipedAll}
-							cardIndex={index}
-							renderCard={renderCard}
-							infinite
-							backgroundColor={"transparent"}
-							onSwiped={onSwiped}
-							cardVerticalMargin={40}
-							stackSize={5}
-							stackScale={8}
-							stackSeparation={30}
-							stackAnimationFriction={7}
-							stackAnimationTension={40}
-							disableBottomSwipe
-							animateOverlayLabelsOpacity
-							animateCardOpacity
-							showSecondCard={showPreviousLikes ? false : true}
-							ref={swiperRef}
-							overlayLabels={{
-								left: {
-									title: showPreviousLikes ? "" : "Dislike",
-									style: {
-										label: {
-											backgroundColor: showPreviousLikes
-												? "transparent"
-												: colors.red,
-											borderColor: showPreviousLikes
-												? "transparent"
-												: colors.red,
-											color: colors.white,
-											borderWidth: 1,
-											fontSize: 24,
-										},
-										wrapper: {
-											flexDirection: "column",
-											alignItems: "flex-end",
-											justifyContent: "flex-start",
-											marginTop: 500,
-											marginLeft: -20,
-										},
-									},
+				<Swiper
+					ref={swiperRef}
+					cards={data}
+					onSwipedRight={onSwipedRight}
+					onSwipedLeft={onSwipedLeft}
+					cardIndex={index}
+					renderCard={renderCard}
+					backgroundColor={"transparent"}
+					onSwiped={onSwiped}
+					cardVerticalMargin={40}
+					stackSize={4}
+					stackScale={8}
+					stackSeparation={30}
+					stackAnimationFriction={7}
+					stackAnimationTension={40}
+					disableBottomSwipe
+					animateOverlayLabelsOpacity
+					animateCardOpacity
+					showSecondCard={showPreviousLikes ? false : true}
+					containerStyle={{
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
+						position: "absolute",
+					}}
+					overlayLabels={{
+						left: {
+							title: showPreviousLikes ? "" : "Dislike",
+							style: {
+								label: {
+									backgroundColor: showPreviousLikes
+										? "transparent"
+										: colors.red,
+									borderColor: showPreviousLikes
+										? "transparent"
+										: colors.red,
+									color: colors.white,
+									borderWidth: 1,
+									fontSize: 24,
 								},
-								right: {
-									title: showPreviousLikes ? "" : "Like",
-									style: {
-										label: {
-											backgroundColor: showPreviousLikes
-												? "transparent"
-												: colors.blue,
-											borderColor: showPreviousLikes
-												? "transparent"
-												: colors.blue,
-											color: colors.white,
-											borderWidth: 1,
-											fontSize: 24,
-										},
-										wrapper: {
-											flexDirection: "column",
-											alignItems: "flex-start",
-											justifyContent: "flex-start",
-											marginTop: 500,
-											marginLeft: 20,
-										},
-									},
+								wrapper: {
+									flexDirection: "column",
+									alignItems: "flex-end",
+									justifyContent: "flex-start",
+									marginTop: 500,
+									marginLeft: -20,
 								},
-							}}
-						/>
-						<View style={{ flex: 1 }} />
-					</View>
-					{/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
-					{/* container for the buttons */}
-					{/* <View style={styles.bottomContainerButtons}>
+							},
+						},
+						right: {
+							title: showPreviousLikes ? "" : "Like",
+							style: {
+								label: {
+									backgroundColor: showPreviousLikes
+										? "transparent"
+										: colors.blue,
+									borderColor: showPreviousLikes
+										? "transparent"
+										: colors.blue,
+									color: colors.white,
+									borderWidth: 1,
+									fontSize: 24,
+								},
+								wrapper: {
+									flexDirection: "column",
+									alignItems: "flex-start",
+									justifyContent: "flex-start",
+									marginTop: 500,
+									marginLeft: 20,
+								},
+							},
+						},
+					}}
+				/>
+			)}
+			{/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
+			{/* container for the buttons */}
+			{/* <View style={styles.bottomContainerButtons}>
         <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
           <Image source={require("../../assets/icons/like.png")} style={styles.btnImage} />
         </TouchableOpacity>
@@ -231,8 +238,7 @@ export function Plates(): JSX.Element {
           <Image source={require("../../assets/icons/x.png")} style={styles.btnImage} />
         </TouchableOpacity>
       </View> */}
-
-					{/* <View style={styles.bottomContainer}>
+			{/* <View style={styles.bottomContainer}>
                     <Transitioning.View
                         transition={transition}
                         style={styles.bottomContainerMeta}
@@ -240,8 +246,6 @@ export function Plates(): JSX.Element {
                         <CardDetails index={index} />
                     </Transitioning.View>
                 </View> */}
-				</>
-			)}
 		</SafeAreaView>
 	);
 }
