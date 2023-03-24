@@ -141,7 +141,7 @@ export function Plates(): JSX.Element {
 			showPreviousLikes ? (
 				<PreviousLikesCard />
 			) : (
-				<Card plate={item?.data() as Plate} />
+				item && item.data()?.image_url && <Card plate={item} />
 			),
 		[showPreviousLikes],
 	);
