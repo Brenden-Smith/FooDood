@@ -32,6 +32,7 @@ const swiperRef: LegacyRef<Swiper<QueryDocumentSnapshot<DocumentData>>> =
 
 export function Plates(): JSX.Element {
 	const [platesQuery, setPlatesQuery] = useState<any>(null);
+	const [businesses, setBusinesses] = useState<any[]>([]);
 	const user = useUserData();
 	const location = useQuery(QueryKey.LOCATION, async () => {
 		const { status } = await Location.requestForegroundPermissionsAsync();
@@ -53,6 +54,7 @@ export function Plates(): JSX.Element {
 		{
 			enabled: !!location.data && !!user.data,
 			onSuccess: (data) => {
+				setBusinesses(data);
 				setPlatesQuery(
 					query(
 						collection(getFirestore(), "plates"),
@@ -71,15 +73,27 @@ export function Plates(): JSX.Element {
 		},
 	);
 	const plates = useFirestoreInfiniteQuery(
-		[QueryKey.PLATES, platesQuery],
+		[QueryKey.PLATES, ...businesses],
 		platesQuery,
 		(snapshot) => {
 			const lastDocument = snapshot.docs[snapshot.docs.length - 1];
-			return query(platesQuery, startAfter(lastDocument));
+			return query(
+				collection(getFirestore(), "plates"),
+				where(
+					"businessId",
+					"in",
+					businesses
+						.sort(() => Math.random() - 0.5)
+						.slice(0, 10)
+						.map((business) => business.id),
+				),
+				limit(5),
+				startAfter(lastDocument),
+			);
 		},
 		{},
 		{
-			enabled: !!businessIds,
+			enabled: !!businessIds && !!platesQuery,
 		},
 	);
 	const [index, setIndex] = useState(0);
@@ -127,7 +141,7 @@ export function Plates(): JSX.Element {
 			showPreviousLikes ? (
 				<PreviousLikesCard />
 			) : (
-				<Card plate={item.data() as Plate} />
+				item && item.data()?.image_url && <Card plate={item} />
 			),
 		[showPreviousLikes],
 	);
