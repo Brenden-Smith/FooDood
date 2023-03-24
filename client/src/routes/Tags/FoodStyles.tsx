@@ -31,7 +31,7 @@ export default memo(() => {
 				]}
 				scrollEnabled={false}
 				values={selectedTags}
-				numColumns={3}
+				numColumns={2}
 				onChange={(values) => setSelectedTags(values)}
 				ItemComponent={({ item, selected }) => (
 					<View
@@ -42,6 +42,7 @@ export default memo(() => {
 							alignItems: "center",
 							padding: 8,
 							borderRadius: 5,
+							marginHorizontal: 5,
 							width: "100%",
 						}}
 					>
@@ -57,7 +58,7 @@ export default memo(() => {
 				ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
 				itemStyle={{
 					height: 50,
-					width: 85,
+					width: 150,
 					marginHorizontal: 5,
 				}}
 			/>
