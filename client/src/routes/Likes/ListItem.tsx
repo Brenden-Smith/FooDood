@@ -119,6 +119,11 @@ export default memo(
 							<View style={styles.modalHeader}>
 								<Text style={styles.modalTitle}>
 									{item.data().name}
+									{"\n"}{"\n"}
+									Description:{"\n"}
+									Price:{"\n"}
+									Resteraunt:{"\n"}
+									Order from:
 								</Text>
 								<TouchableOpacity
 									style={[
@@ -194,7 +199,7 @@ const styles = StyleSheet.create({
 	buttonClose: {
 		backgroundColor: colors.red,
 		padding: 12,
-		
+		maxHeight: 50,
 	},
 	textStyle: {
 		color: colors.white,
@@ -208,6 +213,7 @@ const styles = StyleSheet.create({
 	modalHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		alignItems: "center",
 		width: "100%",
 	},
 	modalTitle: {
