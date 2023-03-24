@@ -57,7 +57,7 @@ export default memo(
 							style={{
 								fontSize: 18,
 								flexWrap: "wrap",
-								maxWidth: 200,
+								maxWidth: 150,
 								textAlign: "left",
 							}}
 						>
