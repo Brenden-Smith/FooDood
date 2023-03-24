@@ -1,18 +1,37 @@
 import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Text, StyleSheet, Dimensions } from "react-native";
 import { getAuth, signOut } from "firebase/auth";
 import { useUserData } from "@/hooks/useUserData";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { colors } from "@/constants/colors"
 import { ScrollView } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import { setDoc } from "firebase/firestore";
 import Slider from '@react-native-community/slider';
+import * as Yup from 'yup';
 
 
 const scrWidth = Dimensions.get("window").width;
 
 export function Settings() {
 	const user = useUserData();
+	
+
+
+    
+	const SignupSchema = Yup.object().shape({
+		email: Yup.string().email('Invalid email').required('Required'),
+		// sufficient password strength and complexity
+		password: Yup.string().min(8, 'Too Short!').max(50, 'Too Long!').
+		matches(/(?=.*[0-9])/, 'Password must contain a number.')
+		.matches(/(?=.*[a-z])/, 'Password must contain a lowercase letter.')
+		.matches(/(?=.*[A-Z])/, 'Password must contain an uppercase letter.')
+		.matches(/(?=.*[!@#$%^&*])/, 'Password must contain a special character.')
+		.required('Required'),
+	});
+
+
+
+	
 	return (
 		<SafeAreaView style={styles.pageContainer}>
 			<ScrollView style={{height: '100%'}}>
@@ -32,10 +51,9 @@ export function Settings() {
 					onSubmit={async (values) => {
 						await setDoc(user.data?.ref!, values, {merge: true});
 					}}
-					
-
+					validationSchema={SignupSchema}
 				>
-					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched}) => (
 						<>
 							<View style={styles.container}>
 								<Text style={styles.title}>Account</Text>
@@ -47,18 +65,9 @@ export function Settings() {
 											style={styles.accountInput}
 											value={values.email}
 											onChangeText={handleChange('email')}
-											
-											
-										/>
-
-										<TouchableOpacity 
-											style={styles.changeBtn}
-											// update the email with the new email in the textfield in firebase
-											// onPress={() => updateEmail(getAuth(), email)}
-										>
-											<Text>C</Text>
-										</TouchableOpacity>
+											/>
 									</View>
+									<Text>{ errors.email && touched.email ? <Text style={{color: 'red'}}>{errors.email.toString()}</Text> : null }</Text>
 									
 									<View style={styles.accountSetting}>
 										{/* create a textfield which loads in the current password */}
@@ -68,32 +77,21 @@ export function Settings() {
 											value={values.password}
 											onChangeText={handleChange('password')}
 										/>
-										<TouchableOpacity
-											style={styles.changeBtn}
-											// update the password with the new password in the textfield in firebase
-											// onPress={() => updatePassword(getAuth(), password)}
-												// onPress={() => setDoc(user.data?.ref, {password}, {merge: true})}
-											>
-											<Text>C</Text>
-										</TouchableOpacity>
 									</View>
+									<Text>{ errors.password && touched.password ? <Text style={{color: 'red'}}>{errors.password.toString()}</Text> : null }</Text>
 								</View>
 							</View>
 							<View style={styles.container}>
 								<Text style={styles.title}>Options</Text>
 								<View style={styles.optionsContainer} >
-
 									<View style={styles.toggleContainer}>
 										<Text>Dark Mode</Text>
 										<Switch 
 										value={values.darkMode}
 										// when the switch is toggled, update the darkMode value to the opposite of what it was
 										onValueChange={() => setFieldValue("darkMode", !values.darkMode)}
-
 										/>
 									</View>
-
-
 									<View style={styles.toggleContainer}>
 										<Text>Notifications</Text>
 										<Switch 
