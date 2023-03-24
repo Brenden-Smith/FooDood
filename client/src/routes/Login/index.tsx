@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import { useEffect, useState } from "react";
 import { GoogleAuthProvider, getAuth, signInWithCredential,
@@ -9,6 +9,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { colors } from "@/constants/colors";
 
 WebBrowser.maybeCompleteAuthSession();
+const srcWidth = Dimensions.get('window').width;
 
 export function Login() {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -54,10 +55,11 @@ export function Login() {
       });
     }
   }
-  
+  const Logo = require('@/assets/logo_big.png');
   // Render front end component
   return (
     <SafeAreaView style={styles.pageContainer}>
+        <Image style={{ width: srcWidth * 0.9, height: 200, resizeMode: "contain"}} source={Logo} />
         <Text style={styles.textTitle}>Login</Text>
         <TextInput
           style={styles.textInput}
@@ -98,9 +100,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cream,
   },
   textTitle: {
-    fontSize: 64,
+    fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 24,
+    marginTop: 16,
     color: colors.creamPurple,
   },
   textInput: {
