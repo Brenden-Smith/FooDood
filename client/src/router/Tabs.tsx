@@ -20,6 +20,7 @@ export default function Tabs() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					backgroundColor: colors.creamPurple,
+					height: 56,
 				},
 				
 				tabBarIcon: ({ focused }) => {
@@ -37,7 +38,7 @@ export default function Tabs() {
 					}
 
 					// You can return any component that you like here!
-					return <Ionicons name={iconName} size={32} color="white" style={{ marginVertical: 4 }}/>;
+					return <Ionicons name={iconName} size={32} color="white" style={{ marginVertical: 6 }}/>;
 				},
 				headerRight: () => (
 					<TouchableOpacity onPress={() => navigation.navigate("Settings")} >
