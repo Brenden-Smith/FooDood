@@ -20,7 +20,7 @@ const queryClient = new QueryClient();
 export default function App(): JSX.Element {
 	return (
 		<>
-			<StatusBar style="auto" />
+			<StatusBar style="light" />
 			<SafeAreaProvider>
 				<QueryClientProvider client={queryClient}>
 					<HoldMenuProvider>
