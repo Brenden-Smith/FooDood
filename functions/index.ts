@@ -53,18 +53,9 @@ type RawPlate = {
   image_url: string;
 };
 
-type Plate = {
-  id: string;
-  businessId: string;
-  name: string;
-  description: string;
-  price: string;
-  image_url: string;
-};
-
 export const getRecommendations = functions.https.onCall(async (data) => {
   // Get parameters
-  const { radius, longitude, latitude } = data;
+  const { radius, longitude, latitude, categories } = data;
 
   // Get businesses from Yelp API
   const businesses: Business[] = await axios
@@ -74,9 +65,10 @@ export const getRecommendations = functions.https.onCall(async (data) => {
       },
       params: {
         term: "burger",
-        radius: radius,
-        longitude: longitude,
-        latitude: latitude,
+        radius,
+        longitude,
+        latitude,
+        categories: categories.join(","),
         limit: 20,
       },
     })
@@ -86,8 +78,8 @@ export const getRecommendations = functions.https.onCall(async (data) => {
       return [];
     });
 
-  // Get menu items from each business
-  const items = await Promise.all(
+  // Populate Firestore with businesses and plates
+  await Promise.all(
     businesses.map(async (business) => {
       // Check if business is in Firestore
       const businessDoc = await firestore()
@@ -95,61 +87,49 @@ export const getRecommendations = functions.https.onCall(async (data) => {
         .doc(business.id)
         .get();
 
-      // If business is in Firestore and is not expired, get plates from Firestore
+      // If business is in Firestore and is not expired, no action needed
       if (
         businessDoc.exists &&
         Date.now() - businessDoc.data()?.timestamp.toDate().getTime() <=
           businessDoc.data()?.ttl
       ) {
-        functions.logger.info("Getting plates from Firestore");
-        const plates: Plate[] = await firestore()
+        functions.logger.info(
+          `${business.id} (${business.name}) is in Firestore`
+        );
+        return;
+      }
+
+      // If business is in Firestore but is expired, delete plates from Firestore
+      functions.logger.info("Getting plates from Yelp");
+      if (businessDoc.exists) {
+        await firestore()
           .collection("plates")
           .where("businessId", "==", business.id)
           .get()
           .then((querySnapshot) =>
-            querySnapshot.docs.map((doc) => {
-              return {
-                id: doc.id,
-                businessId: doc.data().businessId,
-                name: doc.data().name,
-                description: doc.data().description,
-                price: doc.data().price,
-                image_url: doc.data().image_url,
-              };
-            })
+            Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete()))
           );
-        return plates;
-      } else {
-        // If business is in Firestore but is expired, delete plates from Firestore
-        functions.logger.info("Getting plates from Yelp");
-        if (businessDoc.exists) {
-          await firestore()
-            .collection("plates")
-            .where("businessId", "==", business.id)
-            .get()
-            .then((querySnapshot) =>
-              Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete()))
-            );
-        }
+      }
 
-        // Call scrapeMenu using gcloud CLI
-        const plateData: RawPlate[] = await axios
-          .get(
-            "https://us-central1-foodood-cloud.cloudfunctions.net/scrapeMenu",
-            {
-              params: {
-                url: business.url.replace("yelp.com/biz", "yelp.com/menu"),
-              },
-            }
-          )
-          .then((response) => response.data)
-          .catch((error) => {
-            functions.logger.error(error);
-            return [];
-          });
+      // Call scrapeMenu using gcloud CLI
+      const plateData: RawPlate[] = await axios
+        .get(
+          "https://us-central1-foodood-cloud.cloudfunctions.net/scrapeMenu",
+          {
+            params: {
+              url: business.url.replace("yelp.com/biz", "yelp.com/menu"),
+            },
+          }
+        )
+        .then((response) => response.data)
+        .catch((error) => {
+          functions.logger.error(error);
+          return [];
+        });
 
-        // Add plates to Firestore
-        const plates: Plate[] = await Promise.all(
+      // Add plates to Firestore
+      await Promise.all([
+        Promise.all(
           plateData?.map((plate) =>
             firestore()
               .collection("plates")
@@ -171,10 +151,10 @@ export const getRecommendations = functions.https.onCall(async (data) => {
                 };
               })
           ) ?? []
-        );
+        ),
 
         // Add business to Firestore
-        await firestore()
+        firestore()
           .collection("businesses")
           .doc(business.id)
           .set({
@@ -196,17 +176,15 @@ export const getRecommendations = functions.https.onCall(async (data) => {
             attributes: business.attributes ?? [],
             timestamp: firestore.FieldValue.serverTimestamp(),
             ttl: 86400000,
-          });
-
-        return plates;
-      }
+          }),
+      ]);
     })
   );
 
   // Shuffle items based on timestamp 3 times
   for (let i = 0; i < 3; i++) {
-    items.sort(() => Math.random() - 0.5);
+    businesses.sort(() => Math.random() - 0.5);
   }
 
-  return items;
+  return businesses;
 });

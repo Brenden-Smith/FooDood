@@ -2263,6 +2263,11 @@
   resolved "https://registry.yarnpkg.com/@react-query-firebase/firestore/-/firestore-1.0.0-dev.7.tgz#6f5747164e03f66f34c5924e6fc51a7f03031c3d"
   integrity sha512-DF6t4hPDZlEBKgf0XFurJpS+SmbVoMhgjQrxdPhlr3zhddcUv54hmPuSIN8htzmNCDMXFUdZWNy4fI/tJVRkgg==
 
+"@react-query-firebase/functions@^1.0.0-dev.1":
+  version "1.0.0-dev.1"
+  resolved "https://registry.yarnpkg.com/@react-query-firebase/functions/-/functions-1.0.0-dev.1.tgz#5a08e333312baee6081548fefd1f2f4a16ef2117"
+  integrity sha512-SoOg4S6JrXjTLpkXQ2kpsMoCMO/UsIY2giQUH4AvNv7uOXoFCW3OpeaoQacM7DV8VjBB70V7uHMnZEaqlnOCBg==
+
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz"
