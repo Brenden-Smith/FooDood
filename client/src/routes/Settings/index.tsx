@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { colors } from "@/constants/colors"
 import { ScrollView } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
-import { setDoc } from "firebase/firestore"
+import { setDoc } from "firebase/firestore";
+import Slider from '@react-native-community/slider';
 
 
 const scrWidth = Dimensions.get("window").width;
@@ -25,6 +26,7 @@ export function Settings() {
 						sounds: user.data?.data()?.sounds,
 						vibration: user.data?.data()?.vibration,
 						lowData: user.data?.data()?.lowData,
+						searchDistance: user.data?.data()?.searchDistance,
 					}}
 					// when the form is submitted, update the user's data in firebase
 					onSubmit={async (values) => {
@@ -45,6 +47,8 @@ export function Settings() {
 											style={styles.accountInput}
 											value={values.email}
 											onChangeText={handleChange('email')}
+											
+											
 										/>
 
 										<TouchableOpacity 
@@ -124,6 +128,33 @@ export function Settings() {
 										<Text>Save</Text>
 									</TouchableOpacity>
 
+									{/* 
+									create a slider which will determine the user's desired search distance
+
+									on the frontend this distance will be displayed in miles, but ultimately the desired value which will be sent is in meters
+									*/}
+									<View style={styles.sliderContainer}>
+										<Text>Search Distance</Text>
+										<Slider
+											style={{width: 200, height: 40}}
+											minimumValue={5}
+											maximumValue={100}
+											minimumTrackTintColor="#FFFFFF"
+											maximumTrackTintColor="#000000"
+											step={5}
+											tapToSeek={true}
+											value={values.searchDistance}
+											// when the slider is moved, update the searchDistance value to the new value
+											// convert the value to meters from miles by multiplying by 1609.34
+											onValueChange={(value: number) => {
+												value *= 1609.34;
+												setFieldValue("searchDistance", value);
+											}}
+										/>
+										<Text>{Math.floor(values.searchDistance / 1609.34)} miles</Text>
+									</View>
+
+
 								</View>
 							</View>
 							<TouchableOpacity style={styles.logoutBtn} onPress={() => signOut(getAuth())}>
@@ -201,5 +232,10 @@ const styles = StyleSheet.create({
 		paddingVertical:5,
 		paddingHorizontal: 10,
 		marginRight: 10,
-	}
+	},
+	sliderContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 });
