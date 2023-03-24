@@ -22,6 +22,8 @@ import { colors } from "@/constants";
 import { useLikes } from "@/hooks";
 import ListItem from "./ListItem";
 
+const srcWidth = Dimensions.get("window").width;
+
 export function Likes() {
 	const likes = useLikes();
 
