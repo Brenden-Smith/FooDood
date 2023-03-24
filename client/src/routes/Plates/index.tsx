@@ -73,7 +73,7 @@ export function Plates(): JSX.Element {
 		},
 	);
 	const plates = useFirestoreInfiniteQuery(
-		[QueryKey.PLATES, ...businesses],
+		[QueryKey.PLATES, platesQuery],
 		platesQuery,
 		(snapshot) => {
 			const lastDocument = snapshot.docs[snapshot.docs.length - 1];
@@ -94,6 +94,9 @@ export function Plates(): JSX.Element {
 		{},
 		{
 			enabled: !!businessIds && !!platesQuery,
+			onSuccess: (data) => {
+				console.log("Plates fetched");
+			},
 		},
 	);
 	const [index, setIndex] = useState(0);
