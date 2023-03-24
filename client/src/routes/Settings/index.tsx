@@ -122,11 +122,9 @@ export function Settings() {
 										onValueChange={() => setFieldValue("lowData", !values.lowData)}
 										/>
 									</View>
-									
-									{/* create a button which submits the form */}
-									<TouchableOpacity style={styles.logoutBtn} onPress={() => handleSubmit()}>
-										<Text>Save</Text>
-									</TouchableOpacity>
+									{/* create a horizontal rule which spans 80% of the container */}
+									<View style={styles.hr} />
+
 
 									{/* 
 									create a slider which will determine the user's desired search distance
@@ -134,7 +132,7 @@ export function Settings() {
 									on the frontend this distance will be displayed in miles, but ultimately the desired value which will be sent is in meters
 									*/}
 									<View style={styles.sliderContainer}>
-										<Text>Search Distance</Text>
+										<Text style={styles.subtitle}>Search Distance</Text>
 										<Slider
 											style={{width: 200, height: 40}}
 											minimumValue={5}
@@ -153,6 +151,12 @@ export function Settings() {
 										/>
 										<Text>{Math.floor(values.searchDistance / 1609.34)} miles</Text>
 									</View>
+									{/* create a button which submits the form */}
+									<TouchableOpacity style={styles.logoutBtn} onPress={() => handleSubmit()}>
+										<Text>Save</Text>
+									</TouchableOpacity>
+
+									
 
 
 								</View>
@@ -181,11 +185,16 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: colors.creamLight,
 		width: scrWidth * 0.8,
-		marginVertical: 20,
-		paddingVertical: 20,
+		marginVertical: 10,
+		paddingVertical: 10,
 	},
 	title: {
 		fontSize: 20,
+		fontWeight: "bold",
+		fontColor: colors.creamPurple,
+	},
+	subtitle: {
+		fontSize: 16,
 		fontWeight: "bold",
 		fontColor: colors.creamPurple,
 	},
@@ -237,5 +246,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	hr: {
+		borderBottomColor: 'black',
+		borderBottomWidth: 1,
+		width: '80%',
+		marginVertical: 20,
+		alignSelf: 'center',
+		
 	},
 });
