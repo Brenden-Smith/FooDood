@@ -20,7 +20,7 @@ export default function Tabs() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					backgroundColor: colors.creamPurple,
-					height: 56,
+					height: 70,
 				},
 				
 				tabBarIcon: ({ focused }) => {
@@ -38,11 +38,11 @@ export default function Tabs() {
 					}
 
 					// You can return any component that you like here!
-					return <Ionicons name={iconName} size={32} color="white" style={{ marginVertical: 6 }}/>;
+					return <Ionicons name={iconName} size={32} color="white" />;
 				},
 				headerRight: () => (
 					<TouchableOpacity onPress={() => navigation.navigate("Settings")} >
-						<FontAwesome name="gear" size={26} color="white" style={{ marginRight: 20 }} />
+						<FontAwesome name="gear" size={26} color="white" style={{ marginRight: 40 }} />
 					</TouchableOpacity>
 				),
 				headerTitleStyle: {
