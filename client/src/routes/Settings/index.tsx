@@ -134,7 +134,7 @@ export function Settings() {
 										<Slider
 											style={{width: 200, height: 40}}
 											minimumValue={5}
-											maximumValue={100}
+											maximumValue={24}
 											minimumTrackTintColor="#FFFFFF"
 											maximumTrackTintColor="#000000"
 											step={5}
