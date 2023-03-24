@@ -12,9 +12,9 @@ export default memo(() => {
 			<SelectableGroup
 				items={[
 					{ title: "Mexican", value: "mexican" },
-					{ title: "Indian", value: "indian" },
+					{ title: "Indian", value: "indpak" },
 					{ title: "Thai", value: "thai" },
-					{ title: "American", value: "american" },
+					{ title: "American", value: "tradamerican" },
 					{ title: "Chinese", value: "chinese" },
 					{ title: "Japanese", value: "japanese" },
 					{ title: "Greek", value: "greek" },
@@ -31,7 +31,7 @@ export default memo(() => {
 					{ title: "Spanish", value: "spanish" },
 					{
 						title: "Middle Eastern",
-						value: "middle eastern",
+						value: "mideastern",
 					},
 					{ title: "Caribbean", value: "caribbean" },
 				]}

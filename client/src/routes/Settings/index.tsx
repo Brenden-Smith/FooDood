@@ -13,6 +13,12 @@ export function Settings() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
+	const [notifications, setNotifications] = useState<boolean>(false);
+	const [darkMode, setDarkMode] = useState<boolean>(false);
+	const [sounds, setSounds] = useState<boolean>(false);
+	const [vibration, setVibration] = useState<boolean>(false);
+	const [lowData, setLowData] = useState<boolean>(false);
+
 	return (
 		<SafeAreaView style={styles.pageContainer}>
 			<ScrollView style={{height: '100%'}}>
@@ -59,26 +65,45 @@ export function Settings() {
 				<View style={styles.container}>
 					<Text style={styles.title}>Options</Text>
 					<View style={styles.optionsContainer} >
+
+						<View style={styles.toggleContainer}>
+							<Text>Dark Mode</Text>
+							<Switch disabled={false}
+							value={darkMode}
+							onValueChange={() => setDarkMode(!darkMode)}
+							/>
+						</View>
+
+
 						<View style={styles.toggleContainer}>
 							<Text>Notifications</Text>
-							<Switch disabled={false} />
+							<Switch disabled={false}
+							value={notifications}
+							onValueChange={() => setNotifications(!notifications)}
+							/>
 						</View>
 						<View style={styles.toggleContainer}>
 							<Text>Sounds</Text>
-							<Switch disabled={false} />
+							<Switch disabled={false}
+							value={sounds}
+							onValueChange={() => setSounds(!sounds)}
+							/>
 						</View>
 						<View style={styles.toggleContainer}>
 							<Text>Vibration</Text>
-							<Switch disabled={false} />
+							<Switch disabled={false} 
+							value={vibration}
+							onValueChange={() => setVibration(!vibration)}
+							/>
 						</View>
 						<View style={styles.toggleContainer}>
 							<Text>Low Data Usage</Text>
-							<Switch disabled={false} />
+							<Switch disabled={false}
+							value={lowData}
+							onValueChange={() => setLowData(!lowData)}
+							/>
 						</View>
-						<View style={styles.toggleContainer}>
-							<Text>Run in Background</Text>
-							<Switch disabled={false} />
-						</View>
+						
 					</View>
 				</View>
 				<TouchableOpacity style={styles.logoutBtn} onPress={() => signOut(getAuth())}>

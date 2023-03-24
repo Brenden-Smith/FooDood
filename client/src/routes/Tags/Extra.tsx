@@ -13,38 +13,9 @@ export default memo(() => {
 				items={[
 					{ title: "Vegan", value: "vegan" },
 					{ title: "Vegetarian", value: "vegetarian" },
-					{ title: "Gluten Free", value: "gluten free" },
+					{ title: "Gluten Free", value: "gluten_free" },
 					{ title: "Halal", value: "halal" },
 					{ title: "Kosher", value: "kosher" },
-					{ title: "Dairy Free", value: "dairy free" },
-					{ title: "Nut Free", value: "nut free" },
-					{ title: "Egg Free", value: "egg free" },
-					{ title: "Soy Free", value: "soy free" },
-					{ title: "Peanut Free", value: "peanut free" },
-					{
-						title: "Seafood Free",
-						value: "seafood free",
-					},
-					{
-						title: "Shellfish Free",
-						value: "shellfish free",
-					},
-					{ title: "Sesame Free", value: "sesame free" },
-					{ title: "Wheat Free", value: "wheat free" },
-					{ title: "Low Sodium", value: "low sodium" },
-					{ title: "Low Sugar", value: "low sugar" },
-					{ title: "Low Fat", value: "low fat" },
-					{ title: "Low Carb", value: "low carb" },
-					{ title: "Low Calorie", value: "low calorie" },
-					{
-						title: "Low Cholesterol",
-						value: "low cholesterol",
-					},
-					{ title: "Low Protein", value: "low protein" },
-					{
-						title: "Low Saturated Fat",
-						value: "low saturated fat",
-					},
 				]}
 				numColumns={2}
 				scrollEnabled={false}
