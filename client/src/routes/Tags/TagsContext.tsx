@@ -20,7 +20,7 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
 		getDoc(doc(getFirestore(), `users/${getAuth().currentUser?.uid}`)).then(
 			(doc) => {
 				if (doc.exists()) {
-					setTags(doc.data()?.tags);
+					setTags(doc.data()?.tags ?? []);
 				}
 			},
 		);
