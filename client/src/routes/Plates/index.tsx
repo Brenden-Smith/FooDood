@@ -136,28 +136,27 @@ export function Plates({
 	}, [showPreviousLikes]);
 	const onSwipedTop = useCallback(
 		(i: number) => {
-            const plate = data?.[i];
-            if (plate)
-                addDoc(collection(getFirestore(), "likes"), {
-                    plateId: plate.id,
-                    customerId: getAuth().currentUser?.uid,
-                    timestamp: serverTimestamp(),
-                    name: plate.data()?.name,
-                    image_url: plate.data()?.image_url,
-                    tags: plate.data()?.tags,
-                    super: true,
-                }),
-                    setNumInteractions(numInteractions + 1);
-            if (numInteractions % 6 == 5) {
-                // show the previous likes card which is the last card in the data array
-                setShowPreviousLikes(true);
-            } else {
-                setShowPreviousLikes(false);
-            }
-        },
-        [data, numInteractions],
-    );
-
+			const plate = data?.[i];
+			if (plate)
+				addDoc(collection(getFirestore(), "likes"), {
+					plateId: plate.id,
+					customerId: getAuth().currentUser?.uid,
+					timestamp: serverTimestamp(),
+					name: plate.data()?.name,
+					image_url: plate.data()?.image_url,
+					tags: plate.data()?.tags,
+					super: true,
+				}),
+					setNumInteractions(numInteractions + 1);
+			if (numInteractions % 6 == 5) {
+				// show the previous likes card which is the last card in the data array
+				setShowPreviousLikes(true);
+			} else {
+				setShowPreviousLikes(false);
+			}
+		},
+		[data, numInteractions],
+	);
 
 	const renderCard = useCallback(
 		(item: QueryDocumentSnapshot<DocumentData>) =>
@@ -168,9 +167,11 @@ export function Plates({
 				item.data()?.image_url && (
 					<Card
 						plate={item}
-						liked={likes.data?.docs.some(
-							(like) => like.data()?.plateId == item.id,
-						) ?? false}
+						liked={
+							likes.data?.docs.some(
+								(like) => like.data()?.plateId == item.id,
+							) ?? false
+						}
 					/>
 				)
 			),
@@ -208,6 +209,7 @@ export function Plates({
 						cards={data}
 						onSwipedRight={onSwipedRight}
 						onSwipedLeft={onSwipedLeft}
+						onSwipedTop={onSwipedTop}
 						cardIndex={index}
 						renderCard={renderCard}
 						backgroundColor={"transparent"}
@@ -294,7 +296,7 @@ export function Plates({
 							<TouchableOpacity
 								style={styles.superLikeButton}
 								onPress={() => {
-									swiperRef?.current?.swipeLeft();
+									swiperRef?.current?.swipeTop();
 								}}
 							>
 								<AntDesign
