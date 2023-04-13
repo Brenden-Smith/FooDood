@@ -1,5 +1,5 @@
 import { createRef, LegacyRef, useCallback, useEffect, useMemo } from "react";
-import { View, SafeAreaView, ActivityIndicator, Text } from "react-native";
+import { View, SafeAreaView, ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import {
 	collection,
@@ -26,9 +26,9 @@ import { useFirestoreInfiniteQuery } from "@react-query-firebase/firestore";
 import { useFunctionsQuery } from "@react-query-firebase/functions";
 import { useQuery } from "react-query";
 import { useUserData } from "@/hooks";
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 
-const swiperRef: LegacyRef<Swiper<QueryDocumentSnapshot<DocumentData>>> =
-	createRef();
+const swiperRef = createRef<Swiper<Plate>>();
 
 export function Plates(): JSX.Element {
 	const [platesQuery, setPlatesQuery] = useState<any>(null);
@@ -165,7 +165,7 @@ export function Plates(): JSX.Element {
 				<ActivityIndicator size="large" color="#0000ff" />
 			) : (
 				<Swiper
-					ref={swiperRef}
+					ref={swiperRef as any}
 					cards={data}
 					onSwipedRight={onSwipedRight}
 					onSwipedLeft={onSwipedLeft}
@@ -202,13 +202,13 @@ export function Plates(): JSX.Element {
 										: colors.red,
 									color: colors.white,
 									borderWidth: 1,
-									fontSize: 24,
+									fontSize: 32,
 								},
 								wrapper: {
 									flexDirection: "column",
 									alignItems: "flex-end",
 									justifyContent: "flex-start",
-									marginTop: 500,
+									marginTop: 30,
 									marginLeft: -20,
 								},
 							},
@@ -225,13 +225,14 @@ export function Plates(): JSX.Element {
 										: colors.blue,
 									color: colors.white,
 									borderWidth: 1,
-									fontSize: 24,
+									fontSize: 32,
+									
 								},
 								wrapper: {
 									flexDirection: "column",
 									alignItems: "flex-start",
 									justifyContent: "flex-start",
-									marginTop: 500,
+									marginTop: 30,
 									marginLeft: 20,
 								},
 							},
@@ -239,27 +240,34 @@ export function Plates(): JSX.Element {
 					}}
 				/>
 			)}
-			{/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping */}
-			{/* container for the buttons */}
-			{/* <View style={styles.bottomContainerButtons}>
-        <TouchableOpacity style={styles.likeButton} onPress={() => swiperRef.current.swipeRight()}>
-          <Image source={require("../../assets/icons/like.png")} style={styles.btnImage} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.infoButton}
-          onPress={() => setShowDescription(!showDescription)}
-        >
-          
-          <Image source={require("../../assets/icons/view.png")} style={styles.btnImage} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.dislikeButton}
-          onPress={() => swiperRef.current.swipeLeft()}
-        >
-          
-          <Image source={require("../../assets/icons/x.png")} style={styles.btnImage} />
-        </TouchableOpacity>
-      </View> */}
+			{/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping using the swiper ref */}
+			<View style={styles.buttonContainer}>
+				<TouchableOpacity
+					style={styles.dislikeButton}
+					onPress={() => {
+						swiperRef?.current?.swipeLeft();
+					}}
+				>
+					<MaterialIcons name="thumb-down" size={40} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.superLikeButton}
+					onPress={() => {
+						swiperRef?.current?.swipeLeft();
+					}}
+				>
+					<AntDesign name="heart" size={30} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.likeButton}
+					onPress={() => {
+						swiperRef?.current?.swipeRight();
+					}}
+				>
+					<MaterialIcons name="thumb-up" size={40} color="white" />
+				</TouchableOpacity>
+			</View>
+			
 			{/* <View style={styles.bottomContainer}>
                     <Transitioning.View
                         transition={transition}
