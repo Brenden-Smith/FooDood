@@ -161,56 +161,46 @@ async function getData(
         });
 
       // Add plates to Firestore
-      await Promise.all([
-        Promise.all(
-          plateData?.map((plate) =>
-            firestore()
-              .collection("plates")
-              .add({
-                businessId: business.id,
-                name: plate.name,
-                description: plate.description,
-                price: plate.price,
-                image_url: plate.image_url,
-              })
-              .then((docRef) => {
-                return {
-                  id: docRef.id,
-                  businessId: business.id,
-                  name: plate.name,
-                  description: plate.description,
-                  price: plate.price,
-                  image_url: plate.image_url,
-                };
-              })
-          ) ?? []
-        ),
+      await Promise.all(
+        plateData?.map((plate) =>
+          firestore()
+            .collection("plates")
+            .add({
+              businessId: business.id,
+              name: plate.name,
+              description: plate.description,
+              price: plate.price,
+              image_url: plate.image_url,
+              tags: business.categories.map((category) => category.alias),
+              businessName: business.name,
+            })
+        )
+      );
 
-        // Add business to Firestore
-        firestore()
-          .collection("businesses")
-          .doc(business.id)
-          .set({
-            name: business.name,
-            image_url: business.image_url,
-            is_closed: business.is_closed,
-            url: business.url,
-            review_count: business.review_count,
-            categories: business.categories,
-            rating: business.rating,
-            coordinates: business.coordinates,
-            transactions: business.transactions,
-            price: business.price ?? "",
-            location: business.location,
-            phone: business.phone,
-            display_phone: business.display_phone,
-            distance: business.distance ?? "",
-            hours: business.hours ?? [],
-            attributes: business.attributes ?? [],
-            timestamp: firestore.FieldValue.serverTimestamp(),
-            ttl: 86400000,
-          }),
-      ]);
+      // Add business to Firestore
+      await firestore()
+        .collection("businesses")
+        .doc(business.id)
+        .set({
+          name: business.name,
+          image_url: business.image_url,
+          is_closed: business.is_closed,
+          url: business.url,
+          review_count: business.review_count,
+          categories: business.categories,
+          rating: business.rating,
+          coordinates: business.coordinates,
+          transactions: business.transactions,
+          price: business.price ?? "",
+          location: business.location,
+          phone: business.phone,
+          display_phone: business.display_phone,
+          distance: business.distance ?? "",
+          hours: business.hours ?? [],
+          attributes: business.attributes ?? [],
+          timestamp: firestore.FieldValue.serverTimestamp(),
+          ttl: 86400000,
+        });
     })
   );
 
