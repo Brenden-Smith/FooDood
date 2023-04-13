@@ -2,7 +2,6 @@ import * as functions from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import { firestore } from "firebase-admin";
 import axios from "axios";
-import { DocumentData, DocumentSnapshot } from "firebase-admin/firestore";
 
 // Initialize Firebase Admin SDK
 initializeApp();
