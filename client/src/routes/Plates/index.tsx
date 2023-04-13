@@ -121,6 +121,7 @@ export function Plates(): JSX.Element {
 					timestamp: serverTimestamp(),
 					name: plate.data()?.name,
 					image_url: plate.data()?.image_url,
+					tags: plate.data()?.tags,
 				}),
 					setNumInteractions(numInteractions + 1);
 			if (numInteractions % 6 == 5) {
