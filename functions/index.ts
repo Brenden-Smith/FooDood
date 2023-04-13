@@ -264,3 +264,20 @@ export const imFeelingLucky = functions.https.onCall(async (data, context) => {
   // Return data with liked plates sprinkled in
   return results;
 });
+
+// Clear likes every 24 hours
+export const clearLikes = functions.pubsub
+  .schedule("0 0 * * *")
+  .timeZone("America/Los_Angeles")
+  .onRun(() =>
+    firestore()
+      .collection("likes")
+      .where("ttl", "<", firestore.Timestamp.now())
+      .where("super", "!=", true)
+      .get()
+      .then((querySnapshot) =>
+        querySnapshot.docs.map((doc) => doc.ref.delete())
+      )
+      .then(() => functions.logger.info("Likes cleared"))
+      .catch((error) => functions.logger.error(error))
+  );
