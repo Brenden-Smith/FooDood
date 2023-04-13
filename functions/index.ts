@@ -56,10 +56,11 @@ type RawPlate = {
 export const getRecommendations = functions.https.onCall(
   async (data, context) => {
     // Get parameters
-    const { radius, longitude, latitude, lucky } = data;
+    const { radius, longitude, latitude } = data;
+    let { lucky } = data;
 
     // Get calling user
-    if (!context.auth) {
+    if (!context.auth || !context.auth.uid) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "The function must be called while authenticated."
@@ -72,26 +73,33 @@ export const getRecommendations = functions.https.onCall(
           .collection("likes")
           .where("customerId", "==", context.auth?.uid)
           .get()
-          .then((snapshot) =>
-            snapshot.docs
-              .map((doc) => doc.data().tags)
-              .flat()
-              .reduce((acc, tag) => {
-                if (!acc[tag]) {
-                  acc[tag] = 1;
-                } else {
-                  acc[tag]++;
-                }
-                return acc;
-              }, {} as Record<string, number>)
-              .sort((a: any, b: any) => b[1] - a[1])
-              .slice(0, 10)
-          )
+          .then(async (snapshot) => {
+            if (snapshot.docs.length < 10) {
+              lucky = false;
+              return await firestore()
+                .collection("users")
+                .doc(context.auth!.uid)
+                .get()
+                .then((doc) => doc.data()?.tags.join(","));
+            }
+            const tags = snapshot.docs.map((doc) => doc.data().tags).flat();
+            const rankings = tags.map((tag) => ({
+              [tag]: tags.filter((t) => t === tag).length,
+            }));
+            return Object.keys(rankings.sort((a: any, b: any) => b[1] - a[1]))
+              .slice(0, 3)
+              .join(",");
+          })
       : await firestore()
           .collection("users")
           .doc(context.auth?.uid)
           .get()
           .then((doc) => doc.data()?.tags.join(","));
+    functions.logger.info(
+      `Got ${categories} categories for ${context.auth?.uid} (${
+        lucky ? "lucky" : "not lucky"
+      })`
+    );
 
     // Get businesses from Yelp API
     const businesses: Business[] = await axios
@@ -128,9 +136,6 @@ export const getRecommendations = functions.https.onCall(
           Date.now() - businessDoc.data()?.timestamp.toDate().getTime() <=
             businessDoc.data()?.ttl
         ) {
-          functions.logger.info(
-            `${business.id} (${business.name}) is in Firestore`
-          );
           return;
         }
 
@@ -211,6 +216,6 @@ export const getRecommendations = functions.https.onCall(
       businesses.sort(() => Math.random() - 0.5);
     }
 
-    return businesses;
+    return businesses.slice(0, 9);
   }
 );

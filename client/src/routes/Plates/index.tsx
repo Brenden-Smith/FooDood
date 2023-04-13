@@ -1,5 +1,11 @@
 import { createRef, LegacyRef, useCallback, useEffect, useMemo } from "react";
-import { View, SafeAreaView, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import {
+	View,
+	SafeAreaView,
+	ActivityIndicator,
+	Text,
+	TouchableOpacity,
+} from "react-native";
 import Swiper from "react-native-deck-swiper";
 import {
 	collection,
@@ -19,21 +25,23 @@ import { getFunctions } from "firebase/functions";
 import * as Location from "expo-location";
 import { styles } from "./styles";
 import PreviousLikesCard from "./PreviousLikesCard";
-import { Plate } from "@/types";
+import { Plate, RootStackParamList } from "@/types";
 import { colors, QueryKey } from "@/constants";
 import { Card } from "./Card";
 import { useFirestoreInfiniteQuery } from "@react-query-firebase/firestore";
 import { useFunctionsQuery } from "@react-query-firebase/functions";
 import { useQuery } from "react-query";
-import { useUserData } from "@/hooks";
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { useLikes, useUserData } from "@/hooks";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 const swiperRef = createRef<Swiper<Plate>>();
 
-export function Plates(): JSX.Element {
-	const [platesQuery, setPlatesQuery] = useState<any>(null);
-	const [businesses, setBusinesses] = useState<any[]>([]);
+export function Plates({
+	route,
+}: NativeStackScreenProps<RootStackParamList, "Plates">): JSX.Element {
 	const user = useUserData();
+	const likes = useLikes();
 	const location = useQuery(QueryKey.LOCATION, async () => {
 		const { status } = await Location.requestForegroundPermissionsAsync();
 		if (status === "granted") {
@@ -41,62 +49,49 @@ export function Plates(): JSX.Element {
 			return location;
 		}
 	});
-	const businessIds = useFunctionsQuery<any, any[]>(
-		[QueryKey.BUSINESSES, ...user.data?.data()?.tags ?? []],
+	const businesses = useFunctionsQuery<any, any[]>(
+		[
+			QueryKey.BUSINESSES,
+			...(user.data?.data()?.tags ?? []),
+			route?.params?.lucky,
+		],
 		getFunctions(),
 		"getRecommendations",
 		{
 			latitude: location.data?.coords.latitude,
 			longitude: location.data?.coords.longitude,
 			radius: 40000,
+			lucky: route?.params?.lucky,
 		},
 		{},
 		{
-			enabled: !!location.data && !!user.data && !!user.data?.data()?.tags,
-			onSuccess: (data) => {
-				setBusinesses(data);
-				setPlatesQuery(
-					query(
-						collection(getFirestore(), "plates"),
-						where(
-							"businessId",
-							"in",
-							data
-								.sort(() => Math.random() - 0.5)
-								.slice(0, 10)
-								.map((business) => business.id),
-						),
-						limit(5),
-					),
-				);
-			},
+			enabled:
+				!!location.data && !!user.data && !!user.data?.data()?.tags,
 		},
 	);
-	const plates = useFirestoreInfiniteQuery(
-		[QueryKey.PLATES, platesQuery],
-		platesQuery,
-		(snapshot) => {
-			const lastDocument = snapshot.docs[snapshot.docs.length - 1];
-			return query(
+	const platesQuery = useMemo(
+		() =>
+			query(
 				collection(getFirestore(), "plates"),
 				where(
 					"businessId",
 					"in",
-					businesses
-						.sort(() => Math.random() - 0.5)
-						.slice(0, 10)
-						.map((business) => business.id),
+					businesses.data?.map((b) => b.id) ?? [""],
 				),
 				limit(5),
-				startAfter(lastDocument),
-			);
+			),
+		[businesses.data],
+	);
+	const plates = useFirestoreInfiniteQuery(
+		[QueryKey.PLATES, businesses.data, route?.params?.lucky],
+		platesQuery,
+		(snapshot) => {
+			const lastDocument = snapshot.docs[snapshot.docs.length - 1];
+			return lastDocument && query(platesQuery, startAfter(lastDocument));
 		},
 		{},
 		{
-			enabled: !!businessIds && !!platesQuery,
-			onSuccess: (data) => {
-				console.log("Plates fetched");
-			},
+			enabled: !!businesses.data,
 		},
 	);
 	const [index, setIndex] = useState(0);
@@ -110,11 +105,10 @@ export function Plates(): JSX.Element {
 		() => plates.data?.pages.flatMap((page) => page.docs) ?? [],
 		[plates.data],
 	);
-
 	const onSwipedRight = useCallback(
 		(i: number) => {
 			const plate = data?.[i];
-			if (plate)
+			if (plate && !likes.data?.docs.some((like) => like.id == plate.id))
 				addDoc(collection(getFirestore(), "likes"), {
 					plateId: plate.id,
 					customerId: getAuth().currentUser?.uid,
@@ -132,7 +126,7 @@ export function Plates(): JSX.Element {
 				setShowPreviousLikes(false);
 			}
 		},
-		[data, numInteractions],
+		[data, numInteractions, likes.data],
 	);
 
 	const onSwipedLeft = useCallback(() => {
@@ -146,7 +140,15 @@ export function Plates(): JSX.Element {
 			showPreviousLikes ? (
 				<PreviousLikesCard />
 			) : (
-				item && item.data()?.image_url && <Card plate={item} />
+				item &&
+				item.data()?.image_url && (
+					<Card
+						plate={item}
+						liked={likes.data?.docs.some(
+							(like) => like.data()?.plateId == item.id,
+						) ?? false}
+					/>
+				)
 			),
 		[showPreviousLikes],
 	);
@@ -160,124 +162,143 @@ export function Plates(): JSX.Element {
 	return (
 		<SafeAreaView style={styles.container}>
 			{!user.data?.data()?.tags ? (
-				<Text>
-					Please select some tags to get started!
-				</Text>
-			) : !plates.data ? (
-				<ActivityIndicator size="large" color="#0000ff" />
-			) : (
-				<Swiper
-					ref={swiperRef as any}
-					cards={data}
-					onSwipedRight={onSwipedRight}
-					onSwipedLeft={onSwipedLeft}
-					cardIndex={index}
-					renderCard={renderCard}
-					backgroundColor={"transparent"}
-					onSwiped={onSwiped}
-					cardVerticalMargin={40}
-					stackSize={4}
-					stackScale={8}
-					stackSeparation={30}
-					stackAnimationFriction={7}
-					stackAnimationTension={40}
-					disableBottomSwipe
-					animateOverlayLabelsOpacity
-					animateCardOpacity
-					showSecondCard={showPreviousLikes ? false : true}
-					containerStyle={{
+				<Text>Please select some tags to get started!</Text>
+			) : plates.isLoading ||
+			  businesses.isLoading ||
+			  (plates.isFetching && !plates.isFetchingNextPage) ||
+			  businesses.isFetching ? (
+				<View
+					style={{
 						flex: 1,
 						justifyContent: "center",
 						alignItems: "center",
-						position: "absolute",
 					}}
-					overlayLabels={{
-						left: {
-							title: showPreviousLikes ? "" : "Dislike",
-							style: {
-								label: {
-									backgroundColor: showPreviousLikes
-										? "transparent"
-										: colors.red,
-									borderColor: showPreviousLikes
-										? "transparent"
-										: colors.red,
-									color: colors.white,
-									borderWidth: 1,
-									fontSize: 32,
-								},
-								wrapper: {
-									flexDirection: "column",
-									alignItems: "flex-end",
-									justifyContent: "flex-start",
-									marginTop: 30,
-									marginLeft: -20,
+				>
+					<ActivityIndicator size="large" color="black" />
+					<Text>Fetching plates...</Text>
+				</View>
+			) : data.length > 0 ? (
+				<>
+					<Swiper
+						ref={swiperRef as any}
+						cards={data}
+						onSwipedRight={onSwipedRight}
+						onSwipedLeft={onSwipedLeft}
+						cardIndex={index}
+						renderCard={renderCard}
+						backgroundColor={"transparent"}
+						onSwiped={onSwiped}
+						cardVerticalMargin={40}
+						stackSize={4}
+						stackScale={8}
+						stackSeparation={30}
+						stackAnimationFriction={7}
+						stackAnimationTension={40}
+						disableBottomSwipe
+						animateOverlayLabelsOpacity
+						animateCardOpacity
+						showSecondCard={showPreviousLikes ? false : true}
+						containerStyle={{
+							flex: 1,
+							justifyContent: "center",
+							alignItems: "center",
+							position: "absolute",
+						}}
+						overlayLabels={{
+							left: {
+								title: showPreviousLikes ? "" : "Dislike",
+								style: {
+									label: {
+										backgroundColor: showPreviousLikes
+											? "transparent"
+											: colors.red,
+										borderColor: showPreviousLikes
+											? "transparent"
+											: colors.red,
+										color: colors.white,
+										borderWidth: 1,
+										fontSize: 32,
+									},
+									wrapper: {
+										flexDirection: "column",
+										alignItems: "flex-end",
+										justifyContent: "flex-start",
+										marginTop: 30,
+										marginLeft: -20,
+									},
 								},
 							},
-						},
-						right: {
-							title: showPreviousLikes ? "" : "Like",
-							style: {
-								label: {
-									backgroundColor: showPreviousLikes
-										? "transparent"
-										: colors.blue,
-									borderColor: showPreviousLikes
-										? "transparent"
-										: colors.blue,
-									color: colors.white,
-									borderWidth: 1,
-									fontSize: 32,
-									
-								},
-								wrapper: {
-									flexDirection: "column",
-									alignItems: "flex-start",
-									justifyContent: "flex-start",
-									marginTop: 30,
-									marginLeft: 20,
+							right: {
+								title: showPreviousLikes ? "" : "Like",
+								style: {
+									label: {
+										backgroundColor: showPreviousLikes
+											? "transparent"
+											: colors.blue,
+										borderColor: showPreviousLikes
+											? "transparent"
+											: colors.blue,
+										color: colors.white,
+										borderWidth: 1,
+										fontSize: 32,
+									},
+									wrapper: {
+										flexDirection: "column",
+										alignItems: "flex-start",
+										justifyContent: "flex-start",
+										marginTop: 30,
+										marginLeft: 20,
+									},
 								},
 							},
-						},
-					}}
-				/>
+						}}
+					/>
+					{!showPreviousLikes && (
+						<View style={styles.buttonContainer}>
+							<TouchableOpacity
+								style={styles.dislikeButton}
+								onPress={() => {
+									swiperRef?.current?.swipeLeft();
+								}}
+							>
+								<MaterialIcons
+									name="thumb-down"
+									size={40}
+									color="white"
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.superLikeButton}
+								onPress={() => {
+									swiperRef?.current?.swipeLeft();
+								}}
+							>
+								<AntDesign
+									name="heart"
+									size={30}
+									color="white"
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.likeButton}
+								onPress={() => {
+									swiperRef?.current?.swipeRight();
+								}}
+							>
+								<MaterialIcons
+									name="thumb-up"
+									size={40}
+									color="white"
+								/>
+							</TouchableOpacity>
+						</View>
+					)}
+				</>
+			) : (
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					<Text>No results. {":("}</Text>
+				</View>
 			)}
-			{/* add like and dislike buttons underneath the swiper which act as manual buttons for swiping using the swiper ref */}
-			<View style={styles.buttonContainer}>
-				<TouchableOpacity
-					style={styles.dislikeButton}
-					onPress={() => {
-						swiperRef?.current?.swipeLeft();
-					}}
-				>
-					<MaterialIcons name="thumb-down" size={40} color="white" />
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.superLikeButton}
-					onPress={() => {
-						swiperRef?.current?.swipeLeft();
-					}}
-				>
-					<AntDesign name="heart" size={30} color="white" />
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.likeButton}
-					onPress={() => {
-						swiperRef?.current?.swipeRight();
-					}}
-				>
-					<MaterialIcons name="thumb-up" size={40} color="white" />
-				</TouchableOpacity>
-			</View>
-			
-			{/* <View style={styles.bottomContainer}>
-                    <Transitioning.View
-                        transition={transition}
-                        style={styles.bottomContainerMeta}
-                    >
-                        <CardDetails index={index} />
-                    </Transitioning.View>
-                </View> */}
 		</SafeAreaView>
 	);
 }

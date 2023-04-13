@@ -127,7 +127,6 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		margin: 20,
-		
 	},
 	superLikeText: {
 		color: colors.white,
@@ -187,6 +186,15 @@ export const styles = StyleSheet.create({
 		height: 100,
 		backgroundColor: "transparent",
 	},
-	
-
+	likeBadge: {
+		position: "absolute",
+		top: 10,
+		right: 10,
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: colors.gold,
+		justifyContent: "center",
+		alignItems: "center",
+	},
 });
