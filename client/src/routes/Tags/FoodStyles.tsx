@@ -3,36 +3,34 @@ import { colors } from "@/constants";
 import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
+import { useTags } from "./TagsContext";
 
 export default memo(() => {
-	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const { tags, setTags } = useTags();
 	return (
 		<View style={styles.category}>
 			<Text className="text-2xl p-2">Styles</Text>
 			<SelectableGroup
 				items={[
-					{ title: "Burger", value: "burger" },
+					{ title: "Burger", value: "burgers" },
 					{ title: "Pizza", value: "pizza" },
-					{ title: "Bowl", value: "bowl" },
-					{ title: "Plate", value: "plate" },
-					{ title: "Burrito", value: "burrito" },
-					{ title: "Dessert", value: "dessert" },
+					{ title: "Acai Bowl", value: "acaibowls" },
+					{ title: "Dessert", value: "desserts" },
 					{ title: "Salad", value: "salad" },
-					{ title: "Sandwich", value: "sandwich" },
-					{ title: "Wrap", value: "wrap" },
-					{ title: "Fries", value: "fries" },
+					{ title: "Sandwich", value: "sandwiches" },
+					{ title: "Wrap", value: "wraps" },
 					{ title: "Tacos", value: "tacos" },
 					{ title: "Noodles", value: "noodles" },
-					{ title: "Rice", value: "rice" },
+					{ title: "Rice", value: "riceshop" },
 					{ title: "Soup", value: "soup" },
-					{ title: "Pasta", value: "pasta" },
+					{ title: "Pasta", value: "pastashops" },
 					{ title: "Steak", value: "steak" },
-					{ title: "Chicken", value: "chicken" },
+					{ title: "Chicken Wings", value: "chicken_wings" },
 				]}
 				scrollEnabled={false}
-				values={selectedTags}
-				numColumns={3}
-				onChange={(values) => setSelectedTags(values)}
+				values={tags}
+				numColumns={2}
+				onChange={(values) => setTags(values)}
 				ItemComponent={({ item, selected }) => (
 					<View
 						style={{
@@ -42,6 +40,7 @@ export default memo(() => {
 							alignItems: "center",
 							padding: 8,
 							borderRadius: 5,
+							marginHorizontal: 5,
 							width: "100%",
 						}}
 					>
@@ -57,7 +56,7 @@ export default memo(() => {
 				ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
 				itemStyle={{
 					height: 50,
-					width: 85,
+					width: 150,
 					marginHorizontal: 5,
 				}}
 			/>

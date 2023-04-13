@@ -53,73 +53,65 @@ type RawPlate = {
   image_url: string;
 };
 
-type Plate = {
-  id: string;
-  businessId: string;
-  name: string;
-  description: string;
-  price: string;
-  image_url: string;
-};
+export const getRecommendations = functions.https.onCall(
+  async (data, context) => {
+    // Get parameters
+    const { radius, longitude, latitude } = data;
 
-export const getRecommendations = functions.https.onCall(async (data) => {
-  // Get parameters
-  const { radius, longitude, latitude } = data;
+    // Get calling user
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const user = await firestore()
+      .collection("users")
+      .doc(context.auth?.uid)
+      .get();
 
-  // Get businesses from Yelp API
-  const businesses: Business[] = await axios
-    .get("https://api.yelp.com/v3/businesses/search", {
-      headers: {
-        Authorization: `Bearer ${process.env.YELP_API_KEY}`,
-      },
-      params: {
-        term: "burger",
-        radius: radius,
-        longitude: longitude,
-        latitude: latitude,
-        limit: 20,
-      },
-    })
-    .then((response) => response.data.businesses)
-    .catch((error) => {
-      functions.logger.error(error);
-      return [];
-    });
+    // Get businesses from Yelp API
+    const businesses: Business[] = await axios
+      .get("https://api.yelp.com/v3/businesses/search", {
+        headers: {
+          Authorization: `Bearer ${process.env.YELP_API_KEY}`,
+        },
+        params: {
+          term: "burger",
+          radius,
+          longitude,
+          latitude,
+          categories: user.data()?.tags.join(","),
+          limit: 20,
+        },
+      })
+      .then((response) => response.data.businesses)
+      .catch((error) => {
+        functions.logger.error(error);
+        return [];
+      });
 
-  // Get menu items from each business
-  const items = await Promise.all(
-    businesses.map(async (business) => {
-      // Check if business is in Firestore
-      const businessDoc = await firestore()
-        .collection("businesses")
-        .doc(business.id)
-        .get();
+    // Populate Firestore with businesses and plates
+    await Promise.all(
+      businesses.map(async (business) => {
+        // Check if business is in Firestore
+        const businessDoc = await firestore()
+          .collection("businesses")
+          .doc(business.id)
+          .get();
 
-      // If business is in Firestore and is not expired, get plates from Firestore
-      if (
-        businessDoc.exists &&
-        Date.now() - businessDoc.data()?.timestamp.toDate().getTime() <=
-          businessDoc.data()?.ttl
-      ) {
-        functions.logger.info("Getting plates from Firestore");
-        const plates: Plate[] = await firestore()
-          .collection("plates")
-          .where("businessId", "==", business.id)
-          .get()
-          .then((querySnapshot) =>
-            querySnapshot.docs.map((doc) => {
-              return {
-                id: doc.id,
-                businessId: doc.data().businessId,
-                name: doc.data().name,
-                description: doc.data().description,
-                price: doc.data().price,
-                image_url: doc.data().image_url,
-              };
-            })
+        // If business is in Firestore and is not expired, no action needed
+        if (
+          businessDoc.exists &&
+          Date.now() - businessDoc.data()?.timestamp.toDate().getTime() <=
+            businessDoc.data()?.ttl
+        ) {
+          functions.logger.info(
+            `${business.id} (${business.name}) is in Firestore`
           );
-        return plates;
-      } else {
+          return;
+        }
+
         // If business is in Firestore but is expired, delete plates from Firestore
         functions.logger.info("Getting plates from Yelp");
         if (businessDoc.exists) {
@@ -149,64 +141,64 @@ export const getRecommendations = functions.https.onCall(async (data) => {
           });
 
         // Add plates to Firestore
-        const plates: Plate[] = await Promise.all(
-          plateData?.map((plate) =>
-            firestore()
-              .collection("plates")
-              .add({
-                businessId: business.id,
-                name: plate.name,
-                description: plate.description,
-                price: plate.price,
-                image_url: plate.image_url,
-              })
-              .then((docRef) => {
-                return {
-                  id: docRef.id,
+        await Promise.all([
+          Promise.all(
+            plateData?.map((plate) =>
+              firestore()
+                .collection("plates")
+                .add({
                   businessId: business.id,
                   name: plate.name,
                   description: plate.description,
                   price: plate.price,
                   image_url: plate.image_url,
-                };
-              })
-          ) ?? []
-        );
+                })
+                .then((docRef) => {
+                  return {
+                    id: docRef.id,
+                    businessId: business.id,
+                    name: plate.name,
+                    description: plate.description,
+                    price: plate.price,
+                    image_url: plate.image_url,
+                  };
+                })
+            ) ?? []
+          ),
 
-        // Add business to Firestore
-        await firestore()
-          .collection("businesses")
-          .doc(business.id)
-          .set({
-            name: business.name,
-            image_url: business.image_url,
-            is_closed: business.is_closed,
-            url: business.url,
-            review_count: business.review_count,
-            categories: business.categories,
-            rating: business.rating,
-            coordinates: business.coordinates,
-            transactions: business.transactions,
-            price: business.price ?? "",
-            location: business.location,
-            phone: business.phone,
-            display_phone: business.display_phone,
-            distance: business.distance ?? "",
-            hours: business.hours ?? [],
-            attributes: business.attributes ?? [],
-            timestamp: firestore.FieldValue.serverTimestamp(),
-            ttl: 86400000,
-          });
+          // Add business to Firestore
+          firestore()
+            .collection("businesses")
+            .doc(business.id)
+            .set({
+              name: business.name,
+              image_url: business.image_url,
+              is_closed: business.is_closed,
+              url: business.url,
+              review_count: business.review_count,
+              categories: business.categories,
+              rating: business.rating,
+              coordinates: business.coordinates,
+              transactions: business.transactions,
+              price: business.price ?? "",
+              location: business.location,
+              phone: business.phone,
+              display_phone: business.display_phone,
+              distance: business.distance ?? "",
+              hours: business.hours ?? [],
+              attributes: business.attributes ?? [],
+              timestamp: firestore.FieldValue.serverTimestamp(),
+              ttl: 86400000,
+            }),
+        ]);
+      })
+    );
 
-        return plates;
-      }
-    })
-  );
+    // Shuffle items based on timestamp 3 times
+    for (let i = 0; i < 3; i++) {
+      businesses.sort(() => Math.random() - 0.5);
+    }
 
-  // Shuffle items based on timestamp 3 times
-  for (let i = 0; i < 3; i++) {
-    items.sort(() => Math.random() - 0.5);
+    return businesses;
   }
-
-  return items;
-});
+);
