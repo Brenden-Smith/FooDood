@@ -119,11 +119,6 @@ export default memo(
 							<View style={styles.modalHeader}>
 								<Text style={styles.modalTitle}>
 									{item.data().name}
-									{"\n"}{"\n"}
-									Description:{"\n"}
-									Price:{"\n"}
-									Resteraunt:{"\n"}
-									Order from:
 								</Text>
 								<TouchableOpacity
 									style={[
@@ -132,8 +127,9 @@ export default memo(
 									]}
 									onPress={() =>
 										{
-										setModalVisible(!modalVisible);
-										getPlateInfo(item.data().plateId);
+											setCurrentPlateInfo(getPlateInfo(item.data().plateId));
+											console.log(item.data().plateId);
+											setModalVisible(!modalVisible);
 										}
 										
 									}

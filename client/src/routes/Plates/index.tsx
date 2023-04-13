@@ -134,6 +134,30 @@ export function Plates({
 			setShowPreviousLikes(false);
 		}
 	}, [showPreviousLikes]);
+	const onSwipedTop = useCallback(
+		(i: number) => {
+            const plate = data?.[i];
+            if (plate)
+                addDoc(collection(getFirestore(), "likes"), {
+                    plateId: plate.id,
+                    customerId: getAuth().currentUser?.uid,
+                    timestamp: serverTimestamp(),
+                    name: plate.data()?.name,
+                    image_url: plate.data()?.image_url,
+                    tags: plate.data()?.tags,
+                    super: true,
+                }),
+                    setNumInteractions(numInteractions + 1);
+            if (numInteractions % 6 == 5) {
+                // show the previous likes card which is the last card in the data array
+                setShowPreviousLikes(true);
+            } else {
+                setShowPreviousLikes(false);
+            }
+        },
+        [data, numInteractions],
+    );
+
 
 	const renderCard = useCallback(
 		(item: QueryDocumentSnapshot<DocumentData>) =>

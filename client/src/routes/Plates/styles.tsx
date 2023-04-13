@@ -180,7 +180,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		alignItems: "center",
 		position: "absolute",
-		bottom: 5,
+		bottom: 15,
 		left: 0,
 		right: 0,
 		height: 100,
