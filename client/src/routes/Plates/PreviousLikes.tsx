@@ -7,10 +7,18 @@ import {
 	DocumentSnapshot,
 } from "firebase/firestore";
 import { memo, useCallback, useEffect, useState } from "react";
-import { FlatList, Image, Modal, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+	FlatList,
+	Image,
+	Modal,
+	SafeAreaView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { styles } from "./styles";
 import { colors } from "@/constants";
-import Swiper from "react-native-deck-swiper";
+import { PlateDescriptionModal } from "@/components";
 
 export default memo(
 	({
@@ -126,63 +134,81 @@ export default memo(
 );
 
 const PreviousLike = memo(
-	({ item }: { item: DocumentSnapshot<DocumentData> }) => (
-		<View
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				height: 150,
-				width: 150,
-				backgroundColor: colors.black,
-				borderRadius: 15,
-				margin: 10,
-				justifyContent: "center",
-				alignItems: "center",
-			}}
-		>
-			<Image
-				source={{
-					uri: item.data()?.image_url,
+	({ item }: { item: DocumentSnapshot<DocumentData> }) => {
+		const [descriptionModalVisible, setDescriptionModalVisible] =
+			useState(false);
+		return (
+			<TouchableOpacity
+				onPress={() => {
+					setDescriptionModalVisible(true);
 				}}
-				style={[
-					styles.cardImage,
-					{
-						opacity: 0.8,
+			>
+				<View
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						height: 150,
+						width: 150,
+						backgroundColor: colors.black,
 						borderRadius: 15,
-					},
-				]}
-			/>
-			<Text
-				style={[
-					styles.price,
-					{
-						fontSize: 16,
-						paddingRight: 5,
-						right: 0,
-						left: "auto",
-						marginBottom: 0,
-						paddingBottom: 0,
-					},
-				]}
-			>
-				{item.data()?.price}
-			</Text>
-			<Text
-				style={[
-					styles.heading,
-					{
-						fontSize: 16,
-						paddingTop: 0,
-						top: 0,
-						bottom: "auto",
-						marginTop: 0,
-						left: 0,
-						marginBottom: 0,
-					},
-				]}
-			>
-				{item.data()?.name}
-			</Text>
-		</View>
-	),
+						margin: 10,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<Image
+						source={{
+							uri: item.data()?.image_url,
+						}}
+						style={[
+							styles.cardImage,
+							{
+								opacity: 0.8,
+								borderRadius: 15,
+							},
+						]}
+					/>
+
+					<Text
+						style={[
+							styles.price,
+							{
+								fontSize: 16,
+								paddingRight: 5,
+								right: 0,
+								left: "auto",
+								marginBottom: 0,
+								paddingBottom: 0,
+							},
+						]}
+					>
+						{item.data()?.price}
+					</Text>
+					<Text
+						style={[
+							styles.heading,
+							{
+								fontSize: 16,
+								paddingTop: 0,
+								top: 0,
+								bottom: "auto",
+								marginTop: 0,
+								left: 0,
+								marginBottom: 0,
+							},
+						]}
+					>
+						{item.data()?.name}
+					</Text>
+					<PlateDescriptionModal
+						visible={descriptionModalVisible}
+						plateID={item.data()!.plateId}
+						onDismiss={() => {
+							setDescriptionModalVisible(false);
+						}}
+					/>
+				</View>
+			</TouchableOpacity>
+		);
+	},
 );
