@@ -143,13 +143,13 @@ export default memo(
 								currentPlateInfo != null ? (
 								<>
 									<Text style={styles.modalText}>
-										Description: {currentPlateInfo.data().description}
+										Description: 
 									</Text>
 									<Text style={styles.modalText}>
-										Price: {currentPlateInfo.data().price}
+										Price: 
 									</Text>
 									<Text style={styles.modalText}>
-										Location: {currentPlateInfo.data().location}
+										Location:
 									</Text>
 								</>	
 							) : (
