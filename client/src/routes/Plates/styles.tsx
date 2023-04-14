@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 	},
 	bottomContainerMeta: { alignContent: "flex-end", alignItems: "center" },
+	
 	cardImage: {
 		width: "100%",
 		height: "100%",
