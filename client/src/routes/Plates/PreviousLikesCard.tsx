@@ -7,12 +7,15 @@ import {
 	DocumentSnapshot,
 } from "firebase/firestore";
 import { memo, useCallback, useEffect, useState } from "react";
-import { FlatList, Image, Text, View } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { colors } from "@/constants";
+import { PlateDescriptionModal } from "@/components";
 
 export default memo(() => {
 	const [plates, setPlates] = useState<DocumentSnapshot<DocumentData>[]>([]);
+	
+
 
 	const likes = useLikes();
 	useEffect(() => {
@@ -76,7 +79,14 @@ export default memo(() => {
 });
 
 const PreviousLike = memo(
-	({ item }: { item: DocumentSnapshot<DocumentData> }) => (
+	({ item, }: { item: DocumentSnapshot<DocumentData> }) => {
+	const [descriptionModalVisible, setDescriptionModalVisible] = useState(false);
+		return(
+		<TouchableOpacity
+				onPress={() => {
+					setDescriptionModalVisible(true);
+				}}
+				>
 		<View
 			style={{
 				display: "flex",
@@ -90,6 +100,7 @@ const PreviousLike = memo(
 				alignItems: "center",
 			}}
 		>
+			
 			<Image
 				source={{
 					uri: item.data()?.image_url,
@@ -101,38 +112,51 @@ const PreviousLike = memo(
 						borderRadius: 15,
 					},
 				]}
-			/>
-			<Text
-				style={[
-					styles.price,
-					{
-						fontSize: 16,
-						paddingRight: 5,
-						right: 0,
-						left: "auto",
-						marginBottom: 0,
-						paddingBottom: 0,
-					},
-				]}
-			>
-				{item.data()?.price}
-			</Text>
-			<Text
-				style={[
-					styles.heading,
-					{
-						fontSize: 16,
-						paddingTop: 0,
-						top: 0,
-						bottom: "auto",
-						marginTop: 0,
-						left: 0,
-						marginBottom: 0,
-					},
-				]}
-			>
-				{item.data()?.name}
-			</Text>
+				/>
+				
+					
+				<Text
+					style={[
+						styles.price,
+						{
+							fontSize: 16,
+							paddingRight: 5,
+							right: 0,
+							left: "auto",
+							marginBottom: 0,
+							paddingBottom: 0,
+						},
+					]}
+				>
+					{item.data()?.price}
+				</Text>
+				<Text
+					style={[
+						styles.heading,
+						{
+							fontSize: 16,
+							paddingTop: 0,
+							top: 0,
+							bottom: "auto",
+							marginTop: 0,
+							left: 0,
+							marginBottom: 0,
+						},
+					]}
+				>
+					{item.data()?.name}
+				</Text>
+			<PlateDescriptionModal
+				visible={descriptionModalVisible}
+				plateID={item.data()!.plateId}
+				onDismiss={() => {
+					setDescriptionModalVisible(false);
+				}
+			}
+		/>
 		</View>
-	),
+		</TouchableOpacity>
+		);
+	}
 );
+

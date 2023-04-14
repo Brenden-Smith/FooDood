@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   Modal,
   StyleSheet,
@@ -26,7 +26,13 @@ export function PlateDescriptionModal({
   onDismiss,
   plateID,
 }: PlateDescriptionModalProps) {
-  const plateData = usePlateData(plateID);
+
+
+  const plateData = usePlateData(plateID, visible);
+
+  useEffect(() => {
+			console.log("item", plateData.data?.id);
+  }, [plateData.data]);
 
   return (
     <Modal

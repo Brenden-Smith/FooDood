@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 	},
 	bottomContainerMeta: { alignContent: "flex-end", alignItems: "center" },
-	
+
 	cardImage: {
 		width: "100%",
 		height: "100%",
@@ -197,5 +197,16 @@ export const styles = StyleSheet.create({
 		backgroundColor: colors.gold,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	okButton: {
+		borderRadius: 100,
+		paddingVertical: 10,
+		paddingHorizontal: 64,
+		marginBottom: 12,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	buttonText: {
+		fontSize: 16,
 	},
 });
