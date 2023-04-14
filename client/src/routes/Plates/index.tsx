@@ -78,16 +78,27 @@ export function Plates({
 					"in",
 					businesses.data?.map((b) => b.id) ?? [""],
 				),
-				limit(5),
 			),
 		[businesses.data],
 	);
 	const plates = useFirestoreInfiniteQuery(
 		[QueryKey.PLATES, businesses.data, route?.params?.lucky],
-		platesQuery,
+		query(platesQuery, limit(5)),
 		(snapshot) => {
 			const lastDocument = snapshot.docs[snapshot.docs.length - 1];
-			return lastDocument && query(platesQuery, startAfter(lastDocument));
+			return (
+				lastDocument &&
+				query(
+					platesQuery,
+					limit(
+						1 +
+							(snapshot.docs.length - index >= 5
+								? 0
+								: 5 - (snapshot.docs.length - index)),
+					),
+					startAfter(lastDocument),
+				)
+			);
 		},
 		{},
 		{
@@ -97,16 +108,23 @@ export function Plates({
 	const [index, setIndex] = useState(0);
 	const [numInteractions, setNumInteractions] = useState(0);
 	const [showPreviousLikes, setShowPreviousLikes] = useState(false);
-	const onSwiped = useCallback(() => {
-		if (!(numInteractions % 6 == 5))
-			setIndex((index + 1) % (data?.length ?? 0));
-	}, [plates.data, index]);
 	const data = useMemo(
 		() => plates.data?.pages.flatMap((page) => page.docs) ?? [],
 		[plates.data],
 	);
+	const onSwiped = useCallback(() => {
+		plates.fetchNextPage();
+		if (!(numInteractions % 6 == 5) && !showPreviousLikes)
+			setIndex((index + 1) % (data?.length ?? 0));
+		if (numInteractions % 6 == 5) {
+			setShowPreviousLikes(true);
+		} else if (showPreviousLikes) {
+			setShowPreviousLikes(false);
+		}
+	}, [plates.data, index, numInteractions, showPreviousLikes, index, data]);
 	const onSwipedRight = useCallback(
 		(i: number) => {
+			if (showPreviousLikes) return;
 			const plate = data?.[i];
 			if (plate && !likes.data?.docs.some((like) => like.id == plate.id))
 				addDoc(collection(getFirestore(), "likes"), {
@@ -119,23 +137,12 @@ export function Plates({
 					ttl: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
 				}),
 					setNumInteractions(numInteractions + 1);
-			if (numInteractions % 6 == 5) {
-				// show the previous likes card which is the last card in the data array
-				setShowPreviousLikes(true);
-			} else {
-				setShowPreviousLikes(false);
-			}
 		},
 		[data, numInteractions, likes.data],
 	);
-
-	const onSwipedLeft = useCallback(() => {
-		if (showPreviousLikes) {
-			setShowPreviousLikes(false);
-		}
-	}, [showPreviousLikes]);
 	const onSwipedTop = useCallback(
 		(i: number) => {
+			if (showPreviousLikes) return;
 			const plate = data?.[i];
 			if (plate)
 				addDoc(collection(getFirestore(), "likes"), {
@@ -148,12 +155,6 @@ export function Plates({
 					super: true,
 				}),
 					setNumInteractions(numInteractions + 1);
-			if (numInteractions % 6 == 5) {
-				// show the previous likes card which is the last card in the data array
-				setShowPreviousLikes(true);
-			} else {
-				setShowPreviousLikes(false);
-			}
 		},
 		[data, numInteractions],
 	);
@@ -178,17 +179,13 @@ export function Plates({
 		[showPreviousLikes],
 	);
 
-	useEffect(() => {
-		if (index == data.length - 2) {
-			plates.fetchNextPage();
-		}
-	}, [index, plates.data]);
-
 	return (
 		<SafeAreaView style={styles.container}>
 			{!user.data?.data()?.tags ? (
 				<Text>Please select some tags to get started!</Text>
-			) : plates.isLoading ||
+			) : location.isLoading ||
+			  location.isFetching ||
+			  plates.isLoading ||
 			  businesses.isLoading ||
 			  (plates.isFetching && !plates.isFetchingNextPage) ||
 			  businesses.isFetching ? (
@@ -208,14 +205,13 @@ export function Plates({
 						ref={swiperRef as any}
 						cards={data}
 						onSwipedRight={onSwipedRight}
-						onSwipedLeft={onSwipedLeft}
 						onSwipedTop={onSwipedTop}
 						cardIndex={index}
 						renderCard={renderCard}
 						backgroundColor={"transparent"}
 						onSwiped={onSwiped}
 						cardVerticalMargin={40}
-						stackSize={4}
+						stackSize={5}
 						stackScale={8}
 						stackSeparation={30}
 						stackAnimationFriction={7}
