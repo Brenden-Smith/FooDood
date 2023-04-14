@@ -24,7 +24,7 @@ import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import * as Location from "expo-location";
 import { styles } from "./styles";
-import PreviousLikesCard from "./PreviousLikesCard";
+import PreviousLikes from "./PreviousLikes";
 import { Plate, RootStackParamList } from "@/types";
 import { colors, QueryKey } from "@/constants";
 import { Card } from "./Card";
@@ -108,23 +108,24 @@ export function Plates({
 	const [index, setIndex] = useState(0);
 	const [numInteractions, setNumInteractions] = useState(0);
 	const [showPreviousLikes, setShowPreviousLikes] = useState(false);
+	const [endReached, setEndReached] = useState(false);
 	const data = useMemo(
 		() => plates.data?.pages.flatMap((page) => page.docs) ?? [],
 		[plates.data],
 	);
+
+	// Swipe
 	const onSwiped = useCallback(() => {
 		plates.fetchNextPage();
-		if (!(numInteractions % 6 == 5) && !showPreviousLikes)
-			setIndex((index + 1) % (data?.length ?? 0));
-		if (numInteractions % 6 == 5) {
+		setIndex((index + 1) % (data?.length ?? 0));
+		if (numInteractions % 4 === 3) {
 			setShowPreviousLikes(true);
-		} else if (showPreviousLikes) {
-			setShowPreviousLikes(false);
 		}
 	}, [plates.data, index, numInteractions, showPreviousLikes, index, data]);
+
+	// Like
 	const onSwipedRight = useCallback(
 		(i: number) => {
-			if (showPreviousLikes) return;
 			const plate = data?.[i];
 			if (plate && !likes.data?.docs.some((like) => like.id == plate.id))
 				addDoc(collection(getFirestore(), "likes"), {
@@ -140,9 +141,10 @@ export function Plates({
 		},
 		[data, numInteractions, likes.data],
 	);
+
+	// Super like
 	const onSwipedTop = useCallback(
 		(i: number) => {
-			if (showPreviousLikes) return;
 			const plate = data?.[i];
 			if (plate)
 				addDoc(collection(getFirestore(), "likes"), {
@@ -159,26 +161,23 @@ export function Plates({
 		[data, numInteractions],
 	);
 
+	// Render card
 	const renderCard = useCallback(
 		(item: QueryDocumentSnapshot<DocumentData>) =>
-			showPreviousLikes ? (
-				<PreviousLikesCard />
-			) : (
-				item &&
-				item.data()?.image_url && (
-					<Card
-						plate={item}
-						liked={
-							likes.data?.docs.some(
-								(like) => like.data()?.plateId == item.id,
-							) ?? false
-						}
-					/>
-				)
+			item && (
+				<Card
+					plate={item}
+					liked={
+						likes.data?.docs.some(
+							(like) => like.data()?.plateId == item.id,
+						) ?? false
+					}
+				/>
 			),
-		[showPreviousLikes],
+		[likes.data],
 	);
 
+	// Render page
 	return (
 		<SafeAreaView style={styles.container}>
 			{!user.data?.data()?.tags ? (
@@ -200,82 +199,96 @@ export function Plates({
 					<Text>Fetching plates...</Text>
 				</View>
 			) : data.length > 0 ? (
-				<>
-					<Swiper
-						ref={swiperRef as any}
-						cards={data}
-						onSwipedRight={onSwipedRight}
-						onSwipedTop={onSwipedTop}
-						cardIndex={index}
-						renderCard={renderCard}
-						backgroundColor={"transparent"}
-						onSwiped={onSwiped}
-						cardVerticalMargin={40}
-						stackSize={5}
-						stackScale={8}
-						stackSeparation={30}
-						stackAnimationFriction={7}
-						stackAnimationTension={40}
-						disableBottomSwipe
-						animateOverlayLabelsOpacity
-						animateCardOpacity
-						showSecondCard={showPreviousLikes ? false : true}
-						containerStyle={{
+				endReached ? (
+					<View
+						style={{
 							flex: 1,
+
 							justifyContent: "center",
 							alignItems: "center",
-							position: "absolute",
 						}}
-						overlayLabels={{
-							left: {
-								title: showPreviousLikes ? "" : "Dislike",
-								style: {
-									label: {
-										backgroundColor: showPreviousLikes
-											? "transparent"
-											: colors.red,
-										borderColor: showPreviousLikes
-											? "transparent"
-											: colors.red,
-										color: colors.white,
-										borderWidth: 1,
-										fontSize: 32,
-									},
-									wrapper: {
-										flexDirection: "column",
-										alignItems: "flex-end",
-										justifyContent: "flex-start",
-										marginTop: 30,
-										marginLeft: -20,
+					>
+						<Text style={{ fontSize: 20 }}>
+							No more plates to show!
+						</Text>
+						<Text style={{ fontSize: 20 }}>
+							Try changing your tags or choosing a plate from your
+							previous likes!
+						</Text>
+					</View>
+				) : (
+					<>
+						<PreviousLikes
+							visible={showPreviousLikes}
+							setVisible={setShowPreviousLikes}
+						/>
+						<Swiper
+							ref={swiperRef as any}
+							cards={data}
+							onSwipedRight={onSwipedRight}
+							onSwipedTop={onSwipedTop}
+							cardIndex={index}
+							renderCard={renderCard}
+							backgroundColor={"transparent"}
+							onSwiped={onSwiped}
+							cardVerticalMargin={40}
+							onSwipedAll={() => setEndReached(true)}
+							stackSize={5}
+							stackScale={8}
+							stackSeparation={30}
+							stackAnimationFriction={7}
+							stackAnimationTension={40}
+							disableBottomSwipe
+							animateOverlayLabelsOpacity
+							animateCardOpacity
+							showSecondCard={true}
+							containerStyle={{
+								flex: 1,
+								justifyContent: "center",
+								alignItems: "center",
+								position: "absolute",
+							}}
+							overlayLabels={{
+								left: {
+									title: "Dislike",
+									style: {
+										label: {
+											backgroundColor: colors.red,
+											borderColor: colors.red,
+											color: colors.white,
+											borderWidth: 1,
+											fontSize: 32,
+										},
+										wrapper: {
+											flexDirection: "column",
+											alignItems: "flex-end",
+											justifyContent: "flex-start",
+											marginTop: 30,
+											marginLeft: -20,
+										},
 									},
 								},
-							},
-							right: {
-								title: showPreviousLikes ? "" : "Like",
-								style: {
-									label: {
-										backgroundColor: showPreviousLikes
-											? "transparent"
-											: colors.blue,
-										borderColor: showPreviousLikes
-											? "transparent"
-											: colors.blue,
-										color: colors.white,
-										borderWidth: 1,
-										fontSize: 32,
-									},
-									wrapper: {
-										flexDirection: "column",
-										alignItems: "flex-start",
-										justifyContent: "flex-start",
-										marginTop: 30,
-										marginLeft: 20,
+								right: {
+									title: "Like",
+									style: {
+										label: {
+											backgroundColor: colors.blue,
+											borderColor: colors.blue,
+											color: colors.white,
+											borderWidth: 1,
+											fontSize: 32,
+										},
+										wrapper: {
+											flexDirection: "column",
+											alignItems: "flex-start",
+											justifyContent: "flex-start",
+											marginTop: 30,
+											marginLeft: 20,
+										},
 									},
 								},
-							},
-						}}
-					/>
-					{!showPreviousLikes && (
+							}}
+						/>
 						<View style={styles.buttonContainer}>
 							<TouchableOpacity
 								style={styles.dislikeButton}
@@ -314,8 +327,8 @@ export function Plates({
 								/>
 							</TouchableOpacity>
 						</View>
-					)}
-				</>
+					</>
+				)
 			) : (
 				<View style={{ flex: 1, justifyContent: "center" }}>
 					<Text>No results. {":("}</Text>
