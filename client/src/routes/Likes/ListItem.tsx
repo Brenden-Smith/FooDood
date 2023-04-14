@@ -16,6 +16,7 @@ import { getFirestore, doc} from "firebase/firestore";
 import { async } from "@firebase/util"
 
 import { QueryKey } from "@/constants";
+import { PlateDescriptionModal } from "@/components"
 
 
 export default memo(
@@ -58,20 +59,7 @@ export default memo(
 			},
 		];
 
-		// write a function that gets the plate's info from firebase based on the plateId
-		// and then display it in the modal using the react-query-firebase hook
-		async function getPlateInfo(plateId: string) {
-			const like = useFirestoreDocument(
-				[QueryKey.PLATES, plateId],
-				doc(getFirestore(), "plates", plateId),
-				{},
-				{
-					enabled: !!plateId,
-				}
-				
-			);
-			setCurrentPlateInfo(like);
-		}
+		
 		return (
 			<HoldItem items={MenuItems}>
 				<View style={likesStyles.likeContainer}>
@@ -105,7 +93,21 @@ export default memo(
 					</TouchableOpacity>
 				</View>
 				{/*  modal which shows the plate's info */}
-				<Modal
+				<PlateDescriptionModal
+					visible={modalVisible}
+					plateID={item.data().plateId}
+					onDismiss={() => {
+						setModalVisible(!modalVisible);
+						
+					}
+				}
+				/>
+
+
+
+
+
+				{/* <Modal
 					animationType="fade"
 					transparent={true}
 					visible={modalVisible}
@@ -155,7 +157,7 @@ export default memo(
 							}
 						</View>
 					</View>
-				</Modal>
+				</Modal> */}
 			</HoldItem>
 		);
 	}
