@@ -7,6 +7,7 @@ import { Loading, Login, Settings, SignUp } from "@/routes";
 import { RootStackParamList } from "@/types";
 import { useNavigation, useUserData } from "@/hooks";
 import Tabs from "./Tabs";
+import { colors } from "@/constants";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -44,6 +45,10 @@ export default function Router(): JSX.Element {
 			initialRouteName="Loading"
 			screenOptions={{
 				headerShown: false,
+				headerStyle: {
+          backgroundColor: colors.creamPurple, // Set the background color of the header
+        },
+        headerTintColor: 'white', // Set the color of the text/icons in the header
 			}}
 		>
 			<Stack.Screen
@@ -60,7 +65,7 @@ export default function Router(): JSX.Element {
 				<Stack.Screen
 					name="SignUp"
 					component={SignUp}
-					options={{ gestureEnabled: false }}
+					options={{ gestureEnabled: false}}
 				/>
 			</Stack.Group>
 			{user && (

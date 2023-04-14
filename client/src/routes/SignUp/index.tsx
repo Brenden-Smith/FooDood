@@ -1,10 +1,12 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, Image, Dimensions } from "react-native";
 import { colors } from "@/constants/colors";
+import { useNavigation } from '@/hooks';
 
 const srcWidth = Dimensions.get('window').width;
 
 export function SignUp() {
   const Logo = require('@/assets/logo_big.png');
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.pageContainer}>
       <Image style={{ width: srcWidth * 0.9, height: 200, resizeMode: "contain"}} source={Logo} />
@@ -28,7 +30,10 @@ export function SignUp() {
           placeholder="Confirm Password"
         />
         <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.textLoginBtn}>Login</Text>
+          <Text style={styles.textLoginBtn}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.textNormal}>Cancel</Text>
         </TouchableOpacity>
     </SafeAreaView>
   )
