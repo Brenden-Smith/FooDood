@@ -202,7 +202,7 @@ const PreviousLike = memo(
 					</Text>
 					<PlateDescriptionModal
 						visible={descriptionModalVisible}
-						plateID={item.data()!.plateId}
+						plateID={item.id}
 						onDismiss={() => {
 							setDescriptionModalVisible(false);
 						}}
