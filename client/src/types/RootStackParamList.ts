@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
   Settings: undefined;
+  SignUp: undefined;
   Plates: {
     lucky?: boolean;
   }

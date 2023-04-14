@@ -47,6 +47,7 @@ export default memo(
 				),
 				// when pressed, show a modal with the plate's info
 				onPress: () => {
+					setCurrentPlateInfo(item.data());
 					setModalVisible(true);
 				},
 			},
@@ -58,9 +59,8 @@ export default memo(
 				},
 			},
 		];
-
-		
 		return (
+			<>
 			<HoldItem items={MenuItems}>
 				<View style={likesStyles.likeContainer}>
 					<View
@@ -93,15 +93,7 @@ export default memo(
 					</TouchableOpacity>
 				</View>
 				{/*  modal which shows the plate's info */}
-				<PlateDescriptionModal
-					visible={modalVisible}
-					plateID={item.data().plateId}
-					onDismiss={() => {
-						setModalVisible(!modalVisible);
-						
-					}
-				}
-				/>
+				
 
 
 
@@ -159,6 +151,16 @@ export default memo(
 					</View>
 				</Modal> */}
 			</HoldItem>
+			<PlateDescriptionModal
+					visible={modalVisible}
+					plateID={currentPlateInfo?.plateId}
+					onDismiss={() => {
+						setModalVisible(false);
+					}
+				}
+			/>
+			</>
+			
 		);
 	}
 		
