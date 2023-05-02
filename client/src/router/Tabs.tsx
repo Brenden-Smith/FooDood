@@ -1,7 +1,7 @@
 import { useLikes, useNavigation } from "@/hooks";
 import { Likes, Plates, Tags } from "@/routes";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { colors } from "@/constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -25,7 +25,6 @@ export default function Tabs() {
 					backgroundColor: colors.creamPurple,
 					height: 70,
 				},
-
 				tabBarIcon: ({ focused }) => {
 					let iconName;
 					let rn = route.name;

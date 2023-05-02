@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import axios from "axios";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Loading, Login, Settings, SignUp } from "@/routes";
 import { RootStackParamList } from "@/types";
-import { useNavigation, useUserData } from "@/hooks";
+import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
 import { colors } from "@/constants";
 

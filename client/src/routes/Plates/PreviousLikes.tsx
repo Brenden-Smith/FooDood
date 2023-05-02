@@ -11,7 +11,6 @@ import {
 	FlatList,
 	Image,
 	Modal,
-	SafeAreaView,
 	Text,
 	TouchableOpacity,
 	View,
