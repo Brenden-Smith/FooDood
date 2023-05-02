@@ -40,7 +40,6 @@ export default memo(() => {
 							alignItems: "center",
 							padding: 8,
 							borderRadius: 5,
-							marginHorizontal: 5,
 							width: "100%",
 						}}
 					>

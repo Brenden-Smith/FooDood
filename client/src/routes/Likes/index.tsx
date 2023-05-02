@@ -21,6 +21,7 @@ import { getAuth } from "firebase/auth";
 import { colors } from "@/constants";
 import { useLikes } from "@/hooks";
 import ListItem from "./ListItem";
+import { HoldMenuFlatList } from "react-native-hold-menu";
 
 const srcWidth = Dimensions.get("window").width;
 
@@ -88,6 +89,9 @@ export function Likes() {
 						)
 					}
 					showsVerticalScrollIndicator={false}
+					maxToRenderPerBatch={10}
+					initialNumToRender={20}
+					windowSize={2}
 				/>
 			</View>
 		</SafeAreaView>

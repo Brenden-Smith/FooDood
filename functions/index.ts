@@ -57,18 +57,49 @@ export const getRecommendations = functions.https.onCall(
   async (data, context) => {
     // Get parameters
     const { radius, longitude, latitude } = data;
+    let { lucky } = data;
 
     // Get calling user
-    if (!context.auth) {
+    if (!context.auth || !context.auth.uid) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "The function must be called while authenticated."
       );
     }
-    const user = await firestore()
-      .collection("users")
-      .doc(context.auth?.uid)
-      .get();
+
+    // Get user's tags
+    const categories = lucky
+      ? await firestore()
+          .collection("likes")
+          .where("customerId", "==", context.auth?.uid)
+          .get()
+          .then(async (snapshot) => {
+            if (snapshot.docs.length < 10) {
+              lucky = false;
+              return await firestore()
+                .collection("users")
+                .doc(context.auth!.uid)
+                .get()
+                .then((doc) => doc.data()?.tags.join(","));
+            }
+            const tags = snapshot.docs.map((doc) => doc.data().tags).flat();
+            const rankings = tags.map((tag) => ({
+              [tag]: tags.filter((t) => t === tag).length,
+            }));
+            return Object.keys(rankings.sort((a: any, b: any) => b[1] - a[1]))
+              .slice(0, 3)
+              .join(",");
+          })
+      : await firestore()
+          .collection("users")
+          .doc(context.auth?.uid)
+          .get()
+          .then((doc) => doc.data()?.tags.join(","));
+    functions.logger.info(
+      `Got ${categories} categories for ${context.auth?.uid} (${
+        lucky ? "lucky" : "not lucky"
+      })`
+    );
 
     // Get businesses from Yelp API
     const businesses: Business[] = await axios
@@ -77,11 +108,10 @@ export const getRecommendations = functions.https.onCall(
           Authorization: `Bearer ${process.env.YELP_API_KEY}`,
         },
         params: {
-          term: "burger",
           radius,
           longitude,
           latitude,
-          categories: user.data()?.tags.join(","),
+          categories,
           limit: 20,
         },
       })
@@ -106,9 +136,6 @@ export const getRecommendations = functions.https.onCall(
           Date.now() - businessDoc.data()?.timestamp.toDate().getTime() <=
             businessDoc.data()?.ttl
         ) {
-          functions.logger.info(
-            `${business.id} (${business.name}) is in Firestore`
-          );
           return;
         }
 
@@ -141,56 +168,46 @@ export const getRecommendations = functions.https.onCall(
           });
 
         // Add plates to Firestore
-        await Promise.all([
-          Promise.all(
-            plateData?.map((plate) =>
-              firestore()
-                .collection("plates")
-                .add({
-                  businessId: business.id,
-                  name: plate.name,
-                  description: plate.description,
-                  price: plate.price,
-                  image_url: plate.image_url,
-                })
-                .then((docRef) => {
-                  return {
-                    id: docRef.id,
-                    businessId: business.id,
-                    name: plate.name,
-                    description: plate.description,
-                    price: plate.price,
-                    image_url: plate.image_url,
-                  };
-                })
-            ) ?? []
-          ),
+        await Promise.all(
+          plateData?.map((plate) =>
+            firestore()
+              .collection("plates")
+              .add({
+                businessId: business.id,
+                name: plate.name,
+                description: plate.description,
+                price: plate.price,
+                image_url: plate.image_url,
+                tags: business.categories.map((category) => category.alias),
+                businessName: business.name,
+              })
+          )
+        );
 
-          // Add business to Firestore
-          firestore()
-            .collection("businesses")
-            .doc(business.id)
-            .set({
-              name: business.name,
-              image_url: business.image_url,
-              is_closed: business.is_closed,
-              url: business.url,
-              review_count: business.review_count,
-              categories: business.categories,
-              rating: business.rating,
-              coordinates: business.coordinates,
-              transactions: business.transactions,
-              price: business.price ?? "",
-              location: business.location,
-              phone: business.phone,
-              display_phone: business.display_phone,
-              distance: business.distance ?? "",
-              hours: business.hours ?? [],
-              attributes: business.attributes ?? [],
-              timestamp: firestore.FieldValue.serverTimestamp(),
-              ttl: 86400000,
-            }),
-        ]);
+        // Add business to Firestore
+        await firestore()
+          .collection("businesses")
+          .doc(business.id)
+          .set({
+            name: business.name,
+            image_url: business.image_url,
+            is_closed: business.is_closed,
+            url: business.url,
+            review_count: business.review_count,
+            categories: business.categories,
+            rating: business.rating,
+            coordinates: business.coordinates,
+            transactions: business.transactions,
+            price: business.price ?? "",
+            location: business.location,
+            phone: business.phone,
+            display_phone: business.display_phone,
+            distance: business.distance ?? "",
+            hours: business.hours ?? [],
+            attributes: business.attributes ?? [],
+            timestamp: firestore.FieldValue.serverTimestamp(),
+            ttl: 86400000,
+          });
       })
     );
 
@@ -199,6 +216,6 @@ export const getRecommendations = functions.https.onCall(
       businesses.sort(() => Math.random() - 0.5);
     }
 
-    return businesses;
+    return businesses.slice(0, 9);
   }
 );

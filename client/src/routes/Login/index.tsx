@@ -7,6 +7,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { colors } from "@/constants/colors";
+import { useNavigation } from '@/hooks';
+import { RootStackParamList } from "@/types";
+
+
 
 WebBrowser.maybeCompleteAuthSession();
 const srcWidth = Dimensions.get('window').width;
@@ -29,6 +33,8 @@ export function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+
+  const navigation = useNavigation();
 
   function validate() {
     if (email === 'Username or Email' || password === 'Password') {
@@ -77,10 +83,12 @@ export function Login() {
           <Text style={styles.textLoginBtn}>Login</Text>
         </TouchableOpacity>
         <Text style={[styles.textNormal, styles.textLink]}>Need Help Logging In?</Text>
-        <Text style={styles.textNormal}>
-          <Text style={styles.textNormal}>Don't have an Account </Text>
-          <Text style={[styles.textNormal, styles.textLink]}>Sign Up</Text>
-        </Text>
+        <TouchableOpacity style={styles.textNormal} onPress={() => navigation.navigate("SignUp")}>
+          <Text>
+            <Text style={styles.textNormal}>Don't have an Account </Text>
+            <Text style={[styles.textNormal, styles.textLink]}>Sign Up</Text>
+          </Text>
+        </TouchableOpacity>
         <View style={styles.divider}></View>
         <TouchableOpacity style={styles.loginAlt} disabled={!request} onPress={() => promptAsync()} >
           <Text style={styles.textLoginAlt}>Google</Text>

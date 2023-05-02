@@ -14,10 +14,7 @@ const scrWidth = Dimensions.get("window").width;
 
 export function Settings() {
 	const user = useUserData();
-	
 
-
-    
 	const SignupSchema = Yup.object().shape({
 		email: Yup.string().email('Invalid email').required('Required'),
 		// sufficient password strength and complexity
@@ -29,9 +26,6 @@ export function Settings() {
 		.required('Required'),
 	});
 
-
-
-	
 	return (
 		<SafeAreaView style={styles.pageContainer}>
 			<ScrollView style={{height: '100%'}}>
