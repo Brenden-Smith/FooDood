@@ -7,7 +7,7 @@ import {
 import { memo, useCallback, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { PlateDescriptionModal } from "@/components";
 import { Image } from "expo-image";
 

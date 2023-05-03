@@ -20,7 +20,7 @@ import { getAuth } from "firebase/auth";
 import { styles } from "./styles";
 import PreviousLikes from "./PreviousLikes";
 import { Plate, RootStackParamList } from "@/types";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { Card } from "./Card";
 import { useLikes, useRecommendedPlates, useUserData } from "@/hooks";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";

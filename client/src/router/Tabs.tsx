@@ -3,7 +3,7 @@ import { Likes, Plates, Tags } from "@/routes";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/types";
 
@@ -72,22 +72,27 @@ export default function Tabs() {
 				name={platesScreen}
 				component={Plates}
 				options={({ route }) => ({
-					headerLeft: () => (likes.data?.docs.length ?? 0) >= 10 && (
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("Plates", {
-									lucky: !route.params?.lucky ?? true,
-								})
-							}
-						>
-							<MaterialCommunityIcons
-								name="clover"
-								size={26}
-								color={route.params?.lucky ? colors.creamGreen : "white"}
-								style={{ marginLeft: 20 }}
-							/>
-						</TouchableOpacity>
-					),
+					headerLeft: () =>
+						(likes.data?.docs.length ?? 0) >= 10 && (
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("Plates", {
+										lucky: !route.params?.lucky ?? true,
+									})
+								}
+							>
+								<MaterialCommunityIcons
+									name="clover"
+									size={26}
+									color={
+										route.params?.lucky
+											? colors.creamGreen
+											: "white"
+									}
+									style={{ marginLeft: 20 }}
+								/>
+							</TouchableOpacity>
+						),
 				})}
 			/>
 			<Tab.Screen name={likesScreen} component={Likes} />

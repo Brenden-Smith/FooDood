@@ -1,5 +1,5 @@
 import { SelectableGroup } from "@/components";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";

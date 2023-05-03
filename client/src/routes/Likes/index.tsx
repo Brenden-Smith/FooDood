@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useCallback, useMemo } from "react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { useLikes } from "@/hooks";
 import ListItem from "./ListItem";
 import { FlashList } from "@shopify/flash-list";

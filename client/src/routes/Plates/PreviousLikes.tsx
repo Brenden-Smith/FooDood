@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { memo, useCallback, useEffect, useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { PlateDescriptionModal } from "@/components";
 import { text } from "@/theme";
 import { Image } from "expo-image";

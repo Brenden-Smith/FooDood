@@ -4,7 +4,7 @@ import { styles } from "./styles";
 import { useTags } from "./TagsContext";
 import { useUserData } from "@/hooks";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { getAuth } from "firebase/auth";
 
 export default memo(() => {
@@ -24,7 +24,7 @@ export default memo(() => {
 	const disabled = useMemo(
 		() => JSON.stringify(user.data?.data()?.tags) === JSON.stringify(tags),
 		[user.data?.data()?.tags, tags],
-    );
+	);
 
 	return (
 		<View>

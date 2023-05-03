@@ -1,11 +1,9 @@
-import { FlashList, FlashListProps } from "@shopify/flash-list";
 import { useCallback, useMemo } from "react";
 import {
 	FlatList,
 	FlatListProps,
 	TouchableOpacity,
 	TouchableOpacityProps,
-	View,
 } from "react-native";
 
 type SelectableItem = {

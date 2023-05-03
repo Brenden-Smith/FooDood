@@ -3,7 +3,7 @@ import { memo, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 
 export const Card = memo(
 	({

@@ -6,7 +6,7 @@ import { Loading, Login, Settings, SignUp } from "@/routes";
 import { RootStackParamList } from "@/types";
 import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -23,7 +23,9 @@ export default function Router(): JSX.Element {
 		onAuthStateChanged(getAuth(), async (user) => {
 			setUser(user);
 			if (user) {
-				const data = await getDoc(doc(getFirestore(), `users/${user.uid}`));
+				const data = await getDoc(
+					doc(getFirestore(), `users/${user.uid}`),
+				);
 				if (!data.exists()) {
 					setDoc(doc(getFirestore(), `users/${user.uid}`), {
 						createdAt: new Date(),
@@ -45,9 +47,9 @@ export default function Router(): JSX.Element {
 			screenOptions={{
 				headerShown: false,
 				headerStyle: {
-          backgroundColor: colors.creamPurple, // Set the background color of the header
-        },
-        headerTintColor: 'white', // Set the color of the text/icons in the header
+					backgroundColor: colors.creamPurple, // Set the background color of the header
+				},
+				headerTintColor: "white", // Set the color of the text/icons in the header
 			}}
 		>
 			<Stack.Screen
@@ -64,7 +66,7 @@ export default function Router(): JSX.Element {
 				<Stack.Screen
 					name="SignUp"
 					component={SignUp}
-					options={{ gestureEnabled: false}}
+					options={{ gestureEnabled: false }}
 				/>
 			</Stack.Group>
 			{user && (
