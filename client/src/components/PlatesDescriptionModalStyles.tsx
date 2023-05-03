@@ -83,8 +83,6 @@ export const styles = StyleSheet.create({
         overflow: "hidden",
         borderRadius: 15,
         flex: 1,
-        elevation: 6
-        // make sure its above the modal with elevation
     },
 imageContainer: {
         position: "absolute",

@@ -1,9 +1,11 @@
+import { FlashList, FlashListProps } from "@shopify/flash-list";
 import { useCallback, useMemo } from "react";
 import {
 	FlatList,
 	FlatListProps,
 	TouchableOpacity,
 	TouchableOpacityProps,
+	View,
 } from "react-native";
 
 type SelectableItem = {
@@ -82,7 +84,6 @@ export function SelectableGroup({
 			{...props}
 			data={items}
 			renderItem={renderItem}
-			keyExtractor={(item) => item.value}
 			scrollEnabled={false}
 		/>
 	);

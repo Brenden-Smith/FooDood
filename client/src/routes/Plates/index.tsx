@@ -145,7 +145,7 @@ export function Plates({
 			/>
 			<Swiper
 				ref={swiperRef as any}
-				cards={data}
+				cards={data ?? []}
 				onSwipedRight={onSwipedRight}
 				onSwipedTop={onSwipedTop}
 				cardIndex={index}

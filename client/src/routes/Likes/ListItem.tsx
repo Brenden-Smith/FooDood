@@ -1,102 +1,42 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
-import { memo, useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { HoldItem } from "react-native-hold-menu";
-import { likesStyles } from "./styles";
+import { AntDesign } from "@expo/vector-icons";
+import {
+	QueryDocumentSnapshot,
+	DocumentData,
+	deleteDoc,
+} from "firebase/firestore";
+import { memo, useCallback, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { colors } from "@/constants";
 import { PlateDescriptionModal } from "@/components";
+import { Image } from "expo-image";
 
 export default memo(
-	({
-		item,
-		removeLikedPlate,
-	}: {
-		item: QueryDocumentSnapshot<DocumentData>;
-		removeLikedPlate: Function;
-	}) => {
+	({ item }: { item: QueryDocumentSnapshot<DocumentData> }) => {
 		const [visible, setVisible] = useState(false);
+		const onPress = useCallback(() => deleteDoc(item.ref), [item.ref]);
 
 		return (
 			<>
-				{/* <HoldItem
-					items={[
-						{ text: "Actions", isTitle: true },
-						{
-							text: "Super Like",
-							icon: () => (
-								<AntDesign
-									name="heart"
-									size={24}
-									color="black"
-								/>
-							),
-							onPress: () => {},
-						},
-						{
-							text: "Info",
-							icon: () => (
-								<Ionicons
-									name="information-circle-outline"
-									size={24}
-									color="black"
-								/>
-							),
-							// when pressed, show a modal with the plate's info
-							onPress: (i) => {
-								setPlateID(i.data().plateId);
-							},
-						},
-						{
-							text: "Delete",
-							icon: () => (
-								<AntDesign
-									name="delete"
-									size={24}
-									color="black"
-								/>
-							),
-							onPress: () => {
-								removeLikedPlate(item.data().plateId);
-							},
-						},
-					]}
-				> */}
-					<View style={likesStyles.likeContainer}>
+				<View style={styles.likeContainer}>
 					<TouchableOpacity
-							onPress={() => setVisible(true)}
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								marginRight: 15,
-							}}
-						>
-							<Image
-								source={{ uri: item.data().image_url }}
-								style={likesStyles.likedImage}
-							/>
-							<Text
-								style={{
-									fontSize: 18,
-									flexWrap: "wrap",
-									maxWidth: 150,
-									textAlign: "left",
-								}}
-							>
-								{item.data().name}
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() =>
-								removeLikedPlate(item.data().plateId)
-							}
-							style={likesStyles.removeLikeButton}
-						>
-							<AntDesign name="close" size={21} color="white" />
-						</TouchableOpacity>
-					</View>
-				{/* </HoldItem> */}
+						onPress={() => setVisible(true)}
+						style={styles.likeTouchable}
+					>
+						<Image
+							source={{ uri: item.data().image_url }}
+							style={styles.likedImage}
+							contentFit="cover"
+						/>
+						<Text style={styles.name}>{item.data().name}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={onPress}
+						style={styles.removeLikeButton}
+					>
+						<AntDesign name="close" size={21} color="white" />
+					</TouchableOpacity>
+				</View>
 				<PlateDescriptionModal
 					visible={visible}
 					plateID={item.data().plateId}
@@ -106,59 +46,39 @@ export default memo(
 		);
 	},
 );
+
 const styles = StyleSheet.create({
-	centeredView: {
-		flex: 1,
-		flexDirection: "column",
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 22,
-		width: "100%",
-	},
-	modalView: {
-		margin: 20,
-		width: "80%",
-		backgroundColor: colors.white,
-		borderRadius: 20,
-		padding: 35,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
-		alignSelf: "center",
-	},
-	button: {
-		borderRadius: 20,
-		padding: 10,
-		elevation: 2,
-	},
-	buttonClose: {
-		backgroundColor: colors.red,
-		padding: 12,
-		maxHeight: 50,
-	},
-	textStyle: {
-		color: colors.white,
-		fontWeight: "bold",
-		textAlign: "center",
-	},
-	modalText: {
-		marginBottom: 15,
-		textAlign: "center",
-	},
-	modalHeader: {
+	likeContainer: {
+		display: "flex",
 		flexDirection: "row",
-		justifyContent: "space-between",
 		alignItems: "center",
-		width: "100%",
+		justifyContent: "space-between",
+		margin: 10,
+		padding: 10,
+		borderRadius: 10,
+		flexWrap: "nowrap",
+		backgroundColor: colors.white,
 	},
-	modalTitle: {
-		fontSize: 20,
-		fontWeight: "bold",
+	likeTouchable: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginRight: 15,
+	},
+	removeLikeButton: {
+		backgroundColor: colors.creamRed,
+		padding: 3,
+		borderRadius: 5,
+	},
+	likedImage: {
+		width: 70,
+		height: 70,
+		borderRadius: 10,
+		marginRight: 15,
+	},
+	name: {
+		fontSize: 18,
+		flexWrap: "wrap",
+		maxWidth: 150,
+		textAlign: "left",
 	},
 });

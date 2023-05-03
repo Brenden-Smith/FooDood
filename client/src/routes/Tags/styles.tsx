@@ -35,5 +35,8 @@ export const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 16,
 	},
-	
+	title: {
+		textAlign: "center",
+		marginBottom: 12,
+	}
 });

@@ -14,7 +14,7 @@ import {
 	where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useUserData } from "./useUserData";
 
 export function useRecommendedPlates(lucky: boolean) {
@@ -68,26 +68,34 @@ export function useRecommendedPlates(lucky: boolean) {
 		[businesses.data],
 	);
 
-	const queryOrder = useMemo(() => {
-		const random = Math.floor(Math.random() * 7);
-		switch (random) {
+	const randomQueryOrder = useCallback(() => {
+		const r1 = Math.floor(Math.random() * 6);
+		let field = "businessName";
+		switch (r1) {
 			case 0:
-				return orderBy("businessId");
+				field = "businessName";
+				break;
 			case 1:
-				return orderBy("businessName");
+				field = "description";
+				break;
 			case 2:
-				return orderBy("description");
+				field = "image_url";
+				break;
 			case 3:
-				return orderBy("image_url");
+				field = "name";
+				break;
 			case 4:
-				return orderBy("name");
+				field = "price";
+				break;
 			case 5:
-				return orderBy("price");
-			case 6:
-				return orderBy("tags");
+				field = "tags";
+				break;
 			default:
-				return orderBy("businessId");
+				field = "businessName";
+				break;
 		}
+		const r2 = Math.floor(Math.random() * 2);
+		return orderBy(field, r2 === 0 ? "asc" : "desc");
 	}, []);
 
 	return useInfiniteQuery(
@@ -95,11 +103,11 @@ export function useRecommendedPlates(lucky: boolean) {
 		({ pageParam }: { pageParam?: QueryDocumentSnapshot<DocumentData> }) =>
 			getDocs(
 				!pageParam
-					? query(platesQuery, limit(5))
+					? query(platesQuery, randomQueryOrder(), limit(5))
 					: query(
 							platesQuery,
 							limit(1),
-							queryOrder,
+							randomQueryOrder(),
 							startAfter(pageParam),
 					  ),
 			),

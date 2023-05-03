@@ -8,9 +8,6 @@ import * as WebBrowser from "expo-web-browser";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { colors } from "@/constants/colors";
 import { useNavigation } from '@/hooks';
-import { RootStackParamList } from "@/types";
-
-
 
 WebBrowser.maybeCompleteAuthSession();
 const srcWidth = Dimensions.get('window').width;
@@ -93,9 +90,9 @@ export function Login() {
         <TouchableOpacity style={styles.loginAlt} disabled={!request} onPress={() => promptAsync()} >
           <Text style={styles.textLoginAlt}>Google</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.loginAlt} disabled>
+        {/* <TouchableOpacity style={styles.loginAlt} disabled>
           <Text style={styles.textLoginAlt}>Apple</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
     </SafeAreaView>
   );
 }

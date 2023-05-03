@@ -4,12 +4,13 @@ import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { useTags } from "./TagsContext";
+import { text } from "@/theme";
 
 export default memo(() => {
 	const { setTags, tags } = useTags();
 	return (
 		<View style={styles.category}>
-			<Text className="text-2xl p-2">Cuisine</Text>
+			<Text style={[text.h3, styles.title]}>Cuisine</Text>
 			<SelectableGroup
 				items={[
 					{ title: "Mexican", value: "mexican" },
