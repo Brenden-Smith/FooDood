@@ -1,9 +1,8 @@
-import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Text, StyleSheet, Dimensions } from "react-native";
+import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { getAuth, signOut } from "firebase/auth";
 import { useUserData } from "@/hooks/useUserData";
 import { useCallback, useEffect, useState } from "react";
 import { colors } from "@/constants/colors"
-import { ScrollView } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import { setDoc } from "firebase/firestore";
 import Slider from '@react-native-community/slider';
