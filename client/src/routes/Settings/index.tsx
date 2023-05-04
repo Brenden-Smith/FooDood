@@ -259,12 +259,12 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: "bold",
-		fontColor: colors.creamPurple,
+		textDecorationColor: colors.creamPurple,
 	},
 	subtitle: {
 		fontSize: 16,
 		fontWeight: "bold",
-		fontColor: colors.creamPurple,
+		textDecorationColor: colors.creamPurple,
 	},
 	logoutBtn: {
 		backgroundColor: colors.creamOrange,
