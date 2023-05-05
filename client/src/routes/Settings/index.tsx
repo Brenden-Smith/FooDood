@@ -14,12 +14,15 @@ import { Formik } from "formik";
 import { setDoc } from "firebase/firestore";
 import Slider from "@react-native-community/slider";
 import { updatePassword } from "firebase/auth";
+import { StatusBar } from "expo-status-bar";
+import { LoadingOverlay } from "@/components";
 
 export function Settings() {
 	const user = useUserData();
 
 	return (
 		<SafeAreaView style={styles.pageContainer}>
+			<StatusBar style="light" />
 			<ScrollView
 				style={{
 					height: "100%",
@@ -86,10 +89,11 @@ export function Settings() {
 						values,
 						errors,
 						touched,
+						isSubmitting,
 					}) => (
 						<View style={styles.container}>
+							<LoadingOverlay loading={isSubmitting} />
 							<Text style={styles.title}>Account</Text>
-
 							<View style={styles.accountContainer}>
 								<View style={styles.accountSetting}>
 									<TextInput

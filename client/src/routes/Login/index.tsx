@@ -4,43 +4,27 @@ import {
 	TextInput,
 	TouchableOpacity,
 	StyleSheet,
+	KeyboardAvoidingView,
+	Platform,
 } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
-import { useEffect } from "react";
-import {
-	GoogleAuthProvider,
-	getAuth,
-	signInWithCredential,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
 import { colors } from "@/theme";
 import { useNavigation } from "@/hooks";
+
 // @ts-ignore
 import LogoBig from "@/assets/logo_big.svg";
 import { Formik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth/react-native";
+import { StatusBar } from "expo-status-bar";
+import { LoadingOverlay } from "@/components";
+import Google from "./Google";
+import Apple from "./Apple";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export function Login() {
-	const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-		clientId:
-			"637872410840-d6ut3b9clpcenh663ssdi8ggk7pf03ac.apps.googleusercontent.com",
-		iosClientId:
-			"637872410840-5bl5c3d3i10vsblg3esujfb28a4lbebs.apps.googleusercontent.com",
-	});
-
-	// Sign into Firebase with the Google credential
-	useEffect(() => {
-		if (response?.type === "success") {
-			signInWithCredential(
-				getAuth(),
-				GoogleAuthProvider.credential(response.params.id_token),
-			);
-		}
-	}, [response]);
-
 	const navigation = useNavigation();
 
 	// Render front end component
@@ -83,66 +67,73 @@ export function Login() {
 				values,
 				errors,
 				touched,
+				isSubmitting,
 			}) => (
 				<SafeAreaView style={styles.pageContainer}>
-					<LogoBig
-						height={200}
+					<StatusBar style="dark" />
+					<LoadingOverlay loading={isSubmitting} />
+					<KeyboardAvoidingView
+						behavior="padding"
 						style={{
-							color: colors.creamPurple,
+							display: "flex",
+							width: "100%",
+							justifyContent: "center",
+							alignItems: "center",
 						}}
-					/>
-					<Text style={styles.textTitle}>Login</Text>
-					<TextInput
-						style={styles.textInput}
-						onChangeText={handleChange("email")}
-						value={values.email}
-						placeholder="E-Mail"
-						onBlur={handleBlur("email")}
-					/>
-					{touched.email && errors.email && (
-						<Text style={styles.error}>{errors.email}</Text>
-					)}
-					<TextInput
-						style={styles.textInput}
-						onChangeText={handleChange("password")}
-						value={values.password}
-						placeholder="Password"
-						secureTextEntry={true}
-						onBlur={handleBlur("password")}
-					/>
-					{touched.password && errors.password && (
-						<Text style={styles.error}>{errors.password}</Text>
-					)}
-					<TouchableOpacity
-						style={styles.loginBtn}
-						onPress={() => handleSubmit()}
 					>
-						<Text style={styles.textLoginBtn}>Login</Text>
-					</TouchableOpacity>
-					{/* <Text style={[styles.textNormal, styles.textLink]}>
-						Need Help Logging In?
-					</Text> */}
-					<TouchableOpacity
-						style={styles.textNormal}
-						onPress={() => navigation.navigate("SignUp")}
-					>
-						<Text>
-							<Text style={styles.textNormal}>
-								Don't have an Account?{" "}
+						<LogoBig
+							height={200}
+							style={{
+								color: colors.creamPurple,
+							}}
+						/>
+						<Text style={styles.textTitle}>Login</Text>
+						<TextInput
+							style={styles.textInput}
+							onChangeText={handleChange("email")}
+							value={values.email}
+							placeholder="E-Mail"
+							onBlur={handleBlur("email")}
+						/>
+						{touched.email && errors.email && (
+							<Text style={styles.error}>{errors.email}</Text>
+						)}
+						<TextInput
+							style={styles.textInput}
+							onChangeText={handleChange("password")}
+							value={values.password}
+							placeholder="Password"
+							secureTextEntry={true}
+							onBlur={handleBlur("password")}
+						/>
+						{touched.password && errors.password && (
+							<Text style={styles.error}>{errors.password}</Text>
+						)}
+						<TouchableOpacity
+							style={styles.loginBtn}
+							onPress={() => handleSubmit()}
+						>
+							<Text style={styles.textLoginBtn}>Login</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.textNormal}
+							onPress={() => navigation.navigate("SignUp")}
+						>
+							<Text>
+								<Text style={styles.textNormal}>
+									Don't have an Account?{" "}
+								</Text>
+								<Text
+									style={[styles.textNormal, styles.textLink]}
+								>
+									Sign Up
+								</Text>
 							</Text>
-							<Text style={[styles.textNormal, styles.textLink]}>
-								Sign Up
-							</Text>
-						</Text>
-					</TouchableOpacity>
-					<View style={styles.divider}></View>
-					<TouchableOpacity
-						style={styles.loginAlt}
-						disabled={!request}
-						onPress={() => promptAsync()}
-					>
-						<Text style={styles.textLoginAlt}>Sign in with Google</Text>
-					</TouchableOpacity>
+						</TouchableOpacity>
+						<View style={styles.divider}></View>
+						{Platform.OS === "ios" && <Apple />}
+						<Google />
+					</KeyboardAvoidingView>
 				</SafeAreaView>
 			)}
 		</Formik>

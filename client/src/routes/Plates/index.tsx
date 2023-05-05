@@ -26,6 +26,7 @@ import { Card } from "./Card";
 import { useLikes, useRecommendedPlates, useUserData } from "@/hooks";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
 
 const swiperRef = createRef<Swiper<Plate>>();
 
@@ -46,88 +47,86 @@ export function Plates({
 	}, [plates.key]);
 
 	// Render page
-	return !user.data?.data()?.tags || user.data?.data()?.tags.length === 0 ? (
+	return (
 		<SafeAreaView style={styles.container}>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<Text
+			<StatusBar style="light" />
+			{!user.data?.data()?.tags ||
+			user.data?.data()?.tags.length === 0 ? (
+				<View
 					style={{
-						fontFamily: "Cabin_400Regular",
-						fontSize: 20,
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
 					}}
 				>
-					Please select some tags to get started!
-				</Text>
-			</View>
-		</SafeAreaView>
-	) : plates.isLoading ? (
-		<SafeAreaView style={styles.container}>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<ActivityIndicator size="large" color="black" />
-				<Text
+					<Text
+						style={{
+							fontFamily: "Cabin_400Regular",
+							fontSize: 20,
+						}}
+					>
+						Please select some tags to get started!
+					</Text>
+				</View>
+			) : plates.isLoading ? (
+				<View
 					style={{
-						fontSize: 20,
-						fontFamily: "Lobster_400Regular",
-						marginTop: 20,
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
 					}}
 				>
-					Fetching plates...
-				</Text>
-			</View>
-		</SafeAreaView>
-	) : data.length > 0 && endReached ? (
-		<SafeAreaView style={styles.container}>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<Text
+					<ActivityIndicator size="large" color="black" />
+					<Text
+						style={{
+							fontSize: 20,
+							fontFamily: "Lobster_400Regular",
+							marginTop: 20,
+						}}
+					>
+						Fetching plates...
+					</Text>
+				</View>
+			) : data.length > 0 && endReached ? (
+				<View
 					style={{
-						fontFamily: "Cabin_400Regular",
-						fontSize: 20,
-						textAlign: "center",
-						marginBottom: 15,
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
 					}}
 				>
-					No more plates to show!
-				</Text>
-				<Text
-					style={{
-						fontFamily: "Cabin_400Regular",
-						fontSize: 20,
-						textAlign: "center",
-					}}
-				>
-					Try changing your tags or choosing a plate from your
-					previous likes!
-				</Text>
-			</View>
-		</SafeAreaView>
-	) : data.length > 0 ? (
-		<PlatesDeck
-			plates={plates}
-			setEndReached={setEndReached}
-			key={plates.key}
-		/>
-	) : (
-		<SafeAreaView style={styles.container}>
-			<View style={{ flex: 1, justifyContent: "center" }}>
-				<Text>No results. {":("}</Text>
-			</View>
+					<Text
+						style={{
+							fontFamily: "Cabin_400Regular",
+							fontSize: 20,
+							textAlign: "center",
+							marginBottom: 15,
+						}}
+					>
+						No more plates to show!
+					</Text>
+					<Text
+						style={{
+							fontFamily: "Cabin_400Regular",
+							fontSize: 20,
+							textAlign: "center",
+						}}
+					>
+						Try changing your tags or choosing a plate from your
+						previous likes!
+					</Text>
+				</View>
+			) : data.length > 0 ? (
+				<PlatesDeck
+					plates={plates}
+					setEndReached={setEndReached}
+					key={plates.key}
+				/>
+			) : (
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					<Text>No results. {":("}</Text>
+				</View>
+			)}
 		</SafeAreaView>
 	);
 }
@@ -229,7 +228,7 @@ const PlatesDeck = memo(
 		);
 
 		return (
-			<SafeAreaView style={styles.container}>
+			<>
 				<PreviousLikes
 					visible={showPreviousLikes}
 					setVisible={setShowPreviousLikes}
@@ -343,7 +342,7 @@ const PlatesDeck = memo(
 						/>
 					</TouchableOpacity>
 				</View>
-			</SafeAreaView>
+			</>
 		);
 	},
 );

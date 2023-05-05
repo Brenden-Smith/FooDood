@@ -12,6 +12,7 @@ import { colors } from "@/theme";
 import { useLikes } from "@/hooks";
 import ListItem from "./ListItem";
 import { FlashList } from "@shopify/flash-list";
+import { StatusBar } from "expo-status-bar";
 
 /**
  * Likes screen
@@ -41,6 +42,7 @@ export function Likes(): JSX.Element {
 
 	return (
 		<SafeAreaView style={styles.root}>
+			<StatusBar style="light" />
 			<View style={styles.container}>
 				<FlashList
 					data={likes.data?.docs}

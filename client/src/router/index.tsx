@@ -18,6 +18,8 @@ import { Lobster_400Regular } from "@expo-google-fonts/lobster";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BackButton from "./BackButton";
 import { TouchableOpacity } from "react-native";
+import { LoadingOverlay } from "@/components";
+import { Roboto_500Medium } from "@expo-google-fonts/roboto";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -35,7 +37,9 @@ export default function Router(): JSX.Element {
 		Cabin_600SemiBold,
 		Cabin_700Bold,
 		Lobster_400Regular,
+		Roboto_500Medium
 	});
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		if (!fontsLoaded) return;
@@ -51,6 +55,7 @@ export default function Router(): JSX.Element {
 						displayName: user.displayName,
 						email: user.email,
 						tags: [],
+						searchDistance: 40000,
 					});
 				}
 				navigation.navigate("Home");
@@ -110,19 +115,23 @@ export default function Router(): JSX.Element {
 							},
 							headerTintColor: "white",
 							headerRight: () => (
-								<TouchableOpacity
-									onPress={() =>
-										signOut(getAuth()).then(() =>
-											navigation.navigate("Login"),
-										)
-									}
-								>
-									<MaterialIcons
-										name="logout"
-										size={24}
-										color="white"
-									/>
-								</TouchableOpacity>
+								<>
+									<LoadingOverlay loading={loading} />
+
+									<TouchableOpacity
+										onPress={async () => {
+											setLoading(true);
+											await signOut(getAuth());
+											setLoading(false);
+										}}
+									>
+										<MaterialIcons
+											name="logout"
+											size={24}
+											color="white"
+										/>
+									</TouchableOpacity>
+								</>
 							),
 						}}
 					/>

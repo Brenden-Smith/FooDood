@@ -1,6 +1,6 @@
 {
 	"expo": {
-		"name": "foodood",
+		"name": "FooDood",
 		"scheme": "foodood",
 		"slug": "foodood",
 		"version": "1.0.0",
@@ -8,7 +8,7 @@
 		"icon": "./src/assets/icon.png",
 		"userInterfaceStyle": "light",
 		"splash": {
-			"image": "./src/assets/logo.png",
+			"image": "./src/assets/logo_big.png",
 			"backgroundColor": "#f8e3cc"
 		},
 		"updates": {
@@ -36,6 +36,7 @@
 			"favicon": "./src/assets/favicon.png"
 		},
 		"plugins": [
+			"expo-apple-authentication",
 			[
 				"expo-location",
 				{

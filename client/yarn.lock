@@ -1081,6 +1081,11 @@
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/lobster/-/lobster-0.2.3.tgz#2b60d1134e2b696978d3c0ba8bafee26718c1688"
   integrity sha512-+NMtWoW/hF0HKsi0KEeCJjV0gWAa+oi7m1bZbpzWmlLBZNbj9KkKkkS6CngBR8sZ46rmSTXSXC9QOgqY/LJZbQ==
 
+"@expo-google-fonts/roboto@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/roboto/-/roboto-0.2.3.tgz#c103422a3c8f461aaada33acaf06418f6650dc19"
+  integrity sha512-PF6S//ZYWeXfpYTwvY2oEe0d5RnqwR5KMsGjuTgg6y9p/CPK/IkWL+wsbkzjfd+Jck1Q1pRlWOoe5uz42sQFRg==
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"
@@ -3997,6 +4002,11 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+expo-apple-authentication@~6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/expo-apple-authentication/-/expo-apple-authentication-6.0.1.tgz#bd86c5bc8e00da71f7af1aa1f6b02a833a80a9f8"
+  integrity sha512-Vp7HzSdUJj9lC6rJokJjDU1BBA3EgZMEzoQJpI8Kjck4/5BXlOhlKMxqk4zUoPEqZ/hhj5DgqMhM3IeNm46mag==
+
 expo-application@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.1.1.tgz#5206bf0cf89cb0e32d1f5037a0481e5c86b951ab"
@@ -4035,7 +4045,7 @@ expo-constants@~14.2.0, expo-constants@~14.2.1:
     "@expo/config" "~8.0.0"
     uuid "^3.3.2"
 
-expo-crypto@~12.2.0:
+expo-crypto@~12.2.0, expo-crypto@~12.2.1:
   version "12.2.2"
   resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-12.2.2.tgz#e930c77a44aa1816e9e3063a0dd43c6477cc8787"
   integrity sha512-83SZju/l0UL4n+Dgt+T1csiySa0gwCeE6BKKHzlO+4lJ6B8xXZ5ypu97ttWATBsqcpF/bj1RmYPbfbKsZ+4ixA==

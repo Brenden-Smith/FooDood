@@ -5,7 +5,7 @@ import Cuisine from "./Cuisine";
 import FoodStyles from "./FoodStyles";
 import Extra from "./Extra";
 import { TagsProvider } from "./TagsContext";
-import TutorialMain from "../Tutorial2/TutorialMain"
+import { StatusBar } from "expo-status-bar";
 
 export function Tags() {
 	const renderItem = useCallback(
@@ -16,8 +16,7 @@ export function Tags() {
 	return (
 		<TagsProvider>
 			<SafeAreaView style={styles.pageContainer}>
-				{/* <TutorialMain visible={true} setVisible={() => {}} /> */}
-				
+				<StatusBar style="light" />
 				<SectionList
 					contentContainerStyle={styles.categoriesContainer}
 					sections={[
