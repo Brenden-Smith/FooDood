@@ -21,6 +21,7 @@ export default function Router(): JSX.Element {
 	const [user, setUser] = useState<User | null>(null);
 	const [fontsLoaded] = useFonts({
 		Cabin: require("@/assets/fonts/Cabin.ttf"),
+		Lobster: require("@/assets/fonts/Lobster.ttf"),
 	});
 
 	useEffect(() => {
