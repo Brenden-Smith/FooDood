@@ -1,4 +1,4 @@
-import { useLikes, useNavigation } from "@/hooks";
+import { useLikes, useNavigation, useUserData } from "@/hooks";
 import { Likes, Plates, Tags } from "@/routes";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native";
@@ -16,6 +16,8 @@ const likesScreen = "Likes";
 export default function Tabs() {
 	const navigation = useNavigation();
 	const likes = useLikes();
+	const user = useUserData();
+
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -46,7 +48,7 @@ export default function Tabs() {
 						/>
 					);
 				},
-				headerRight: () => (
+				headerLeft: () => (
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Settings")}
 					>
@@ -54,7 +56,7 @@ export default function Tabs() {
 							name="gear"
 							size={26}
 							color="white"
-							style={{ marginRight: 20 }}
+							style={{ marginLeft: 20 }}
 						/>
 					</TouchableOpacity>
 				),
@@ -72,7 +74,7 @@ export default function Tabs() {
 				name={platesScreen}
 				component={Plates}
 				options={({ route }) => ({
-					headerLeft: () =>
+					headerRight: () =>
 						(likes.data?.docs.length ?? 0) >= 10 && (
 							<TouchableOpacity
 								onPress={() =>
@@ -89,7 +91,7 @@ export default function Tabs() {
 											? colors.creamGreen
 											: "white"
 									}
-									style={{ marginLeft: 20 }}
+									style={{ marginRight: 20 }}
 								/>
 							</TouchableOpacity>
 						),

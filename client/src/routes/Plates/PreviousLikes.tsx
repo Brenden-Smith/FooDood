@@ -72,7 +72,7 @@ export default memo(
 						<View
 							style={{
 								height: 350,
-								width: 350,
+								width: 300,
 							}}
 						>
 							<FlashList
@@ -134,7 +134,6 @@ const PreviousLike = memo(
 const styles = StyleSheet.create({
 	modalInner: {
 		display: "flex",
-		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: "rgba(0,0,0,0.5)",
@@ -155,7 +154,6 @@ const styles = StyleSheet.create({
 		elevation: 5,
 		display: "flex",
 		flexDirection: "column",
-		justifyContent: "space-evenly",
 		padding: 20,
 		backgroundColor: colors.creamLight,
 	},
@@ -214,26 +212,21 @@ const styles = StyleSheet.create({
 		paddingRight: 5,
 		right: 0,
 		left: "auto",
-		marginBottom: 0,
-		paddingBottom: 0,
 	},
 	cardImage: {
 		width: "100%",
 		height: "100%",
-		backgroundColor: "#FFFFFF",
-		overflow: "hidden",
-		flex: 1,
-		opacity: 0.8,
 		borderRadius: 15,
 	},
 	card: {
-		display: "flex",
-		flexDirection: "column",
-		height: 150,
-		width: 150,
-		backgroundColor: colors.black,
+		flex: 1,
+		// flexDirection: "column",
+		height: 160,
+		width: 141,
+		backgroundColor: colors.white,
 		borderRadius: 15,
-		margin: 10,
+		marginBottom: 10,
+		marginLeft: 5,
 		justifyContent: "center",
 		alignItems: "center",
 	},
