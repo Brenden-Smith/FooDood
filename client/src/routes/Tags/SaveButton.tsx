@@ -26,16 +26,6 @@ const styles = StyleSheet.create({
 	button: {
 		marginRight: 20,
 	},
-	disabledButton: {
-		backgroundColor: "grey",
-		padding: 10,
-		borderRadius: 5,
-	},
-	enabledButton: {
-		backgroundColor: colors.creamGreen,
-		padding: 10,
-		borderRadius: 5,
-	},
 	text: {
 		fontFamily: "Cabin_500Medium",
 		fontSize: 16,
