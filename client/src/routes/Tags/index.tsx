@@ -16,7 +16,7 @@ export function Tags() {
 	return (
 		<TagsProvider>
 			<SafeAreaView style={styles.pageContainer}>
-				<TutorialMain visible={true} setVisible={() => {}} />
+				{/* <TutorialMain visible={true} setVisible={() => {}} /> */}
 				
 				<SectionList
 					contentContainerStyle={styles.categoriesContainer}
