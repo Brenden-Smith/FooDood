@@ -6,13 +6,14 @@ import {
 	getFirestore,
 	DocumentSnapshot,
 } from "firebase/firestore";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "@/theme";
 import { PlateDescriptionModal } from "@/components";
 import { text } from "@/theme";
 import { Image } from "expo-image";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 
 export default memo(
 	({
@@ -22,26 +23,30 @@ export default memo(
 		visible: boolean;
 		setVisible: (visible: boolean) => void;
 	}) => {
-		const [plates, setPlates] = useState<DocumentSnapshot<DocumentData>[]>(
-			[],
-		);
-
 		const likes = useLikes();
-		useEffect(() => {
-			async function getPlates() {
-				const plateIds =
+		const plates = useQuery(
+			[
+				"previousLikes",
+				likes.data?.docs.slice(0, Math.min(likes.data?.docs.length, 4)),
+			],
+			() =>
+				Promise.all(
 					likes.data?.docs
-						?.splice(0, 4)
-						.map((doc) => doc.data().plateId) ?? [];
-				const plateDocs = await Promise.all(
-					plateIds.map((id: string) =>
-						getDoc(doc(getFirestore(), "plates", id)),
-					),
-				);
-				setPlates(plateDocs);
-			}
-			getPlates();
-		}, [likes.data?.docs]);
+						.slice(0, Math.min(likes.data?.docs.length, 4))
+						.map((like) =>
+							getDoc(
+								doc(
+									getFirestore(),
+									"plates",
+									like.data().plateId,
+								),
+							),
+						) ?? [],
+				),
+			{
+				enabled: !!likes.data?.docs,
+			},
+		);
 
 		const renderItem = useCallback(
 			({ item }: { item: DocumentSnapshot<DocumentData> }) => (
@@ -71,7 +76,7 @@ export default memo(
 							}}
 						>
 							<FlashList
-								data={plates}
+								data={plates.data}
 								renderItem={renderItem}
 								numColumns={2}
 								scrollEnabled={false}

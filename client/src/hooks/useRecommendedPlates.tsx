@@ -14,10 +14,11 @@ import {
 	where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserData } from "./useUserData";
+import { RecommendedPlatesQuery } from "@/types";
 
-export function useRecommendedPlates(lucky: boolean) {
+export function useRecommendedPlates(lucky: boolean): RecommendedPlatesQuery {
 	const getRecommendations = httpsCallable(
 		getFunctions(),
 		"getRecommendations",
@@ -53,7 +54,7 @@ export function useRecommendedPlates(lucky: boolean) {
 			enabled:
 				!!location.data && !!user.data && !!user.data?.data()?.tags,
 		},
-  );
+	);
 
 	const platesQuery = useMemo(
 		() =>
@@ -68,48 +69,18 @@ export function useRecommendedPlates(lucky: boolean) {
 		[businesses.data],
 	);
 
-	const randomQueryOrder = useCallback(() => {
-		const r1 = Math.floor(Math.random() * 6);
-		let field = "businessName";
-		switch (r1) {
-			case 0:
-				field = "businessName";
-				break;
-			case 1:
-				field = "description";
-				break;
-			case 2:
-				field = "image_url";
-				break;
-			case 3:
-				field = "name";
-				break;
-			case 4:
-				field = "price";
-				break;
-			case 5:
-				field = "tags";
-				break;
-			default:
-				field = "businessName";
-				break;
-		}
-		const r2 = Math.floor(Math.random() * 2);
-		return orderBy(field, r2 === 0 ? "asc" : "desc");
-	}, []);
+	const key = useMemo(
+		() => [QueryKey.PLATES, platesQuery, businesses.data],
+		[platesQuery, businesses.data],
+	);
 
-	return useInfiniteQuery(
-		[QueryKey.PLATES, platesQuery, businesses.data],
+	const plates = useInfiniteQuery(
+		key,
 		({ pageParam }: { pageParam?: QueryDocumentSnapshot<DocumentData> }) =>
 			getDocs(
 				!pageParam
-					? query(platesQuery, randomQueryOrder(), limit(5))
-					: query(
-							platesQuery,
-							limit(1),
-							randomQueryOrder(),
-							startAfter(pageParam),
-					  ),
+					? query(platesQuery, limit(5), orderBy("image_url"))
+					: query(platesQuery, limit(1), orderBy("image_url"), startAfter(pageParam)),
 			),
 		{
 			getNextPageParam: (lastPage) => {
@@ -118,4 +89,9 @@ export function useRecommendedPlates(lucky: boolean) {
 			enabled: !!businesses.data && !!platesQuery,
 		},
 	);
+
+	return {
+		key,
+		...plates,
+	};
 }
