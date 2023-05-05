@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Loading, Login, Settings, SignUp } from "@/routes";
@@ -15,8 +15,9 @@ import {
 	Cabin_700Bold,
 } from "@expo-google-fonts/cabin";
 import { Lobster_400Regular } from "@expo-google-fonts/lobster";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BackButton from "./BackButton";
+import { TouchableOpacity } from "react-native";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -108,6 +109,21 @@ export default function Router(): JSX.Element {
 								fontFamily: "Lobster_400Regular",
 							},
 							headerTintColor: "white",
+							headerRight: () => (
+								<TouchableOpacity
+									onPress={() =>
+										signOut(getAuth()).then(() =>
+											navigation.navigate("Login"),
+										)
+									}
+								>
+									<MaterialIcons
+										name="logout"
+										size={24}
+										color="white"
+									/>
+								</TouchableOpacity>
+							),
 						}}
 					/>
 				</Stack.Group>
