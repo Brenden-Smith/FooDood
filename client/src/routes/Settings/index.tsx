@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { getAuth, signOut } from "firebase/auth";
 import { useUserData } from "@/hooks/useUserData";
-import { useCallback, useEffect, useState } from "react";
 import { colors } from "@/theme";
 import { Formik } from "formik";
 import { setDoc } from "firebase/firestore";
@@ -20,7 +19,6 @@ import * as Yup from "yup";
 import { updatePassword } from "firebase/auth";
 
 const scrWidth = Dimensions.get("window").width;
-
 
 function updateUserPassword(password: string) {
 	const user = getAuth().currentUser;
@@ -66,11 +64,13 @@ export function Settings() {
 						email: user.data?.data()?.email,
 						password: undefined,
 						// darkMode: user.data?.data()?.darkMode,
-						notifications: user.data?.data()?.notifications || false,
+						notifications:
+							user.data?.data()?.notifications || false,
 						sounds: user.data?.data()?.sounds || false,
 						vibration: user.data?.data()?.vibration || false,
 						lowData: user.data?.data()?.lowData || false,
-						searchDistance: user.data?.data()?.searchDistance || false,
+						searchDistance:
+							user.data?.data()?.searchDistance || false,
 					}}
 					// when the form is submitted, update the user's data in firebase
 					onSubmit={async (values) => {
@@ -79,7 +79,6 @@ export function Settings() {
 						if (values.password) {
 							await updateUserPassword(values.password);
 						}
-
 					}}
 					validationSchema={SignupSchema}
 				>
@@ -164,7 +163,7 @@ export function Settings() {
 											}
 										/>
 									</View>
-									
+
 									<View style={styles.toggleContainer}>
 										<Text>Sounds</Text>
 										<Switch
@@ -217,8 +216,10 @@ export function Settings() {
 											style={{ width: 200, height: 40 }}
 											minimumValue={1}
 											maximumValue={24}
-											minimumTrackTintColor={colors.creamPurple}
-											maximumTrackTintColor='grey'
+											minimumTrackTintColor={
+												colors.creamPurple
+											}
+											maximumTrackTintColor="grey"
 											step={1}
 											tapToSeek={true}
 											value={values.searchDistance}
@@ -232,7 +233,7 @@ export function Settings() {
 												);
 											}}
 										/>
-										<Text style = {styles.sliderText}>
+										<Text style={styles.sliderText}>
 											{Math.floor(
 												values.searchDistance / 1609.34,
 											)}{" "}

@@ -15,6 +15,8 @@ import {
 	Cabin_700Bold,
 } from "@expo-google-fonts/cabin";
 import { Lobster_400Regular } from "@expo-google-fonts/lobster";
+import { Ionicons } from "@expo/vector-icons";
+import BackButton from "./BackButton";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -62,10 +64,6 @@ export default function Router(): JSX.Element {
 			initialRouteName="Loading"
 			screenOptions={{
 				headerShown: false,
-				headerStyle: {
-					backgroundColor: colors.creamPurple, // Set the background color of the header
-				},
-				headerTintColor: "white", // Set the color of the text/icons in the header
 			}}
 		>
 			<Stack.Screen
@@ -95,7 +93,22 @@ export default function Router(): JSX.Element {
 					<Stack.Screen
 						name="Settings"
 						component={Settings}
-						options={{ gestureEnabled: false, headerShown: true }}
+						options={{
+							gestureEnabled: false,
+							headerShown: true,
+							headerLeft: () => <BackButton />,
+							headerBackVisible: false,
+							headerStyle: {
+								backgroundColor: colors.creamPurple,
+							},
+							headerTitleStyle: {
+								fontWeight: "bold",
+								fontSize: 30,
+								color: "white",
+								fontFamily: "Lobster_400Regular",
+							},
+							headerTintColor: "white",
+						}}
 					/>
 				</Stack.Group>
 			)}
