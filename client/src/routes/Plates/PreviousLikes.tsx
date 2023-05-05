@@ -44,7 +44,7 @@ export default memo(
 						) ?? [],
 				),
 			{
-				enabled: !!likes.data?.docs,
+				enabled: !!likes.data?.docs && visible,
 			},
 		);
 

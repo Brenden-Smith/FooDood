@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback, useEffect } from "react";
 import {
 	Modal,
 	Text,
@@ -6,27 +6,13 @@ import {
 	TouchableOpacity,
 	Image,
 	StyleSheet,
-	Linking,
 	Platform,
+	Linking,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { usePlateData } from "@/hooks";
 import { colors } from "@/theme";
-import { useBusiness } from "@/hooks/useBusiness"
-
-function navigateToLocation(address: string) {
-	// detect if the operating system is ios or android
-	// if ios, use apple maps
-	// if android, use google maps
-	if (Platform.OS === "ios") {
-		Linking.openURL(`maps://app?address=${address}`);
-	}
-	if (Platform.OS === "android") {
-		Linking.openURL(`google.navigation:q=${address}`);
-	}
-	
-}
-
+import { useBusiness } from "@/hooks/useBusiness";
 
 export const PlateDescriptionModal = memo(
 	({
@@ -39,7 +25,23 @@ export const PlateDescriptionModal = memo(
 		plateID: string;
 	}) => {
 		const plateData = usePlateData(plateID, visible);
-		const businessData = useBusiness(plateData.data?.data()?.businessId);	
+		const businessData = useBusiness(
+			plateData.data?.data()?.businessId,
+			visible,
+		);
+
+		const navigateToLocation = useCallback(() => {
+			if (Platform.OS === "ios") {
+				Linking.openURL(
+					`maps://app?address=${businessData.data?.data()?.address}`,
+				);
+			}
+			if (Platform.OS === "android") {
+				Linking.openURL(
+					`google.navigation:q=${businessData.data?.data()?.address}`,
+				);
+			}
+		}, [businessData.data?.data()?.address]);
 
 		return (
 			<Modal
@@ -97,12 +99,13 @@ export const PlateDescriptionModal = memo(
 										</Text>
 									))}
 							</View>
-							{/* create a button which links the user to the proper location using expo linking */}
-							<Text style={styles.subHeading}>Business Location</Text>
+							<Text style={styles.subHeading}>
+								Business Location
+							</Text>
 							<Text style={styles.modalText}>
 								{businessData.data?.data()?.address}
 							</Text>
-							<TouchableOpacity onPress={navigateToLocation(businessData.data?.data()?.address)}>
+							<TouchableOpacity onPress={navigateToLocation}>
 								<MaterialCommunityIcons
 									name="map-marker"
 									size={30}

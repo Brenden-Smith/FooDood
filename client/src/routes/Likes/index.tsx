@@ -6,7 +6,7 @@ import {
 	Dimensions,
 	StyleSheet,
 } from "react-native";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { colors } from "@/theme";
 import { useLikes } from "@/hooks";

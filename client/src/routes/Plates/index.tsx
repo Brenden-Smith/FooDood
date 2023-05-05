@@ -26,7 +26,6 @@ import { Card } from "./Card";
 import { useLikes, useRecommendedPlates, useUserData } from "@/hooks";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UseInfiniteQueryResult } from "@tanstack/react-query";
 
 const swiperRef = createRef<Swiper<Plate>>();
 
@@ -41,6 +40,10 @@ export function Plates({
 	const plates = useRecommendedPlates(route?.params?.lucky ?? false);
 	const data = plates.data?.pages.flatMap((page) => page.docs) ?? [];
 	const [endReached, setEndReached] = useState(false);
+
+	useEffect(() => {
+		setEndReached(false);
+	}, [plates.key]);
 
 	// Render page
 	return !user.data?.data()?.tags ? (

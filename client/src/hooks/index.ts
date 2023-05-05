@@ -1,3 +1,4 @@
+export { useBusiness } from "./useBusiness";
 export { useFirestoreDocument } from "./useFirestoreDocument";
 export { useFirestoreQuery } from "./useFirestoreQuery";
 export { useLikes } from "./useLikes";
