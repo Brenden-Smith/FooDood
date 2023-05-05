@@ -16,7 +16,7 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"buildNumber": "2",
+			"buildNumber": "3",
 			"supportsTablet": true,
 			"bundleIdentifier": "dev.foodood.ios"
 		},
