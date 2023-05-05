@@ -41,7 +41,10 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
 	useEffect(() => setTags(user.data?.data()?.tags ?? []), [user.data]);
 
 	useEffect(() => {
-		if (!tags.every((tag) => user.data?.data()?.tags.includes(tag))) {
+		if (
+			!tags.every((tag) => user.data?.data()?.tags.includes(tag)) ||
+			!user.data?.data()?.tags.every((tag: string) => tags.includes(tag))
+		) {
 			navigation.setOptions({
 				headerRight: () => <SaveButton onPress={onPress} />,
 			});
