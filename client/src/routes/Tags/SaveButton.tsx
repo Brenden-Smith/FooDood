@@ -1,15 +1,26 @@
-import { colors } from "@/theme"
+import { colors } from "@/theme";
 import { memo } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Button, View, Text } from "react-native";
 
-export default memo(({ onPress, disabled }: { onPress?: () => void, disabled?: boolean }) => (
-	<View style={styles.button}>
-		<TouchableOpacity onPress={onPress} disabled={disabled}  style={disabled ? styles.disabledButton : styles.enabledButton} >
-			<Text>Save</Text>
-		</TouchableOpacity>
-	</View>
-));
+export default memo(
+	({ onPress, disabled }: { onPress?: () => void; disabled?: boolean }) => (
+		<View style={styles.button}>
+			<TouchableOpacity onPress={onPress} disabled={disabled}>
+				<Text
+					style={[
+						styles.text,
+						{
+							color: disabled ? "grey" : colors.creamGreen,
+						},
+					]}
+				>
+					Save
+				</Text>
+			</TouchableOpacity>
+		</View>
+	),
+);
 
 const styles = StyleSheet.create({
 	button: {
@@ -24,5 +35,9 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.creamGreen,
 		padding: 10,
 		borderRadius: 5,
+	},
+	text: {
+		fontFamily: "Cabin_500Medium",
+		fontSize: 16,
 	},
 });
