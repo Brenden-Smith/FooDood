@@ -107,7 +107,7 @@ export const PlateDescriptionModal = memo(
 							</Text>
 						</View>
 						<View style={styles.details}>
-							<Text style={styles.detail}>
+							<Text style={styles.detailRestaurant}>
 								{business.data?.data()?.name}
 							</Text>
 							<Text style={styles.detail}>
@@ -217,6 +217,13 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontFamily: "Cabin_400Regular",
 		color: colors.gray,
+	},
+	detailRestaurant: {
+		fontSize: 16,
+		fontWeight: "bold",
+		fontFamily: "Cabin_400Regular",
+		color: colors.creamPurple,
+		marginTop: 15,
 	},
 	description: {
 		display: "flex",
