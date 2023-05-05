@@ -12,7 +12,7 @@ export default memo(() => {
             <Text style={[text.h3, TutorialStyles.tutorialTitle]}>Tags Tutorial</Text>
             <Ionicons
                 name="pricetags"
-                size={24}
+                size={32}
                 color="black"
             />
             <Text style={[TutorialStyles.tutorialDescription]}>
