@@ -17,8 +17,23 @@ import { Formik } from "formik";
 import { setDoc } from "firebase/firestore";
 import Slider from "@react-native-community/slider";
 import * as Yup from "yup";
+import { updatePassword } from "firebase/auth";
 
 const scrWidth = Dimensions.get("window").width;
+
+
+function updateUserPassword(password: string) {
+	const user = getAuth().currentUser;
+	if (user) {
+		updatePassword(user, password)
+			.then(() => {
+				console.log("Password updated!");
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+}
 
 export function Settings() {
 	const user = useUserData();
@@ -26,20 +41,20 @@ export function Settings() {
 	const SignupSchema = Yup.object().shape({
 		email: Yup.string().email("Invalid email").required("Required"),
 		// sufficient password strength and complexity
-		password: Yup.string()
-			.min(8, "Too Short!")
-			.max(50, "Too Long!")
-			.matches(/(?=.*[0-9])/, "Password must contain a number.")
-			.matches(/(?=.*[a-z])/, "Password must contain a lowercase letter.")
-			.matches(
-				/(?=.*[A-Z])/,
-				"Password must contain an uppercase letter.",
-			)
-			.matches(
-				/(?=.*[!@#$%^&*])/,
-				"Password must contain a special character.",
-			)
-			.required("Required"),
+		// password: Yup.string()
+		// 	.min(8, "Too Short!")
+		// 	.max(50, "Too Long!")
+		// 	.matches(/(?=.*[0-9])/, "Password must contain a number.")
+		// 	.matches(/(?=.*[a-z])/, "Password must contain a lowercase letter.")
+		// 	.matches(
+		// 		/(?=.*[A-Z])/,
+		// 		"Password must contain an uppercase letter.",
+		// 	)
+		// 	.matches(
+		// 		/(?=.*[!@#$%^&*])/,
+		// 		"Password must contain a special character.",
+		// 	)
+		// 	.required("Required"),
 	});
 
 	return (
@@ -49,7 +64,7 @@ export function Settings() {
 					// load the initial values of the form from the user's data
 					initialValues={{
 						email: user.data?.data()?.email,
-						password: user.data?.data()?.password,
+						password: undefined,
 						// darkMode: user.data?.data()?.darkMode,
 						notifications: user.data?.data()?.notifications || false,
 						sounds: user.data?.data()?.sounds || false,
@@ -60,6 +75,11 @@ export function Settings() {
 					// when the form is submitted, update the user's data in firebase
 					onSubmit={async (values) => {
 						await setDoc(user.data?.ref!, values, { merge: true });
+						// if the user has changed their password, update it
+						if (values.password) {
+							await updateUserPassword(values.password);
+						}
+
 					}}
 					validationSchema={SignupSchema}
 				>
@@ -98,7 +118,7 @@ export function Settings() {
 									<View style={styles.accountSetting}>
 										{/* create a textfield which loads in the current password */}
 										<TextInput
-											placeholder="Password"
+											placeholder="********"
 											style={styles.accountInput}
 											value={values.password}
 											onChangeText={handleChange(
@@ -197,8 +217,8 @@ export function Settings() {
 											style={{ width: 200, height: 40 }}
 											minimumValue={1}
 											maximumValue={24}
-											minimumTrackTintColor="#FFFFFF"
-											maximumTrackTintColor="#000000"
+											minimumTrackTintColor={colors.creamPurple}
+											maximumTrackTintColor='grey'
 											step={1}
 											tapToSeek={true}
 											value={values.searchDistance}
@@ -212,7 +232,7 @@ export function Settings() {
 												);
 											}}
 										/>
-										<Text>
+										<Text style = {styles.sliderText}>
 											{Math.floor(
 												values.searchDistance / 1609.34,
 											)}{" "}
@@ -262,9 +282,10 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 		textDecorationColor: colors.creamPurple,
+		marginBottom: 12,
 	},
 	subtitle: {
-		fontSize: 16,
+		fontSize: 18,
 		fontWeight: "bold",
 		textDecorationColor: colors.creamPurple,
 	},
@@ -311,6 +332,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		paddingHorizontal: 10,
 		marginRight: 10,
+		flex: 1,
 	},
 	sliderContainer: {
 		flex: 1,
@@ -323,5 +345,10 @@ const styles = StyleSheet.create({
 		width: "80%",
 		marginVertical: 20,
 		alignSelf: "center",
+	},
+	sliderText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		paddingBottom: 20,
 	},
 });
