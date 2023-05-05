@@ -1,53 +1,52 @@
 {
-  "expo": {
-    "name": "foodood",
-    "scheme": "foodood",
-    "slug": "foodood",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./src/assets/logo.png",
-      "backgroundColor": "#f8e3cc"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "dev.foodood.ios"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE"
-      ],
-      "package": "dev.foodood.android"
-    },
-    "web": {
-      "favicon": "./src/assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "483a2f28-bbe7-42fd-8f87-e7cde5ce78ca"
-      }
-    }
-  }
+	"expo": {
+		"name": "foodood",
+		"scheme": "foodood",
+		"slug": "foodood",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./src/assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./src/assets/logo.png",
+			"backgroundColor": "#f8e3cc"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"buildNumber": "2",
+			"supportsTablet": true,
+			"bundleIdentifier": "dev.foodood.ios"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./src/assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"permissions": [
+				"android.permission.ACCESS_COARSE_LOCATION",
+				"android.permission.ACCESS_FINE_LOCATION",
+				"android.permission.FOREGROUND_SERVICE"
+			],
+			"package": "dev.foodood.android"
+		},
+		"web": {
+			"favicon": "./src/assets/favicon.png"
+		},
+		"plugins": [
+			[
+				"expo-location",
+				{
+					"locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+				}
+			]
+		],
+		"extra": {
+			"eas": {
+				"projectId": "483a2f28-bbe7-42fd-8f87-e7cde5ce78ca"
+			}
+		}
+	}
 }
