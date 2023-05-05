@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
 	title: {
 		textAlign: "center",
 		marginBottom: 12,
+		fontFamily: "Cabin_700Bold",
 	},
 	description: {
 		textAlign: "center",
@@ -175,6 +176,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 16,
 		color: "white",
+		fontFamily: "Cabin_600SemiBold",
 	},
 	heading: {
 		position: "absolute",
@@ -194,6 +196,7 @@ const styles = StyleSheet.create({
 		marginTop: 0,
 		left: 0,
 		marginBottom: 0,
+		fontFamily: "Cabin_700Bold",
 	},
 	price: {
 		position: "absolute",
@@ -210,6 +213,7 @@ const styles = StyleSheet.create({
 		paddingRight: 5,
 		right: 0,
 		left: "auto",
+		fontFamily: "Cabin_700Bold",
 	},
 	cardImage: {
 		width: "100%",
