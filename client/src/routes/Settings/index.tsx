@@ -50,12 +50,12 @@ export function Settings() {
 					initialValues={{
 						email: user.data?.data()?.email,
 						password: user.data?.data()?.password,
-						darkMode: user.data?.data()?.darkMode,
-						notifications: user.data?.data()?.notifications,
-						sounds: user.data?.data()?.sounds,
-						vibration: user.data?.data()?.vibration,
-						lowData: user.data?.data()?.lowData,
-						searchDistance: user.data?.data()?.searchDistance,
+						// darkMode: user.data?.data()?.darkMode,
+						notifications: user.data?.data()?.notifications || false,
+						sounds: user.data?.data()?.sounds || false,
+						vibration: user.data?.data()?.vibration || false,
+						lowData: user.data?.data()?.lowData || false,
+						searchDistance: user.data?.data()?.searchDistance || false,
 					}}
 					// when the form is submitted, update the user's data in firebase
 					onSubmit={async (values) => {
@@ -118,7 +118,7 @@ export function Settings() {
 							<View style={styles.container}>
 								<Text style={styles.title}>Options</Text>
 								<View style={styles.optionsContainer}>
-									<View style={styles.toggleContainer}>
+									{/* <View style={styles.toggleContainer}>
 										<Text>Dark Mode</Text>
 										<Switch
 											value={values.darkMode}
@@ -130,10 +130,11 @@ export function Settings() {
 												)
 											}
 										/>
-									</View>
+									</View> */}
 									<View style={styles.toggleContainer}>
 										<Text>Notifications</Text>
 										<Switch
+											// value is taking the value of the notifications field in the form
 											value={values.notifications}
 											onValueChange={() =>
 												setFieldValue(
@@ -143,6 +144,7 @@ export function Settings() {
 											}
 										/>
 									</View>
+									
 									<View style={styles.toggleContainer}>
 										<Text>Sounds</Text>
 										<Switch
