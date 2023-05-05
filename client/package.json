@@ -10,6 +10,8 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.20.13",
+		"@expo-google-fonts/cabin": "^0.2.3",
+		"@expo-google-fonts/lobster": "^0.2.3",
 		"@expo/vector-icons": "^13.0.0",
 		"@react-native-async-storage/async-storage": "1.17.11",
 		"@react-native-community/slider": "4.4.2",

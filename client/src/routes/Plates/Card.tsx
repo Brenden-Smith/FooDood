@@ -1,9 +1,10 @@
 import { Plate } from "@/types";
-import { memo, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { memo, useCallback, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { colors } from "@/theme";
+import { PlateDescriptionModal } from "@/components";
 
 export const Card = memo(
 	({
@@ -14,40 +15,34 @@ export const Card = memo(
 		liked: boolean;
 	}) => {
 		const [showDescription, setShowDescription] = useState(false);
+		const onPress = useCallback(() => setShowDescription(true), []);
 		return (
-			<View style={styles.card}>
-				<Image
-					source={{ uri: plate.data().image_url }}
-					style={styles.cardImage}
+			<>
+				<PlateDescriptionModal
+					plateID={plate.id}
+					visible={showDescription}
+					onDismiss={() => setShowDescription(false)}
 				/>
-				<Text style={styles.heading}>{plate.data()?.name}</Text>
-				<Text style={styles.price}>{plate.data()?.price}</Text>
-				{liked && (
-					<View style={styles.likeBadge}>
-						<AntDesign name="star" size={24} color="white" />
-					</View>
-				)}
-
-				{showDescription && (
-					<View style={styles.descContainer}>
-						<Text style={styles.descText}>
-							{plate.data()?.name}
-						</Text>
-						<Text style={styles.descText}>
-							{plate.data()?.price}
-						</Text>
-						<Text style={styles.descText}>Description</Text>
-						<Text style={styles.descText}>
-							{plate.data()?.description}
-						</Text>
-					</View>
-				)}
-				{/* <LinearGradient 
-                    locations={[0, 1.0]}  
-                    colors= {['rgba(0,0,0,0.00)', 'rgba(0,0,0,0.80)']} 
-                    style={styles.linearGradient}>
-                  </LinearGradient> */}
-			</View>
+				<View style={styles.card}>
+					<Image
+						source={{ uri: plate.data().image_url }}
+						style={styles.cardImage}
+					/>
+					<Text style={styles.heading}>{plate.data()?.name}</Text>
+					<Text style={styles.price}>{plate.data()?.price}</Text>
+					<TouchableOpacity
+						style={styles.infoBadge}
+						onPress={onPress}
+					>
+						<FontAwesome5 name="info" size={24} color="white" />
+					</TouchableOpacity>
+					{liked && (
+						<View style={styles.likeBadge}>
+							<AntDesign name="star" size={24} color="white" />
+						</View>
+					)}
+				</View>
+			</>
 		);
 	},
 );
@@ -90,6 +85,7 @@ const styles = StyleSheet.create({
 		padding: 5,
 		fontWeight: "700",
 		overflow: "visible",
+		fontFamily: "Cabin_700Bold",
 	},
 	price: {
 		position: "absolute",
@@ -105,6 +101,7 @@ const styles = StyleSheet.create({
 		textShadowRadius: 12,
 		overflow: "visible",
 		padding: 5,
+		fontFamily: "Cabin_500Medium",
 	},
 	descContainer: {
 		position: "absolute",
@@ -131,6 +128,17 @@ const styles = StyleSheet.create({
 		height: 40,
 		borderRadius: 20,
 		backgroundColor: colors.gold,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	infoBadge: {
+		position: "absolute",
+		top: 10,
+		left: 10,
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: colors.blue,
 		justifyContent: "center",
 		alignItems: "center",
 	},

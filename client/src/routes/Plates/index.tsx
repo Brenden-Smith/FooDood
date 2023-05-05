@@ -223,6 +223,7 @@ const PlatesDeck = memo(
 									color: colors.white,
 									borderWidth: 1,
 									fontSize: 32,
+									fontFamily: "Cabin",
 								},
 								wrapper: {
 									flexDirection: "column",
@@ -242,6 +243,7 @@ const PlatesDeck = memo(
 									color: colors.white,
 									borderWidth: 1,
 									fontSize: 32,
+									fontFamily: "Cabin",
 								},
 								wrapper: {
 									flexDirection: "column",
