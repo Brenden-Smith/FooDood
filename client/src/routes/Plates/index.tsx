@@ -60,7 +60,15 @@ export function Plates({
 				}}
 			>
 				<ActivityIndicator size="large" color="black" />
-				<Text>Fetching plates...</Text>
+				<Text
+					style={{
+						fontSize: 20,
+						fontFamily: "Lobster_400Regular",
+						marginTop: 20,
+					}}
+				>
+					Fetching plates...
+				</Text>
 			</View>
 		</SafeAreaView>
 	) : data.length > 0 && endReached ? (
@@ -128,7 +136,7 @@ const PlatesDeck = memo(
 			showPreviousLikes,
 			index,
 			data,
-			timeout
+			timeout,
 		]);
 
 		// Like
@@ -241,7 +249,7 @@ const PlatesDeck = memo(
 									flexDirection: "column",
 									alignItems: "flex-end",
 									justifyContent: "flex-start",
-									marginTop: 30,
+									marginTop: 60,
 									marginLeft: -20,
 								},
 							},
@@ -261,7 +269,7 @@ const PlatesDeck = memo(
 									flexDirection: "column",
 									alignItems: "flex-start",
 									justifyContent: "flex-start",
-									marginTop: 30,
+									marginTop: 60,
 									marginLeft: 20,
 								},
 							},
