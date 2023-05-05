@@ -1,7 +1,8 @@
-import { View, Text, Image} from "react-native"
+import { View, Text} from "react-native"
 import { TutorialStyles } from "./TutorialStyles";
 import { text } from "@/theme"
 import { memo } from "react"
+import { Image } from "expo-image";
 // import the swiping GIF from the assets folder
 
 
@@ -13,7 +14,7 @@ export default memo(() => {
             Hello! Welcome to the FoodDood! We are here to help you find the best food in your area!
             </Text>
             {/* include an animation of how to swipe in the application using the gif */}
-            <Image source={require("../../../assets/swiping.gif")} style={TutorialStyles.tutorialImage} />
+            <Image source={require("@/assets/swiping.gif")} style={TutorialStyles.tutorialImage} />
             <Text style={[TutorialStyles.tutorialDescription]}>
             Swipe right to like a restaurant, swipe left to dislike a restaurant.
             </Text>
