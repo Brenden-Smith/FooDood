@@ -46,9 +46,24 @@ export function Plates({
 	}, [plates.key]);
 
 	// Render page
-	return !user.data?.data()?.tags ? (
+	return !user.data?.data()?.tags || user.data?.data()?.tags.length === 0 ? (
 		<SafeAreaView style={styles.container}>
-			<Text>Please select some tags to get started!</Text>
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<Text
+					style={{
+						fontFamily: "Cabin_400Regular",
+						fontSize: 20,
+					}}
+				>
+					Please select some tags to get started!
+				</Text>
+			</View>
 		</SafeAreaView>
 	) : plates.isLoading ? (
 		<SafeAreaView style={styles.container}>
@@ -80,8 +95,23 @@ export function Plates({
 					alignItems: "center",
 				}}
 			>
-				<Text style={{ fontSize: 20 }}>No more plates to show!</Text>
-				<Text style={{ fontSize: 20 }}>
+				<Text
+					style={{
+						fontFamily: "Cabin_400Regular",
+						fontSize: 20,
+						textAlign: "center",
+						marginBottom: 15,
+					}}
+				>
+					No more plates to show!
+				</Text>
+				<Text
+					style={{
+						fontFamily: "Cabin_400Regular",
+						fontSize: 20,
+						textAlign: "center",
+					}}
+				>
 					Try changing your tags or choosing a plate from your
 					previous likes!
 				</Text>
