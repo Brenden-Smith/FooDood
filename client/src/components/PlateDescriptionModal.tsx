@@ -124,10 +124,8 @@ export const PlateDescriptionModal = memo(
 						</View>
 						<View style={styles.tags}>
 							{plate.data?.data()?.tags?.map((tag: string) => (
-								<View style={styles.tagContainer}>
-									<Text style={styles.tag} key={tag}>
-										{tag}
-									</Text>
+								<View style={styles.tagContainer} key={tag}>
+									<Text style={styles.tag}>{tag}</Text>
 								</View>
 							))}
 						</View>
@@ -260,10 +258,10 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		marginRight: 5,
 		marginBottom: 5,
-  },
-  tag: {
-    fontSize: 16,
+	},
+	tag: {
+		fontSize: 16,
 		fontWeight: "bold",
 		fontFamily: "Cabin_400Regular",
-  }
+	},
 });
