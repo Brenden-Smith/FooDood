@@ -1,22 +1,23 @@
 import { SafeAreaView, SectionList } from "react-native";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { styles } from "./styles";
 import Cuisine from "./Cuisine";
 import FoodStyles from "./FoodStyles";
 import Extra from "./Extra";
-import SaveButton from "./SaveButton";
 import { TagsProvider } from "./TagsContext";
+import TutorialMain from "../Tutorial2/TutorialMain"
 
 export function Tags() {
 	const renderItem = useCallback(
 		({ item }: { item: JSX.Element }) => item,
 		[],
 	);
-	const [isSaved, setIsSaved] = React.useState(false);
 
 	return (
 		<TagsProvider>
 			<SafeAreaView style={styles.pageContainer}>
+				{/* <TutorialMain visible={true} setVisible={() => {}} /> */}
+				
 				<SectionList
 					contentContainerStyle={styles.categoriesContainer}
 					sections={[
@@ -36,7 +37,6 @@ export function Tags() {
 					renderItem={renderItem}
 					keyExtractor={(item, index) => index.toString()}
 					showsVerticalScrollIndicator={false}
-					ListFooterComponent={<SaveButton />}
 				/>
 			</SafeAreaView>
 		</TagsProvider>

@@ -1,162 +1,284 @@
-import { View, SafeAreaView, TouchableOpacity, TextInput, Switch, Text, StyleSheet, Dimensions } from "react-native";
-import { getAuth, signOut } from "firebase/auth";
+import {
+	View,
+	SafeAreaView,
+	TouchableOpacity,
+	TextInput,
+	Text,
+	StyleSheet,
+	ScrollView,
+} from "react-native";
+import { getAuth, updateEmail } from "firebase/auth";
 import { useUserData } from "@/hooks/useUserData";
-import { useCallback, useEffect, useState } from "react";
-import { colors } from "@/constants/colors"
-import { ScrollView } from 'react-native-gesture-handler';
-import { Formik } from 'formik';
+import { colors } from "@/theme";
+import { Formik } from "formik";
 import { setDoc } from "firebase/firestore";
-import Slider from '@react-native-community/slider';
-import * as Yup from 'yup';
-
-
-const scrWidth = Dimensions.get("window").width;
+import Slider from "@react-native-community/slider";
+import { updatePassword } from "firebase/auth";
 
 export function Settings() {
 	const user = useUserData();
 
-	const SignupSchema = Yup.object().shape({
-		email: Yup.string().email('Invalid email').required('Required'),
-		// sufficient password strength and complexity
-		password: Yup.string().min(8, 'Too Short!').max(50, 'Too Long!').
-		matches(/(?=.*[0-9])/, 'Password must contain a number.')
-		.matches(/(?=.*[a-z])/, 'Password must contain a lowercase letter.')
-		.matches(/(?=.*[A-Z])/, 'Password must contain an uppercase letter.')
-		.matches(/(?=.*[!@#$%^&*])/, 'Password must contain a special character.')
-		.required('Required'),
-	});
-
 	return (
 		<SafeAreaView style={styles.pageContainer}>
-			<ScrollView style={{height: '100%'}}>
+			<ScrollView
+				style={{
+					height: "100%",
+					width: "100%",
+				}}
+			>
 				<Formik
-					// load the initial values of the form from the user's data
 					initialValues={{
 						email: user.data?.data()?.email,
-						password: user.data?.data()?.password,
-						darkMode: user.data?.data()?.darkMode,
-						notifications: user.data?.data()?.notifications,
-						sounds: user.data?.data()?.sounds,
-						vibration: user.data?.data()?.vibration,
-						lowData: user.data?.data()?.lowData,
-						searchDistance: user.data?.data()?.searchDistance,
+						password: undefined,
+						confirmPassword: undefined,
 					}}
-					// when the form is submitted, update the user's data in firebase
-					onSubmit={async (values) => {
-						await setDoc(user.data?.ref!, values, {merge: true});
+					onSubmit={(values) => {
+						const promises = [];
+						promises.push(
+							setDoc(
+								user.data?.ref!,
+								{
+									email: values.email,
+								},
+								{ merge: true },
+							),
+						);
+						if (values.password) {
+							promises.push(
+								updatePassword(
+									getAuth().currentUser!,
+									values.password,
+								),
+							);
+						}
+						if (getAuth().currentUser?.email !== values.email) {
+							promises.push(
+								updateEmail(
+									getAuth().currentUser!,
+									values.email,
+								),
+							);
+						}
+						return Promise.all(promises);
 					}}
-					validationSchema={SignupSchema}
+					validate={(values) => {
+						let errors: any = {};
+						if (!values.email) {
+							errors.email = "This field is required";
+						} else if (
+							!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+								values.email,
+							)
+						) {
+							errors.email = "Invalid email address";
+						}
+						if (values.password !== values.confirmPassword) {
+							errors.password = "Passwords do not match";
+						}
+						return errors;
+					}}
+					enableReinitialize
 				>
-					{({ handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched}) => (
-						<>
-							<View style={styles.container}>
-								<Text style={styles.title}>Account</Text>
-								<View style={styles.accountContainer}>
-									<View style={styles.accountSetting}>
-										{/* create a textfield which loads in the current email */}
-										<TextInput
-											placeholder={user.data?.data()?.email}
-											style={styles.accountInput}
-											value={values.email}
-											onChangeText={handleChange('email')}
-											/>
-									</View>
-									<Text>{ errors.email && touched.email ? <Text style={{color: 'red'}}>{errors.email.toString()}</Text> : null }</Text>
-									
-									<View style={styles.accountSetting}>
-										{/* create a textfield which loads in the current password */}
-										<TextInput
-											placeholder="Password"
-											style={styles.accountInput}
-											value={values.password}
-											onChangeText={handleChange('password')}
-										/>
-									</View>
-									<Text>{ errors.password && touched.password ? <Text style={{color: 'red'}}>{errors.password.toString()}</Text> : null }</Text>
+					{({
+						handleChange,
+						handleBlur,
+						handleSubmit,
+						values,
+						errors,
+						touched,
+					}) => (
+						<View style={styles.container}>
+							<Text style={styles.title}>Account</Text>
+
+							<View style={styles.accountContainer}>
+								<View style={styles.accountSetting}>
+									<TextInput
+										placeholder={user.data?.data()?.email}
+										style={styles.accountInput}
+										value={values.email}
+										onChangeText={handleChange("email")}
+										onBlur={handleBlur("email")}
+									/>
 								</View>
-							</View>
-							<View style={styles.container}>
-								<Text style={styles.title}>Options</Text>
-								<View style={styles.optionsContainer} >
-									<View style={styles.toggleContainer}>
-										<Text>Dark Mode</Text>
-										<Switch 
-										value={values.darkMode}
-										// when the switch is toggled, update the darkMode value to the opposite of what it was
-										onValueChange={() => setFieldValue("darkMode", !values.darkMode)}
-										/>
-									</View>
-									<View style={styles.toggleContainer}>
-										<Text>Notifications</Text>
-										<Switch 
-										value={values.notifications}
-										onValueChange={() => setFieldValue("notifications", !values.notifications)}
-										/>
-									</View>
-									<View style={styles.toggleContainer}>
-										<Text>Sounds</Text>
-										<Switch
-										value={values.sounds}
-										onValueChange={() => setFieldValue("sounds", !values.sounds)}
-										/>
-									</View>
-									<View style={styles.toggleContainer}>
-										<Text>Vibration</Text>
-										<Switch
-										value={values.vibration}
-										onValueChange={() => setFieldValue("vibration", !values.vibration)}
-										/>
-									</View>
-									<View style={styles.toggleContainer}>
-										<Text>Low Data Usage</Text>
-										<Switch
-										value={values.lowData}
-										onValueChange={() => setFieldValue("lowData", !values.lowData)}
-										/>
-									</View>
-									{/* create a horizontal rule which spans 80% of the container */}
-									<View style={styles.hr} />
+								{errors.email && touched.email ? (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Cabin_400Regular",
+											marginBottom: 15,
+										}}
+									>
+										{errors.email.toString()}
+									</Text>
+								) : null}
 
-
-									{/* 
-									create a slider which will determine the user's desired search distance
-
-									on the frontend this distance will be displayed in miles, but ultimately the desired value which will be sent is in meters
-									*/}
-									<View style={styles.sliderContainer}>
-										<Text style={styles.subtitle}>Search Distance</Text>
-										<Slider
-											style={{width: 200, height: 40}}
-											minimumValue={1}
-											maximumValue={24}
-											minimumTrackTintColor="#FFFFFF"
-											maximumTrackTintColor="#000000"
-											step={1}
-											tapToSeek={true}
-											value={values.searchDistance}
-											// when the slider is moved, update the searchDistance value to the new value
-											// convert the value to meters from miles by multiplying by 1609.34
-											onValueChange={(value: number) => {
-												value *= 1609.34;
-												setFieldValue("searchDistance", value);
-											}}
-										/>
-										<Text>{Math.floor(values.searchDistance / 1609.34)} miles</Text>
-									</View>
-									{/* create a button which submits the form */}
-									<TouchableOpacity style={styles.logoutBtn} onPress={() => handleSubmit()}>
-										<Text>Save</Text>
-									</TouchableOpacity>
+								<View style={styles.accountSetting}>
+									<TextInput
+										placeholder="Enter New Password"
+										style={styles.accountInput}
+										value={values.password}
+										onChangeText={handleChange("password")}
+										onBlur={handleBlur("password")}
+										secureTextEntry
+									/>
 								</View>
+								<View style={styles.accountSetting}>
+									<TextInput
+										placeholder="Confirm New Password"
+										style={styles.accountInput}
+										value={values.confirmPassword}
+										onChangeText={handleChange(
+											"confirmPassword",
+										)}
+										onBlur={handleBlur("confirmPassword")}
+										secureTextEntry
+									/>
+								</View>
+								{errors.password && touched.password ? (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Cabin_400Regular",
+											marginBottom: 15,
+										}}
+									>
+										{errors.password.toString()}
+									</Text>
+								) : null}
+
+								<TouchableOpacity
+									style={[
+										styles.logoutBtn,
+										{
+											backgroundColor:
+												!!errors.email ||
+												!!errors.password ||
+												(values.email ===
+													user.data?.data()?.email &&
+													(!values.password ||
+														!values.confirmPassword))
+													? colors.gray
+													: colors.creamOrange,
+										},
+									]}
+									onPress={() => handleSubmit()}
+									disabled={
+										!!errors.email ||
+										!!errors.password ||
+										(values.email ===
+											user.data?.data()?.email &&
+											(!values.password ||
+												!values.confirmPassword))
+									}
+								>
+									<Text
+										style={{
+											fontFamily: "Cabin_600SemiBold",
+											color:
+												!!errors ||
+												(values.email ===
+													user.data?.data()?.email &&
+													(!values.password ||
+														!values.confirmPassword))
+													? colors.white
+													: colors.black,
+										}}
+									>
+										Save
+									</Text>
+								</TouchableOpacity>
 							</View>
-							<TouchableOpacity style={styles.logoutBtn} onPress={() => signOut(getAuth())}>
-								<Text>Logout</Text>
-							</TouchableOpacity>
-						</>
+						</View>
+					)}
+				</Formik>
+				<Formik
+					initialValues={{
+						searchDistance:
+							user.data?.data()?.searchDistance || false,
+					}}
+					onSubmit={(values) =>
+						setDoc(
+							user.data?.ref!,
+							{
+								searchDistance: values.searchDistance,
+							},
+							{ merge: true },
+						)
+					}
+					enableReinitialize
+				>
+					{({ handleSubmit, values, setFieldValue }) => (
+						<View style={styles.container}>
+							<Text style={styles.title}>Options</Text>
+							<View style={styles.optionsContainer}>
+								<View style={styles.sliderContainer}>
+									<Text style={styles.subtitle}>
+										Search Distance
+									</Text>
+									<Slider
+										style={{ width: "100%" }}
+										minimumValue={1}
+										maximumValue={24}
+										minimumTrackTintColor={
+											colors.creamPurple
+										}
+										maximumTrackTintColor="grey"
+										step={1}
+										tapToSeek={true}
+										value={values.searchDistance}
+										onValueChange={(value: number) => {
+											value *= 1609.34;
+											setFieldValue(
+												"searchDistance",
+												value,
+											);
+										}}
+									/>
+									<Text style={styles.sliderText}>
+										{Math.floor(
+											values.searchDistance / 1609.34,
+										)}{" "}
+										miles
+									</Text>
+								</View>
+								<TouchableOpacity
+									style={[
+										styles.logoutBtn,
+										{
+											backgroundColor:
+												values.searchDistance ===
+												user.data?.data()
+													?.searchDistance
+													? colors.gray
+													: colors.creamOrange,
+										},
+									]}
+									onPress={() => handleSubmit()}
+									disabled={
+										values.searchDistance ===
+										user.data?.data()?.searchDistance
+									}
+								>
+									<Text
+										style={{
+											fontFamily: "Cabin_600SemiBold",
+											color:
+												values.searchDistance ===
+												user.data?.data()
+													?.searchDistance
+													? colors.white
+													: colors.black,
+										}}
+									>
+										Save
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
 					)}
 				</Formik>
 			</ScrollView>
-		</SafeAreaView >
+		</SafeAreaView>
 	);
 }
 
@@ -166,25 +288,27 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: colors.cream,
+		width: "100%",
 	},
 	container: {
-		flex: 1,
 		alignItems: "center",
 		borderRadius: 10,
 		backgroundColor: colors.creamLight,
-		width: scrWidth * 0.8,
-		marginVertical: 10,
+		margin: 20,
 		paddingVertical: 10,
 	},
 	title: {
 		fontSize: 20,
 		fontWeight: "bold",
-		fontColor: colors.creamPurple,
+		textDecorationColor: colors.creamPurple,
+		marginBottom: 12,
+		fontFamily: "Cabin_600SemiBold",
 	},
 	subtitle: {
-		fontSize: 16,
+		fontSize: 18,
 		fontWeight: "bold",
-		fontColor: colors.creamPurple,
+		textDecorationColor: colors.creamPurple,
+		fontFamily: "Cabin_500Medium",
 	},
 	logoutBtn: {
 		backgroundColor: colors.creamOrange,
@@ -196,22 +320,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	toggleContainer: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
 	},
 	optionsContainer: {
-		width: '100%',
+		width: "100%",
 		paddingHorizontal: 32,
 	},
 	accountContainer: {
-		width: '100%',
+		width: "100%",
 		paddingHorizontal: 32,
 	},
 	accountSetting: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
 		marginBottom: 12,
 	},
 	changeBtn: {
@@ -226,21 +350,28 @@ const styles = StyleSheet.create({
 	accountInput: {
 		backgroundColor: "white",
 		borderRadius: 10,
-		paddingVertical:5,
+		paddingVertical: 5,
 		paddingHorizontal: 10,
 		marginRight: 10,
+		flex: 1,
+		fontFamily: "Cabin_400Regular",
 	},
 	sliderContainer: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	hr: {
-		borderBottomColor: 'black',
+		borderBottomColor: "black",
 		borderBottomWidth: 1,
-		width: '80%',
+		width: "80%",
 		marginVertical: 20,
-		alignSelf: 'center',
-		
+		alignSelf: "center",
+	},
+	sliderText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		paddingBottom: 20,
+		fontFamily: "Cabin_400Regular",
 	},
 });

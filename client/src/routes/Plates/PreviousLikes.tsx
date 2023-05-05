@@ -6,19 +6,14 @@ import {
 	getFirestore,
 	DocumentSnapshot,
 } from "firebase/firestore";
-import { memo, useCallback, useEffect, useState } from "react";
-import {
-	FlatList,
-	Image,
-	Modal,
-	SafeAreaView,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import { styles } from "./styles";
-import { colors } from "@/constants";
+import { memo, useCallback, useState } from "react";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "@/theme";
 import { PlateDescriptionModal } from "@/components";
+import { text } from "@/theme";
+import { Image } from "expo-image";
+import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 
 export default memo(
 	({
@@ -28,26 +23,30 @@ export default memo(
 		visible: boolean;
 		setVisible: (visible: boolean) => void;
 	}) => {
-		const [plates, setPlates] = useState<DocumentSnapshot<DocumentData>[]>(
-			[],
-		);
-
 		const likes = useLikes();
-		useEffect(() => {
-			async function getPlates() {
-				const plateIds =
+		const plates = useQuery(
+			[
+				"previousLikes",
+				likes.data?.docs.slice(0, Math.min(likes.data?.docs.length, 4)),
+			],
+			() =>
+				Promise.all(
 					likes.data?.docs
-						?.splice(0, 4)
-						.map((doc) => doc.data().plateId) ?? [];
-				const plateDocs = await Promise.all(
-					plateIds.map((id: string) =>
-						getDoc(doc(getFirestore(), "plates", id)),
-					),
-				);
-				setPlates(plateDocs);
-			}
-			getPlates();
-		}, [likes.data?.docs]);
+						.slice(0, Math.min(likes.data?.docs.length, 4))
+						.map((like) =>
+							getDoc(
+								doc(
+									getFirestore(),
+									"plates",
+									like.data().plateId,
+								),
+							),
+						) ?? [],
+				),
+			{
+				enabled: !!likes.data?.docs && visible,
+			},
+		);
 
 		const renderItem = useCallback(
 			({ item }: { item: DocumentSnapshot<DocumentData> }) => (
@@ -57,75 +56,40 @@ export default memo(
 		);
 
 		return (
-			<Modal visible={visible} transparent={true}>
-				<View
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						justifyContent: "center",
-						alignItems: "center",
-						backgroundColor: "rgba(0,0,0,0.5)",
-						height: "100%",
-						width: "100%",
-						padding: 25,
-						flex: 1,
-						alignContent: "center",
-					}}
-				>
-					<View
-						style={[
-							styles.card,
-							{
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "space-evenly",
-								padding: 20,
-								backgroundColor: colors.creamLight,
-							},
-						]}
-					>
-						<View className="flex flex-col space-y-5 items-center mt-5">
-							<Text className="text-2xl font-bold">
+			<Modal visible={visible} transparent={true} animationType="fade">
+				<View style={styles.modalInner}>
+					<View style={styles.container}>
+						<View>
+							<Text style={[text.h3, styles.title]}>
 								Previous Likes
 							</Text>
-							<Text className="text-md">
+							<Text style={[text.p, styles.description]}>
 								These are some of the plates you liked in the
 								past! Choose from the following plates to order
 								online!
 							</Text>
 						</View>
-						<View className="flex flex-row flex-wrap justify-center items-center">
-							<FlatList
-								data={plates}
+						<View
+							style={{
+								height: 350,
+								width: 300,
+							}}
+						>
+							<FlashList
+								data={plates.data}
 								renderItem={renderItem}
-								keyExtractor={(item) => item.id}
-								contentContainerStyle={{
-									alignItems: "center",
-								}}
 								numColumns={2}
+								scrollEnabled={false}
+								estimatedItemSize={158}
 							/>
-
-							<TouchableOpacity
-								style={[
-									styles.okButton,
-									{
-										backgroundColor: colors.creamOrange,
-									},
-								]}
-								onPress={() => setVisible(false)}
-							>
-								<Text
-									style={[
-										styles.buttonText,
-										{
-											color: "white",
-										},
-									]}
-								>
-									OK
-								</Text>
-							</TouchableOpacity>
 						</View>
+
+						<TouchableOpacity
+							style={styles.okButton}
+							onPress={() => setVisible(false)}
+						>
+							<Text style={styles.buttonText}>OK</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</Modal>
@@ -143,72 +107,125 @@ const PreviousLike = memo(
 					setDescriptionModalVisible(true);
 				}}
 			>
-				<View
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						height: 150,
-						width: 150,
-						backgroundColor: colors.black,
-						borderRadius: 15,
-						margin: 10,
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
+				<View style={styles.card}>
 					<Image
 						source={{
 							uri: item.data()?.image_url,
 						}}
-						style={[
-							styles.cardImage,
-							{
-								opacity: 0.8,
-								borderRadius: 15,
-							},
-						]}
+						style={styles.cardImage}
+						contentFit="cover"
 					/>
 
-					<Text
-						style={[
-							styles.price,
-							{
-								fontSize: 16,
-								paddingRight: 5,
-								right: 0,
-								left: "auto",
-								marginBottom: 0,
-								paddingBottom: 0,
-							},
-						]}
-					>
-						{item.data()?.price}
-					</Text>
-					<Text
-						style={[
-							styles.heading,
-							{
-								fontSize: 16,
-								paddingTop: 0,
-								top: 0,
-								bottom: "auto",
-								marginTop: 0,
-								left: 0,
-								marginBottom: 0,
-							},
-						]}
-					>
-						{item.data()?.name}
-					</Text>
+					<Text style={styles.price}>{item.data()?.price}</Text>
+					<Text style={styles.heading}>{item.data()?.name}</Text>
 					<PlateDescriptionModal
 						visible={descriptionModalVisible}
 						plateID={item.id}
-						onDismiss={() => {
-							setDescriptionModalVisible(false);
-						}}
+						setVisible={setDescriptionModalVisible}
 					/>
 				</View>
 			</TouchableOpacity>
 		);
 	},
 );
+
+const styles = StyleSheet.create({
+	modalInner: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
+		height: "100%",
+		width: "100%",
+		padding: 25,
+		flex: 1,
+		alignContent: "center",
+	},
+	container: {
+		height: "66%",
+		borderRadius: 15,
+		shadowRadius: 25,
+		shadowColor: colors.black,
+		shadowOpacity: 0.08,
+		shadowOffset: { width: 0, height: 0 },
+		alignItems: "center",
+		elevation: 5,
+		display: "flex",
+		flexDirection: "column",
+		padding: 20,
+		backgroundColor: colors.creamLight,
+	},
+	title: {
+		textAlign: "center",
+		marginBottom: 12,
+	},
+	description: {
+		textAlign: "center",
+		marginBottom: 12,
+	},
+	okButton: {
+		borderRadius: 100,
+		paddingVertical: 10,
+		paddingHorizontal: 64,
+		marginBottom: 12,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: colors.creamOrange,
+	},
+	buttonText: {
+		fontSize: 16,
+		color: "white",
+	},
+	heading: {
+		position: "absolute",
+		lineHeight: 28,
+		color: colors.white,
+		shadowRadius: 25,
+		textShadowColor: "rgba(0, 0, 0, 0.8)",
+		textShadowOffset: { width: 0, height: 0 },
+		textShadowRadius: 12,
+		padding: 5,
+		fontWeight: "700",
+		overflow: "visible",
+		fontSize: 16,
+		paddingTop: 0,
+		top: 0,
+		bottom: "auto",
+		marginTop: 0,
+		left: 0,
+		marginBottom: 0,
+	},
+	price: {
+		position: "absolute",
+		bottom: 0,
+		color: colors.green,
+		lineHeight: 24,
+		fontWeight: "500",
+		textShadowColor: "rgba(0, 0, 0, 0.8)",
+		textShadowOffset: { width: 0, height: 0 },
+		textShadowRadius: 12,
+		overflow: "visible",
+		padding: 5,
+		fontSize: 16,
+		paddingRight: 5,
+		right: 0,
+		left: "auto",
+	},
+	cardImage: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 15,
+	},
+	card: {
+		flex: 1,
+		// flexDirection: "column",
+		height: 160,
+		width: 141,
+		backgroundColor: colors.white,
+		borderRadius: 15,
+		marginBottom: 10,
+		marginLeft: 5,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});

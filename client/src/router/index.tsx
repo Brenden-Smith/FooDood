@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import axios from "axios";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Loading, Login, Settings, SignUp } from "@/routes";
 import { RootStackParamList } from "@/types";
-import { useNavigation, useUserData } from "@/hooks";
+import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
+import { useFonts } from "expo-font";
+import {
+	Cabin_400Regular,
+	Cabin_500Medium,
+	Cabin_600SemiBold,
+	Cabin_700Bold,
+} from "@expo-google-fonts/cabin";
+import { Lobster_400Regular } from "@expo-google-fonts/lobster";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import BackButton from "./BackButton";
+import { TouchableOpacity } from "react-native";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,12 +29,22 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function Router(): JSX.Element {
 	const navigation = useNavigation();
 	const [user, setUser] = useState<User | null>(null);
+	const [fontsLoaded] = useFonts({
+		Cabin_400Regular,
+		Cabin_500Medium,
+		Cabin_600SemiBold,
+		Cabin_700Bold,
+		Lobster_400Regular,
+	});
 
 	useEffect(() => {
+		if (!fontsLoaded) return;
 		onAuthStateChanged(getAuth(), async (user) => {
 			setUser(user);
 			if (user) {
-				const data = await getDoc(doc(getFirestore(), `users/${user.uid}`));
+				const data = await getDoc(
+					doc(getFirestore(), `users/${user.uid}`),
+				);
 				if (!data.exists()) {
 					setDoc(doc(getFirestore(), `users/${user.uid}`), {
 						createdAt: new Date(),
@@ -38,17 +58,13 @@ export default function Router(): JSX.Element {
 				navigation.navigate("Login");
 			}
 		});
-	});
+	}, [navigation, fontsLoaded]);
 
 	return (
 		<Stack.Navigator
 			initialRouteName="Loading"
 			screenOptions={{
 				headerShown: false,
-				headerStyle: {
-          backgroundColor: colors.creamPurple, // Set the background color of the header
-        },
-        headerTintColor: 'white', // Set the color of the text/icons in the header
 			}}
 		>
 			<Stack.Screen
@@ -65,7 +81,7 @@ export default function Router(): JSX.Element {
 				<Stack.Screen
 					name="SignUp"
 					component={SignUp}
-					options={{ gestureEnabled: false}}
+					options={{ gestureEnabled: false }}
 				/>
 			</Stack.Group>
 			{user && (
@@ -78,7 +94,37 @@ export default function Router(): JSX.Element {
 					<Stack.Screen
 						name="Settings"
 						component={Settings}
-						options={{ gestureEnabled: false, headerShown: true }}
+						options={{
+							gestureEnabled: false,
+							headerShown: true,
+							headerLeft: () => <BackButton />,
+							headerBackVisible: false,
+							headerStyle: {
+								backgroundColor: colors.creamPurple,
+							},
+							headerTitleStyle: {
+								fontWeight: "bold",
+								fontSize: 30,
+								color: "white",
+								fontFamily: "Lobster_400Regular",
+							},
+							headerTintColor: "white",
+							headerRight: () => (
+								<TouchableOpacity
+									onPress={() =>
+										signOut(getAuth()).then(() =>
+											navigation.navigate("Login"),
+										)
+									}
+								>
+									<MaterialIcons
+										name="logout"
+										size={24}
+										color="white"
+									/>
+								</TouchableOpacity>
+							),
+						}}
 					/>
 				</Stack.Group>
 			)}

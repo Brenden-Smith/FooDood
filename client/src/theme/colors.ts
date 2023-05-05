@@ -1,0 +1,16 @@
+export const colors = {
+	red: "#d90404",
+	blue: "#0063e6",
+	gray: "#777777",
+	gold: '#ffd700',
+	white: "#ffffff",
+	black: "#000000",
+	green: "#aff7a8",
+	cream: "#f8e3cc",
+	creamLight: "#fceee3",
+	creamOrange: "#fc9a3b",
+	creamPurple: "#834179",
+	creamRed: "#ee5953",
+	creamGreen: "#23cbc2",
+	creamPink: "#e9a5a5",
+};

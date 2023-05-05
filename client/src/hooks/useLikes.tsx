@@ -1,4 +1,3 @@
-import { useFirestoreQuery } from "@react-query-firebase/firestore";
 import { QueryKey } from "@/constants";
 import {
 	query,
@@ -8,6 +7,7 @@ import {
 	orderBy,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { useFirestoreQuery } from "./useFirestoreQuery";
 
 export function useLikes() {
 	return useFirestoreQuery(

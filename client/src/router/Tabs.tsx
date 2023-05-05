@@ -1,9 +1,9 @@
-import { useLikes, useNavigation } from "@/hooks";
+import { useLikes, useNavigation, useUserData } from "@/hooks";
 import { Likes, Plates, Tags } from "@/routes";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/types";
 
@@ -16,6 +16,8 @@ const likesScreen = "Likes";
 export default function Tabs() {
 	const navigation = useNavigation();
 	const likes = useLikes();
+	const user = useUserData();
+
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -25,7 +27,6 @@ export default function Tabs() {
 					backgroundColor: colors.creamPurple,
 					height: 70,
 				},
-
 				tabBarIcon: ({ focused }) => {
 					let iconName;
 					let rn = route.name;
@@ -47,7 +48,7 @@ export default function Tabs() {
 						/>
 					);
 				},
-				headerRight: () => (
+				headerLeft: () => (
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Settings")}
 					>
@@ -55,14 +56,15 @@ export default function Tabs() {
 							name="gear"
 							size={26}
 							color="white"
-							style={{ marginRight: 20 }}
+							style={{ marginLeft: 20 }}
 						/>
 					</TouchableOpacity>
 				),
 				headerTitleStyle: {
 					fontWeight: "bold",
-					fontSize: 24,
+					fontSize: 30,
 					color: "white",
+					fontFamily: "Lobster_400Regular",
 				},
 				headerStyle: { backgroundColor: colors.creamPurple },
 				headerTitleAlign: "center",
@@ -73,22 +75,27 @@ export default function Tabs() {
 				name={platesScreen}
 				component={Plates}
 				options={({ route }) => ({
-					headerLeft: () => (likes.data?.docs.length ?? 0) >= 10 && (
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("Plates", {
-									lucky: !route.params?.lucky ?? true,
-								})
-							}
-						>
-							<MaterialCommunityIcons
-								name="clover"
-								size={26}
-								color={route.params?.lucky ? colors.creamGreen : "white"}
-								style={{ marginLeft: 20 }}
-							/>
-						</TouchableOpacity>
-					),
+					headerRight: () =>
+						(likes.data?.docs.length ?? 0) >= 10 && (
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("Plates", {
+										lucky: !route.params?.lucky ?? true,
+									})
+								}
+							>
+								<MaterialCommunityIcons
+									name="clover"
+									size={26}
+									color={
+										route.params?.lucky
+											? colors.creamGreen
+											: "white"
+									}
+									style={{ marginRight: 20 }}
+								/>
+							</TouchableOpacity>
+						),
 				})}
 			/>
 			<Tab.Screen name={likesScreen} component={Likes} />

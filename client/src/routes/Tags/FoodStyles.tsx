@@ -1,15 +1,16 @@
 import { SelectableGroup } from "@/components";
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { useTags } from "./TagsContext";
+import { text } from "@/theme";
 
 export default memo(() => {
 	const { tags, setTags } = useTags();
 	return (
 		<View style={styles.category}>
-			<Text className="text-2xl p-2">Styles</Text>
+			<Text style={[text.h3, styles.title]}>Styles</Text>
 			<SelectableGroup
 				items={[
 					{ title: "Burger", value: "burgers" },
@@ -44,9 +45,12 @@ export default memo(() => {
 						}}
 					>
 						<Text
-							style={{
-								color: selected ? "white" : "black",
-							}}
+							style={[
+								text.p,
+								{
+									color: selected ? "white" : "black",
+								},
+							]}
 						>
 							{item.title}
 						</Text>

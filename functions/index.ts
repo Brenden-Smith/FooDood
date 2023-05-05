@@ -56,7 +56,7 @@ type RawPlate = {
 export const getRecommendations = functions.https.onCall(
   async (data, context) => {
     // Get parameters
-    const { radius, longitude, latitude } = data;
+    const { longitude, latitude } = data;
     let { lucky } = data;
 
     // Get calling user
@@ -64,6 +64,16 @@ export const getRecommendations = functions.https.onCall(
       throw new functions.https.HttpsError(
         "unauthenticated",
         "The function must be called while authenticated."
+      );
+    }
+    const user = await firestore()
+      .collection("users")
+      .doc(context.auth.uid)
+      .get();
+    if (!user.exists) {
+      throw new functions.https.HttpsError(
+        "not-found",
+        "The user does not exist."
       );
     }
 
@@ -82,12 +92,17 @@ export const getRecommendations = functions.https.onCall(
                 .get()
                 .then((doc) => doc.data()?.tags.join(","));
             }
-            const tags = snapshot.docs.map((doc) => doc.data().tags).flat();
-            const rankings = tags.map((tag) => ({
-              [tag]: tags.filter((t) => t === tag).length,
-            }));
-            return Object.keys(rankings.sort((a: any, b: any) => b[1] - a[1]))
-              .slice(0, 3)
+            const rankings: Record<string, number> = {};
+            snapshot.docs.forEach((doc) => {
+              const multiplier = doc.data().super ? 2 : 1;
+              doc.data().tags?.forEach((tag: string) => {
+                if (!rankings[tag]) rankings[tag] = 0;
+                rankings[tag] += 1 * multiplier;
+              });
+            });
+            return Object.keys(rankings)
+              .sort((a, b) => rankings[b] - rankings[a])
+              .slice(0, 10)
               .join(",");
           })
       : await firestore()
@@ -108,11 +123,11 @@ export const getRecommendations = functions.https.onCall(
           Authorization: `Bearer ${process.env.YELP_API_KEY}`,
         },
         params: {
-          radius,
+          radius: parseInt((user.data()?.searchDistance ?? 40000).toString()),
           longitude,
           latitude,
           categories,
-          limit: 20,
+          limit: 50,
         },
       })
       .then((response) => response.data.businesses)

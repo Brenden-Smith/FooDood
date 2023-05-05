@@ -1,4 +1,4 @@
-import { colors } from "@/constants";
+import { colors } from "@/theme";
 import { Dimensions, StyleSheet } from "react-native";
 
 const srcWidth = Dimensions.get("window").width;
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
 		backgroundColor: colors.creamLight,
 		flexWrap: "nowrap",
 	},
-		saveButton: {
+	saveButton: {
 		borderRadius: 100,
 		paddingVertical: 10,
 		paddingHorizontal: 64,
@@ -35,5 +35,8 @@ export const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 16,
 	},
-	
+	title: {
+		textAlign: "center",
+		marginBottom: 12,
+	},
 });
