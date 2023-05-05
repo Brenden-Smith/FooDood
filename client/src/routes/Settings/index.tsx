@@ -65,7 +65,17 @@ export function Settings() {
 						let errors: any = {};
 						if (!values.email) {
 							errors.email = "This field is required";
+						} else if (
+							!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+								values.email,
+							)
+						) {
+							errors.email = "Invalid email address";
 						}
+						if (values.password !== values.confirmPassword) {
+							errors.password = "Passwords do not match";
+						}
+						return errors;
 					}}
 					enableReinitialize
 				>
@@ -74,7 +84,6 @@ export function Settings() {
 						handleBlur,
 						handleSubmit,
 						values,
-						setFieldValue,
 						errors,
 						touched,
 					}) => (
@@ -88,16 +97,20 @@ export function Settings() {
 										style={styles.accountInput}
 										value={values.email}
 										onChangeText={handleChange("email")}
-										onBlur={handleBlur}
+										onBlur={handleBlur("email")}
 									/>
 								</View>
-								<Text>
-									{errors.email && touched.email ? (
-										<Text style={{ color: "red" }}>
-											{errors.email.toString()}
-										</Text>
-									) : null}
-								</Text>
+								{errors.email && touched.email ? (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Cabin_400Regular",
+											marginBottom: 15,
+										}}
+									>
+										{errors.email.toString()}
+									</Text>
+								) : null}
 
 								<View style={styles.accountSetting}>
 									<TextInput
@@ -105,21 +118,74 @@ export function Settings() {
 										style={styles.accountInput}
 										value={values.password}
 										onChangeText={handleChange("password")}
-										onBlur={handleBlur}
+										onBlur={handleBlur("password")}
+										secureTextEntry
 									/>
 								</View>
-								<Text>
-									{errors.password && touched.password ? (
-										<Text style={{ color: "red" }}>
-											{errors.password.toString()}
-										</Text>
-									) : null}
-								</Text>
+								<View style={styles.accountSetting}>
+									<TextInput
+										placeholder="Confirm New Password"
+										style={styles.accountInput}
+										value={values.confirmPassword}
+										onChangeText={handleChange(
+											"confirmPassword",
+										)}
+										onBlur={handleBlur("confirmPassword")}
+										secureTextEntry
+									/>
+								</View>
+								{errors.password && touched.password ? (
+									<Text
+										style={{
+											color: "red",
+											fontFamily: "Cabin_400Regular",
+											marginBottom: 15,
+										}}
+									>
+										{errors.password.toString()}
+									</Text>
+								) : null}
+
 								<TouchableOpacity
-									style={styles.logoutBtn}
+									style={[
+										styles.logoutBtn,
+										{
+											backgroundColor:
+												!!errors.email ||
+												!!errors.password ||
+												(values.email ===
+													user.data?.data()?.email &&
+													(!values.password ||
+														!values.confirmPassword))
+													? colors.gray
+													: colors.creamOrange,
+										},
+									]}
 									onPress={() => handleSubmit()}
+									disabled={
+										!!errors.email ||
+										!!errors.password ||
+										(values.email ===
+											user.data?.data()?.email &&
+											(!values.password ||
+												!values.confirmPassword))
+									}
 								>
-									<Text>Save</Text>
+									<Text
+										style={{
+											fontFamily: "Cabin_600SemiBold",
+											color:
+												!!errors ||
+												(values.email ===
+													user.data?.data()?.email &&
+													(!values.password ||
+														!values.confirmPassword))
+													? colors.white
+													: colors.black,
+										}}
+									>
+										Save
+									</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -150,7 +216,7 @@ export function Settings() {
 										Search Distance
 									</Text>
 									<Slider
-										style={{ width: 200, height: 40 }}
+										style={{ width: "100%" }}
 										minimumValue={1}
 										maximumValue={24}
 										minimumTrackTintColor={
@@ -176,10 +242,36 @@ export function Settings() {
 									</Text>
 								</View>
 								<TouchableOpacity
-									style={styles.logoutBtn}
+									style={[
+										styles.logoutBtn,
+										{
+											backgroundColor:
+												values.searchDistance ===
+												user.data?.data()
+													?.searchDistance
+													? colors.gray
+													: colors.creamOrange,
+										},
+									]}
 									onPress={() => handleSubmit()}
+									disabled={
+										values.searchDistance ===
+										user.data?.data()?.searchDistance
+									}
 								>
-									<Text>Save</Text>
+									<Text
+										style={{
+											fontFamily: "Cabin_600SemiBold",
+											color:
+												values.searchDistance ===
+												user.data?.data()
+													?.searchDistance
+													? colors.white
+													: colors.black,
+										}}
+									>
+										Save
+									</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -210,11 +302,13 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		textDecorationColor: colors.creamPurple,
 		marginBottom: 12,
+		fontFamily: "Cabin_600SemiBold",
 	},
 	subtitle: {
 		fontSize: 18,
 		fontWeight: "bold",
 		textDecorationColor: colors.creamPurple,
+		fontFamily: "Cabin_500Medium",
 	},
 	logoutBtn: {
 		backgroundColor: colors.creamOrange,
@@ -260,6 +354,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		marginRight: 10,
 		flex: 1,
+		fontFamily: "Cabin_400Regular",
 	},
 	sliderContainer: {
 		flex: 1,
@@ -277,5 +372,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		paddingBottom: 20,
+		fontFamily: "Cabin_400Regular",
 	},
 });
