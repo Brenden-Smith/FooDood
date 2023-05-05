@@ -14,7 +14,7 @@ import {
 	where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useUserData } from "./useUserData";
 import { RecommendedPlatesQuery } from "@/types";
 
