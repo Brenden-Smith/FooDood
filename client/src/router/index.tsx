@@ -8,6 +8,13 @@ import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
 import { colors } from "@/theme";
 import { useFonts } from "expo-font";
+import {
+	Cabin_400Regular,
+	Cabin_500Medium,
+	Cabin_600SemiBold,
+	Cabin_700Bold,
+} from "@expo-google-fonts/cabin";
+import { Lobster_400Regular } from "@expo-google-fonts/lobster";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -20,8 +27,11 @@ export default function Router(): JSX.Element {
 	const navigation = useNavigation();
 	const [user, setUser] = useState<User | null>(null);
 	const [fontsLoaded] = useFonts({
-		Cabin: require("@/assets/fonts/Cabin.ttf"),
-		Lobster: require("@/assets/fonts/Lobster.ttf"),
+		Cabin_400Regular,
+		Cabin_500Medium,
+		Cabin_600SemiBold,
+		Cabin_700Bold,
+		Lobster_400Regular,
 	});
 
 	useEffect(() => {

@@ -1071,6 +1071,16 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@expo-google-fonts/cabin@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/cabin/-/cabin-0.2.3.tgz#6ad8ae08681b2a868179ccff2478378bf56464b4"
+  integrity sha512-ahUydwZbgmo6zY+cNLfaFaqbQsJC6ydZNPfqleCAIzWJ+ofn7ZPKL49qgj3po70V5IKcn9FbHdEZ3SH+PYrUkg==
+
+"@expo-google-fonts/lobster@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/lobster/-/lobster-0.2.3.tgz#2b60d1134e2b696978d3c0ba8bafee26718c1688"
+  integrity sha512-+NMtWoW/hF0HKsi0KEeCJjV0gWAa+oi7m1bZbpzWmlLBZNbj9KkKkkS6CngBR8sZ46rmSTXSXC9QOgqY/LJZbQ==
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"

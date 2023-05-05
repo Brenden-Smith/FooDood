@@ -2,13 +2,13 @@ import { QueryKey } from "@/constants";
 import { getFirestore, doc } from "firebase/firestore";
 import { useFirestoreDocument } from "./useFirestoreDocument";
 
-export function usePlateData(plateID: string, enabled?: boolean) {
+export function usePlateData(plateID: string | undefined, enabled?: boolean) {
 	return useFirestoreDocument(
 		[QueryKey.PLATES, plateID],
-		doc(getFirestore(), "plates", plateID),
+		doc(getFirestore(), `plates/${plateID}`),
 		{},
 		{
-			enabled,
+			enabled: !!plateID && enabled,
 		},
 	);
 }

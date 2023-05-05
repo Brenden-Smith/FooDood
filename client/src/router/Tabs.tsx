@@ -64,7 +64,7 @@ export default function Tabs() {
 					fontWeight: "bold",
 					fontSize: 30,
 					color: "white",
-					fontFamily: "Lobster",
+					fontFamily: "Lobster_400Regular",
 				},
 				headerStyle: { backgroundColor: colors.creamPurple },
 				headerTitleAlign: "center",

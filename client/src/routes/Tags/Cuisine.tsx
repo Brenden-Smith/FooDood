@@ -54,9 +54,12 @@ export default memo(() => {
 						}}
 					>
 						<Text
-							style={{
-								color: selected ? "white" : "black",
-							}}
+							style={[
+								text.p,
+								{
+									color: selected ? "white" : "black",
+								},
+							]}
 						>
 							{item.title}
 						</Text>

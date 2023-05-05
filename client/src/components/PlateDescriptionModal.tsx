@@ -1,155 +1,135 @@
-import { memo, useCallback, useEffect } from "react";
-import {
-	Modal,
-	Text,
-	View,
-	TouchableOpacity,
-	Image,
-	StyleSheet,
-	Platform,
-	Linking,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { usePlateData } from "@/hooks";
+import { useBusiness, usePlateData } from "@/hooks";
 import { colors } from "@/theme";
-import { useBusiness } from "@/hooks/useBusiness";
-import { Entypo } from '@expo/vector-icons';
-
-
-
-
+import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { memo, useCallback } from "react";
+import {
+	Linking,
+	Modal,
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 export const PlateDescriptionModal = memo(
 	({
-		visible,
-		onDismiss,
 		plateID,
+		visible,
+		setVisible,
 	}: {
+		plateID?: string;
 		visible: boolean;
-		onDismiss: () => void;
-		plateID: string;
+		setVisible: (visible: boolean) => void;
 	}) => {
-		const plateData = usePlateData(plateID, visible);
-		const businessData = useBusiness(
-			plateData.data?.data()?.businessId,
-			visible,
-		);
-		
-
+		const onDismiss = useCallback(() => setVisible(false), [setVisible]);
+		const plate = usePlateData(plateID, visible);
+		const business = useBusiness(plate.data?.data()?.businessId, visible);
 		const navigateToLocation = useCallback(() => {
-			// parse the address from the location
-			const restaurantLocation = businessData.data?.data()?.location;
+			const restaurantLocation = business.data?.data()?.location;
 			console.log(restaurantLocation);
-			// parse the address from the location
-			const display_address = restaurantLocation?.display_address;
-			// for each item in the display address array append it to the address string
-			const addressString = businessData.data?.data()?.location.display_address.join(" ")
-			// if there is no address string then set the address string to the coordinates of the location
+			const addressString = business.data
+				?.data()
+				?.location.display_address.join(" ");
 			if (addressString.length === 0) {
 				const coordinates = restaurantLocation?.coordinates;
 				addressString.push(coordinates?.latitude);
 				addressString.push(coordinates?.longitude);
 			}
-			// if the platform is ios then open the maps app
 			if (Platform.OS === "ios") {
-				Linking.openURL(
-					`maps://app?address=${addressString}`,
-				);
+				Linking.openURL(`maps://app?address=${addressString}`);
+			} else if (Platform.OS === "android") {
+				Linking.openURL(`google.navigation:q=${addressString}`);
 			}
-			// if the platform is android then open the google maps app
-			if (Platform.OS === "android") {
-				Linking.openURL(
-					`google.navigation:q=${addressString}`,
-				);
-			}
-
-		}, [businessData.data]);
-
+		}, [business.data]);
 		return (
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={visible}
-				onRequestClose={onDismiss}
-			>
-				<View style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<View style={styles.imageContainer}>
-							<Image
-								source={{
-									uri: plateData.data?.data()?.image_url,
-								}}
-								style={styles.modalImage}
+			<Modal visible={visible} transparent={true} animationType="fade">
+				<View style={styles.modalInner}>
+					<View style={styles.container}>
+						<TouchableOpacity
+							style={styles.close}
+							onPress={onDismiss}
+						>
+							<AntDesign
+								name="close"
+								size={30}
+								color="white"
+								style={styles.closeIcon}
 							/>
-						</View>
-						<View style={styles.modalHeader}>
-							<Text style={styles.modalTitle}>
-								{plateData.data?.data()?.name}
-							</Text>
-							<TouchableOpacity onPress={onDismiss}>
+						</TouchableOpacity>
+						<Image
+							style={styles.image}
+							source={plate.data?.data()?.image_url}
+						/>
+						<View style={styles.actions}>
+							<TouchableOpacity
+								onPress={() =>
+									Linking.openURL(
+										`tel:${business.data?.data()?.phone}`,
+									)
+								}
+							>
 								<MaterialCommunityIcons
-									name="close"
+									name="phone"
 									size={30}
-									color="white"
+									color={colors.creamPurple}
+									style={styles.action}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={navigateToLocation}>
+								<MaterialCommunityIcons
+									name="map-marker"
+									size={30}
+									color={colors.creamGreen}
+									style={styles.action}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity
+								onPress={() =>
+									Linking.openURL(business.data?.data()?.url)
+								}
+							>
+								<Entypo
+									name="yelp"
+									size={30}
+									color="red"
+									style={styles.action}
 								/>
 							</TouchableOpacity>
 						</View>
-
-						<View style={styles.modalBody}>
-							<Text style={styles.subHeading}>Business Name</Text>
-							<Text style={styles.modalText}>
-								{plateData.data?.data()?.businessName}
+						<View style={styles.header}>
+							<Text style={styles.title}>
+								{plate.data?.data()?.name}
 							</Text>
-
-							<Text style={styles.subHeading}>Description</Text>
-							<Text style={styles.modalText}>
-								{plateData.data?.data()?.description}
+							<Text style={styles.price}>
+								{plate.data?.data()?.price}
 							</Text>
-
-							<Text style={styles.subHeading}>Price</Text>
-							<Text style={styles.modalText}>
-								{plateData.data?.data()?.price}
+						</View>
+						<View style={styles.details}>
+							<Text style={styles.detail}>
+								{business.data?.data()?.name}
 							</Text>
-
-							<View style={styles.modalTagsContainer}>
-								<Text style={styles.subHeading}>Tags</Text>
-								{plateData.data
+							<Text style={styles.detail}>
+								{business.data
 									?.data()
-									?.tags?.map((tag: string) => (
-										<Text style={styles.modalTag} key={tag}>
-											{tag}
-										</Text>
-									))}
-							</View>
-							<Text style={styles.subHeading}>
-								Business Location
+									?.location.display_address.join(" ") ||
+									"No address available"}
 							</Text>
-							<Text style={styles.modalText}>
-								{businessData.data?.data()?.location.display_address.join(" ") || "No address available"}
+						</View>
+						<View style={styles.description}>
+							<Text style={styles.descriptionText}>
+								{plate.data?.data()?.description}
 							</Text>
-							
-							<Text style={styles.subHeading}>Business Phone Number</Text>
-							{/* use the linking library to open the phone app and call the business phone number */}
-							<Text style={styles.modalText}>
-								{businessData.data?.data()?.display_phone}
-							</Text>
-							<View style={styles.bottomIconsContainer}>
-								<TouchableOpacity onPress={() => Linking.openURL(`tel:${businessData.data?.data()?.phone}`)}>
-									<MaterialCommunityIcons name="phone" size={30} color={colors.creamPurple} style={styles.bottomIcons}/>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={navigateToLocation}>
-									<MaterialCommunityIcons
-										name="map-marker"
-										size={30}
-										color={colors.creamGreen}
-										style={styles.bottomIcons}
-									/>
-								</TouchableOpacity>
-								{/* link to the business yelp page with a yelp icon */}
-								<TouchableOpacity onPress={() => Linking.openURL(businessData.data?.data()?.url)}>
-									<Entypo name="yelp" size={30} color="red" style={styles.bottomIcons}/>
-								</TouchableOpacity>
-							</View>
+						</View>
+						<View style={styles.tags}>
+							{plate.data?.data()?.tags?.map((tag: string) => (
+								<View style={styles.tagContainer}>
+									<Text style={styles.tag} key={tag}>
+										{tag}
+									</Text>
+								</View>
+							))}
 						</View>
 					</View>
 				</View>
@@ -159,35 +139,25 @@ export const PlateDescriptionModal = memo(
 );
 
 const styles = StyleSheet.create({
-	bottomIconsContainer: {
+	modalInner: {
 		display: "flex",
-		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-	},
-	bottomIcons: {
-		margin: 10,
-		padding: 10,
-		backgroundColor: colors.white,
-		borderRadius: 4
-	},
-
-
-	centeredView: {
-		display: "flex",
+		backgroundColor: "rgba(0,0,0,0.5)",
+		height: "100%",
+		width: "100%",
+		padding: 25,
 		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
+		alignContent: "center",
 	},
-	modalView: {
+	container: {
 		display: "flex",
 		flex: 0.8,
-		width: "90%",
 		marginTop: 40,
 		marginBottom: 25,
 		backgroundColor: colors.white,
+		width: "100%",
 		borderRadius: 20,
-		padding: 35,
 		alignItems: "center",
 		shadowColor: colors.black,
 		shadowOffset: {
@@ -198,68 +168,102 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84,
 		elevation: 5,
 	},
-	modalHeader: {
+	image: {
+		width: "100%",
+		height: "50%",
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
+	},
+	close: {
+		position: "absolute",
+		top: 10,
+		left: 10,
+		zIndex: 10,
+	},
+	closeIcon: {
+		shadowColor: colors.black,
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+	},
+	header: {
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
 		width: "100%",
+		paddingHorizontal: 15,
+		marginTop: 15,
 	},
-	modalTitle: {
-		fontSize: 24,
+	title: {
+		fontSize: 20,
 		fontWeight: "bold",
-		color: colors.white,
+		fontFamily: "Cabin_700Bold",
 	},
-	modalBody: {
+	price: {
+		fontSize: 20,
+		fontWeight: "bold",
+		fontFamily: "Cabin_500Medium",
+	},
+	details: {
 		display: "flex",
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
+		flexDirection: "column",
+		width: "100%",
+		paddingHorizontal: 15,
+		marginTop: 15,
 	},
-	modalText: {
+	detail: {
 		fontSize: 16,
-		textAlign: "center",
-		color: colors.white,
-
-		// to allign text to bottom of the container
-	},
-	subHeading: {
-		fontSize: 18,
 		fontWeight: "bold",
-		color: colors.white,
+		fontFamily: "Cabin_400Regular",
+		color: colors.gray,
 	},
-	modalTagsContainer: {
+	description: {
+		display: "flex",
+		flexDirection: "column",
+		width: "100%",
+		paddingHorizontal: 15,
+		marginTop: 15,
+	},
+	descriptionText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		fontFamily: "Cabin_400Regular",
+	},
+	actions: {
+		position: "absolute",
+		bottom: "50%",
+		right: 0,
+		display: "flex",
+		flexDirection: "row",
+	},
+	action: {
+		margin: 10,
+		padding: 10,
+		backgroundColor: colors.white,
+		borderRadius: 4,
+	},
+	tags: {
 		display: "flex",
 		flexDirection: "row",
 		flexWrap: "wrap",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	modalTag: {
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: colors.creamGreen,
-		borderRadius: 12,
-		padding: 10,
-		margin: 5,
-	},
-	modalImage: {
-		justifyContent: "center",
-		alignItems: "center",
 		width: "100%",
-		height: "50%",
-		resizeMode: "cover",
-		overflow: "hidden",
-		borderRadius: 15,
-		flex: 1,
+		paddingHorizontal: 15,
+		marginTop: 15,
+		marginBottom: 25,
 	},
-	imageContainer: {
-		position: "absolute",
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		justifyContent: "center",
-		alignItems: "center",
-	},
+	tagContainer: {
+		backgroundColor: colors.cream,
+		padding: 5,
+		borderRadius: 20,
+		marginRight: 5,
+		marginBottom: 5,
+  },
+  tag: {
+    fontSize: 16,
+		fontWeight: "bold",
+		fontFamily: "Cabin_400Regular",
+  }
 });

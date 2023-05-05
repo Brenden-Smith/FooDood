@@ -107,10 +107,16 @@ const PlatesDeck = memo(
 		const [numInteractions, setNumInteractions] = useState(0);
 		const [showPreviousLikes, setShowPreviousLikes] = useState(false);
 		const data = plates.data?.pages.flatMap((page) => page.docs) ?? [];
+		const [disabled, setDisabled] = useState(false);
+		const timeout = useCallback(() => {
+			setDisabled(true);
+			setTimeout(() => setDisabled(false), 750);
+		}, []);
 
 		// Swipe
 		const onSwiped = useCallback(() => {
 			plates.fetchNextPage();
+			timeout();
 			setIndex((index + 1) % (data?.length ?? 0));
 			if (numInteractions % 4 === 3) {
 				setShowPreviousLikes(true);
@@ -122,11 +128,13 @@ const PlatesDeck = memo(
 			showPreviousLikes,
 			index,
 			data,
+			timeout
 		]);
 
 		// Like
 		const onSwipedRight = useCallback(
 			(i: number) => {
+				timeout();
 				const plate = data?.[i];
 				if (
 					plate &&
@@ -143,12 +151,13 @@ const PlatesDeck = memo(
 					}),
 						setNumInteractions(numInteractions + 1);
 			},
-			[data, numInteractions, likes.data],
+			[data, numInteractions, likes.data, timeout],
 		);
 
 		// Super like
 		const onSwipedTop = useCallback(
 			(i: number) => {
+				timeout();
 				const plate = data?.[i];
 				if (plate)
 					addDoc(collection(getFirestore(), "likes"), {
@@ -162,7 +171,7 @@ const PlatesDeck = memo(
 					}),
 						setNumInteractions(numInteractions + 1);
 			},
-			[data, numInteractions],
+			[data, numInteractions, timeout],
 		);
 
 		// Render card
@@ -189,6 +198,9 @@ const PlatesDeck = memo(
 				/>
 				<Swiper
 					ref={swiperRef as any}
+					disableLeftSwipe={plates.isFetchingNextPage || disabled}
+					disableRightSwipe={plates.isFetchingNextPage || disabled}
+					disableTopSwipe={plates.isFetchingNextPage || disabled}
 					cards={data ?? []}
 					onSwipedRight={onSwipedRight}
 					onSwipedTop={onSwipedTop}
@@ -223,6 +235,7 @@ const PlatesDeck = memo(
 									color: colors.white,
 									borderWidth: 1,
 									fontSize: 32,
+									fontFamily: "Cabin_400Regular",
 								},
 								wrapper: {
 									flexDirection: "column",
@@ -242,6 +255,7 @@ const PlatesDeck = memo(
 									color: colors.white,
 									borderWidth: 1,
 									fontSize: 32,
+									fontFamily: "Cabin_400Regular",
 								},
 								wrapper: {
 									flexDirection: "column",
@@ -260,6 +274,7 @@ const PlatesDeck = memo(
 						onPress={() => {
 							swiperRef?.current?.swipeLeft();
 						}}
+						disabled={plates.isFetchingNextPage || disabled}
 					>
 						<MaterialIcons
 							name="thumb-down"
@@ -272,6 +287,7 @@ const PlatesDeck = memo(
 						onPress={() => {
 							swiperRef?.current?.swipeTop();
 						}}
+						disabled={plates.isFetchingNextPage || disabled}
 					>
 						<AntDesign name="heart" size={30} color="white" />
 					</TouchableOpacity>
@@ -280,6 +296,7 @@ const PlatesDeck = memo(
 						onPress={() => {
 							swiperRef?.current?.swipeRight();
 						}}
+						disabled={plates.isFetchingNextPage || disabled}
 					>
 						<MaterialIcons
 							name="thumb-up"
