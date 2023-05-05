@@ -131,6 +131,8 @@ const styles = StyleSheet.create({
 		display: "flex",
 		flex: 0.8,
 		width: "90%",
+		marginTop: 40,
+		marginBottom: 25,
 		backgroundColor: colors.white,
 		borderRadius: 20,
 		padding: 35,
