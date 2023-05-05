@@ -6,7 +6,7 @@ import {
 	Dimensions,
 	StyleSheet,
 } from "react-native";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { colors } from "@/theme";
 import { useLikes } from "@/hooks";
@@ -32,15 +32,7 @@ export function Likes(): JSX.Element {
 			likes.isLoading ? (
 				<ActivityIndicator size="large" />
 			) : (
-				<Text
-					style={{
-						fontSize: 20,
-						fontWeight: "bold",
-						marginBottom: 10,
-						marginTop: 10,
-						textAlign: "center",
-					}}
-				>
+				<Text style={styles.noLikesText}>
 					When you like a plate it will be displayed here
 				</Text>
 			),
@@ -77,5 +69,13 @@ const styles = StyleSheet.create({
 		width: Dimensions.get("window").width - 40,
 		height: Dimensions.get("window").height - 200,
 		margin: 20,
+	},
+	noLikesText: {
+		fontSize: 20,
+		fontWeight: "bold",
+		marginBottom: 10,
+		marginTop: 10,
+		textAlign: "center",
+		fontFamily: "Cabin_400Regular",
 	},
 });

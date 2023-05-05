@@ -28,6 +28,9 @@ export default memo(
 							style={styles.likedImage}
 							contentFit="cover"
 						/>
+						{item.data().super && <View style={styles.superLike}>
+							<AntDesign name="star" size={18} color="white" />
+						</View>}
 						<Text style={styles.name}>{item.data().name}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
@@ -80,5 +83,13 @@ const styles = StyleSheet.create({
 		flexWrap: "wrap",
 		maxWidth: 150,
 		textAlign: "left",
+		fontFamily: "Cabin_400Regular",
+	},
+	superLike: {
+		backgroundColor: colors.blue,
+		padding: 3,
+		borderRadius: 20,
+
+		marginRight: 5,
 	},
 });
