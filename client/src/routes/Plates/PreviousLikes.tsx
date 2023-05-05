@@ -56,7 +56,7 @@ export default memo(
 		);
 
 		return (
-			<Modal visible={visible} transparent={true}>
+			<Modal visible={visible} transparent={true} animationType="fade">
 				<View style={styles.modalInner}>
 					<View style={styles.container}>
 						<View>
