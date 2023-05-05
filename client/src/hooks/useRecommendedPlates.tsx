@@ -79,8 +79,8 @@ export function useRecommendedPlates(lucky: boolean): RecommendedPlatesQuery {
 		({ pageParam }: { pageParam?: QueryDocumentSnapshot<DocumentData> }) =>
 			getDocs(
 				!pageParam
-					? query(platesQuery, limit(5), orderBy("image_url"))
-					: query(platesQuery, limit(1), orderBy("image_url"), startAfter(pageParam)),
+					? query(platesQuery, limit(5))
+					: query(platesQuery, limit(1), startAfter(pageParam)),
 			),
 		{
 			getNextPageParam: (lastPage) => {
