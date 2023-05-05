@@ -21,7 +21,7 @@ export const Card = memo(
 				<PlateDescriptionModal
 					plateID={plate.id}
 					visible={showDescription}
-					onDismiss={() => setShowDescription(false)}
+					setVisible={setShowDescription}
 				/>
 				<View style={styles.card}>
 					<Image

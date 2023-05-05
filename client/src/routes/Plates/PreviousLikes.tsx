@@ -121,9 +121,7 @@ const PreviousLike = memo(
 					<PlateDescriptionModal
 						visible={descriptionModalVisible}
 						plateID={item.id}
-						onDismiss={() => {
-							setDescriptionModalVisible(false);
-						}}
+						setVisible={setDescriptionModalVisible}
 					/>
 				</View>
 			</TouchableOpacity>

@@ -40,7 +40,7 @@ export default memo(
 				<PlateDescriptionModal
 					visible={visible}
 					plateID={item.data().plateId}
-					onDismiss={() => setVisible(false)}
+					setVisible={setVisible}
 				/>
 			</>
 		);
