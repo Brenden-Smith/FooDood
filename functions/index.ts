@@ -100,7 +100,8 @@ export const getRecommendations = functions.https.onCall(
                 rankings[tag] += 1 * multiplier;
               });
             });
-            return Object.keys(rankings).sort((a, b) => rankings[b] - rankings[a])
+            return Object.keys(rankings)
+              .sort((a, b) => rankings[b] - rankings[a])
               .slice(0, 10)
               .join(",");
           })
@@ -122,7 +123,7 @@ export const getRecommendations = functions.https.onCall(
           Authorization: `Bearer ${process.env.YELP_API_KEY}`,
         },
         params: {
-          radius: user.data()?.searchDistance ?? 40000,
+          radius: parseInt((user.data()?.searchDistance ?? 40000).toString()),
           longitude,
           latitude,
           categories,
