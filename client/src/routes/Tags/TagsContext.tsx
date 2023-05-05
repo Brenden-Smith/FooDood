@@ -46,7 +46,6 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
 				headerRight: () => <SaveButton onPress={onPress} />,
 			});
 		} else {
-			console.log("disabled");
 			navigation.setOptions({
 				headerRight: () => <SaveButton disabled />,
 			});
