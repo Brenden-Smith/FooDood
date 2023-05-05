@@ -13,6 +13,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { usePlateData } from "@/hooks";
 import { colors } from "@/theme";
 import { useBusiness } from "@/hooks/useBusiness";
+import { Entypo } from '@expo/vector-icons';
+
+
+
+
 
 export const PlateDescriptionModal = memo(
 	({
@@ -29,19 +34,36 @@ export const PlateDescriptionModal = memo(
 			plateData.data?.data()?.businessId,
 			visible,
 		);
+		
 
 		const navigateToLocation = useCallback(() => {
+			// parse the address from the location
+			const restaurantLocation = businessData.data?.data()?.location;
+			console.log(restaurantLocation);
+			// parse the address from the location
+			const display_address = restaurantLocation?.display_address;
+			// for each item in the display address array append it to the address string
+			const addressString = businessData.data?.data()?.location.display_address.join(" ")
+			// if there is no address string then set the address string to the coordinates of the location
+			if (addressString.length === 0) {
+				const coordinates = restaurantLocation?.coordinates;
+				addressString.push(coordinates?.latitude);
+				addressString.push(coordinates?.longitude);
+			}
+			// if the platform is ios then open the maps app
 			if (Platform.OS === "ios") {
 				Linking.openURL(
-					`maps://app?address=${businessData.data?.data()?.address}`,
+					`maps://app?address=${addressString}`,
 				);
 			}
+			// if the platform is android then open the google maps app
 			if (Platform.OS === "android") {
 				Linking.openURL(
-					`google.navigation:q=${businessData.data?.data()?.address}`,
+					`google.navigation:q=${addressString}`,
 				);
 			}
-		}, [businessData.data?.data()?.address]);
+
+		}, [businessData.data]);
 
 		return (
 			<Modal
@@ -103,15 +125,31 @@ export const PlateDescriptionModal = memo(
 								Business Location
 							</Text>
 							<Text style={styles.modalText}>
-								{businessData.data?.data()?.address}
+								{businessData.data?.data()?.location.display_address.join(" ") || "No address available"}
 							</Text>
-							<TouchableOpacity onPress={navigateToLocation}>
-								<MaterialCommunityIcons
-									name="map-marker"
-									size={30}
-									color="white"
-								/>
-							</TouchableOpacity>
+							
+							<Text style={styles.subHeading}>Business Phone Number</Text>
+							{/* use the linking library to open the phone app and call the business phone number */}
+							<Text style={styles.modalText}>
+								{businessData.data?.data()?.display_phone}
+							</Text>
+							<View style={styles.bottomIconsContainer}>
+								<TouchableOpacity onPress={() => Linking.openURL(`tel:${businessData.data?.data()?.phone}`)}>
+									<MaterialCommunityIcons name="phone" size={30} color={colors.creamPurple} style={styles.bottomIcons}/>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={navigateToLocation}>
+									<MaterialCommunityIcons
+										name="map-marker"
+										size={30}
+										color={colors.creamGreen}
+										style={styles.bottomIcons}
+									/>
+								</TouchableOpacity>
+								{/* link to the business yelp page with a yelp icon */}
+								<TouchableOpacity onPress={() => Linking.openURL(businessData.data?.data()?.url)}>
+									<Entypo name="yelp" size={30} color="red" style={styles.bottomIcons}/>
+								</TouchableOpacity>
+							</View>
 						</View>
 					</View>
 				</View>
@@ -121,6 +159,20 @@ export const PlateDescriptionModal = memo(
 );
 
 const styles = StyleSheet.create({
+	bottomIconsContainer: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	bottomIcons: {
+		margin: 10,
+		padding: 10,
+		backgroundColor: colors.white,
+		borderRadius: 4
+	},
+
+
 	centeredView: {
 		display: "flex",
 		flex: 1,
@@ -195,7 +247,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		width: "100%",
-		height: "100%",
+		height: "50%",
 		resizeMode: "cover",
 		overflow: "hidden",
 		borderRadius: 15,
