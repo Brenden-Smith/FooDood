@@ -7,6 +7,7 @@ import { RootStackParamList } from "@/types";
 import { useNavigation } from "@/hooks";
 import Tabs from "./Tabs";
 import { colors } from "@/theme";
+import { useFonts } from "expo-font";
 
 // Create stack and tab navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -18,8 +19,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function Router(): JSX.Element {
 	const navigation = useNavigation();
 	const [user, setUser] = useState<User | null>(null);
+	const [fontsLoaded] = useFonts({
+		Cabin: require("@/assets/fonts/Cabin.ttf"),
+	});
 
 	useEffect(() => {
+		if (!fontsLoaded) return;
 		onAuthStateChanged(getAuth(), async (user) => {
 			setUser(user);
 			if (user) {
@@ -39,7 +44,7 @@ export default function Router(): JSX.Element {
 				navigation.navigate("Login");
 			}
 		});
-	});
+	}, [navigation, fontsLoaded]);
 
 	return (
 		<Stack.Navigator
