@@ -30,6 +30,8 @@ export function Login() {
 	const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
 		clientId:
 			"637872410840-d6ut3b9clpcenh663ssdi8ggk7pf03ac.apps.googleusercontent.com",
+		iosClientId:
+			"637872410840-5bl5c3d3i10vsblg3esujfb28a4lbebs.apps.googleusercontent.com",
 	});
 
 	// Sign into Firebase with the Google credential
