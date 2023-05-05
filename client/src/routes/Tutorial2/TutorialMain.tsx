@@ -25,12 +25,21 @@ export default memo(
         const [tutorialPage, setTutorialPage] = useState(1);
 
         const nextPage = useCallback(() => {
-            setTutorialPage(tutorialPage + 1);
+            if (tutorialPage === 3) {
+                onDismiss();
+            }
+            else{
+                setTutorialPage(tutorialPage + 1);
+            }
+
         }
         , [tutorialPage]);
 
         const previousPage = useCallback(() => {
-            setTutorialPage(tutorialPage - 1);
+            if (!(tutorialPage === 1)) {
+                setTutorialPage(tutorialPage - 1);
+            }
+            
         }
         , [tutorialPage]);
 
@@ -45,7 +54,7 @@ export default memo(
         >
             <View style={TutorialStyles.tutorialContainer}>
                 {/* <View style={TutorialStyles.tutorialInner}> */}
-                    <View style={TutorialStyles.tutorialHeader}>
+                    {/* <View style={TutorialStyles.tutorialHeader}>
                         <TouchableOpacity onPress={onDismiss}>
                             <MaterialCommunityIcons
                                 name="close"
@@ -54,12 +63,12 @@ export default memo(
                                 style={TutorialStyles.closeIcon}
                             />
                         </TouchableOpacity>
-                    </View>
-                    <View style={TutorialStyles.tutorialBody}>
+                    </View> */}
+                    
                         {tutorialPage === 1 && <TutorialSwipe />}
                         {tutorialPage === 2 && <TutorialTags />}
                         {tutorialPage === 3 && <TutorialLikes />}
-                    </View>
+                    
                     <View style={TutorialStyles.tutorialFooter}>
                         <TouchableOpacity onPress={previousPage}>
                             <MaterialCommunityIcons

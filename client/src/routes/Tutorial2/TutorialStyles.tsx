@@ -7,31 +7,36 @@ import { StyleSheet } from "react-native";
 export const TutorialStyles = StyleSheet.create({
     tutorialContainer: {
         flex: 1,
+        display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        paddingHorizontal: 32,
         backgroundColor: colors.cream,
     },
     tutorialTitle: {
-        fontSize: 48,
-        fontWeight: "bold",
+        fontFamily: 'Cabin_700Bold',
         marginBottom: 24,
-        marginTop: 16,
+        marginTop: 150,
+        fontSize: 36,
         color: colors.creamPurple,
     },
     tutorialDescription: {
         fontSize: 20,
         marginBottom: 24,
+        fontFamily: 'Cabin_400Regular'
     },
     tutorialText: {
         fontSize: 16,
         marginBottom: 10,
     },
     tutorialImage: {
-        width: 300,
-        height: 300,
+        width: 200,
+        height: 200,
         marginBottom: 24,
+        borderRadius: 10
     },
-    
+
     tutorialDivider: {
         width: 300,
         height: 6,
@@ -43,13 +48,12 @@ export const TutorialStyles = StyleSheet.create({
         backgroundColor: colors.creamOrange,
         borderRadius: 100,
         paddingVertical: 10,
-        paddingHorizontal: 64,
         marginBottom: 12,
         justifyContent: "center",
         alignItems: "center",
     },
     tutorialTextBtn: {
-        fontSize: 20,
+        fontFamily: 'Cabin_700Bold',
     },
     closeIcon: {
         position: "absolute",
@@ -64,12 +68,13 @@ export const TutorialStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal: 32,
+        
         marginBottom: 12,
+        fontFamily: 'Cabin_700Bold'
     },
     tutorialBody: {
-        display : "flex",
         flex: 1,
+        display : "flex",
         justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 32,
@@ -86,7 +91,8 @@ export const TutorialStyles = StyleSheet.create({
     },
     tutorialFooterText: {
         fontSize: 16,
-        marginBottom: 10,
+        margin: 20,
+        
     },
     nextIcon: {
         backgroundColor: colors.creamOrange,
@@ -99,6 +105,16 @@ export const TutorialStyles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
     },
-
-
+    removeLikeStyle: {
+        backgroundColor: colors.creamRed,
+		padding: 3,
+		borderRadius: 5,
+    },
+    infoBadge: {
+        borderRadius: 15,
+		backgroundColor: colors.blue,
+		justifyContent: "center",
+		alignItems: "center",
+        padding: 15
+    }
 });
